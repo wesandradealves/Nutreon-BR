@@ -1,7 +1,23 @@
+'use client';
+
 import Link from 'next/link';
 import { Container } from './styles';
 
 export default function UnauthorizedPage() {
+  const handleLogin = () => {
+    const clientId = process.env.NEXT_PUBLIC_NUVEMSHOP_CLIENT_ID || '';
+    
+    // Gerar um state aleatório para CSRF protection
+    const state = Math.random().toString(36).substring(7);
+    sessionStorage.setItem('oauth_state', state);
+    
+    // URL correta de autorização conforme documentação
+    const authUrl = `https://www.tiendanube.com/apps/${clientId}/authorize?state=${state}`;
+    
+    console.log('Redirecting to:', authUrl);
+    window.location.href = authUrl;
+  };
+
   return (
     <Container className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
@@ -12,16 +28,20 @@ export default function UnauthorizedPage() {
         </div>
         <h1 className="text-2xl font-bold text-gray-800 mb-4">Acesso Não Autorizado</h1>
         <p className="text-gray-600 mb-6">
-          Para acessar esta área, você precisa instalar o aplicativo Nutreon em sua loja Nuvemshop.
+          Para acessar esta área, você precisa conectar sua loja Nuvemshop.
         </p>
         <div className="space-y-4">
-          <Link 
-            href="https://www.nuvemshop.com.br/loja-aplicativos-nuvem"
-            className="block w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors"
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={handleLogin}
+            className="w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors font-medium"
           >
-            Ir para Loja de Aplicativos
+            Conectar com Nuvemshop
+          </button>
+          <Link 
+            href="/login"
+            className="block w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Ir para Login
           </Link>
           <Link 
             href="/"

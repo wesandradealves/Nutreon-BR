@@ -1,44 +1,49 @@
-"use client";
+'use client';
 
 import { Container } from './styles';
 import 'hamburgers/dist/hamburgers.css';
-// import { useState, useEffect, useCallback, useRef } from 'react';
 import classNames from 'classnames';
 import Props from './typo';
-// import { debounce } from "lodash";
+import Link from 'next/link';
+import { useAuth } from '@/context/auth';
+import { Person as PersonIcon } from '@mui/icons-material';
 
 const Header = ({ scrollPosition }: Props) => {
-  // const [expanded, setExpand] = useState<boolean>(false);
-
-  // const debouncedResize = useRef(
-  //   debounce(() => setExpand(false), 200)
-  // ).current;
-
-  // useEffect(() => {
-  //   if (scrollPosition) {
-  //     setExpand(false);
-  //   }
-  // }, [scrollPosition]);
-
-  // useEffect(() => {
-  //   window.addEventListener('resize', debouncedResize);
-
-  //   return () => {
-  //     window.removeEventListener('resize', debouncedResize);
-  //   };
-  // }, [debouncedResize]);
+  const { isAuthenticated, customer } = useAuth();
   
-  // const handleLinkClick = () => {
-  //   setExpand(false);
-  // };
-
   return (
     <Container
-      className={classNames("w-full header", {
+      className={classNames("w-full header flex items-center justify-between px-8 py-4", {
         'scrolled': scrollPosition > 0,
       })}
     >
-      Header
+      <div className="flex items-center">
+        <Link href="/" className="text-2xl font-bold hover:text-green-600 transition-colors">
+          Nutreon
+        </Link>
+      </div>
+      
+      <nav className="flex items-center gap-6">
+        <Link href="/" className="text-gray-700 hover:text-green-600 transition-colors">
+          Início
+        </Link>
+        <Link href="/produtos" className="text-gray-700 hover:text-green-600 transition-colors">
+          Produtos
+        </Link>
+        <Link href="/carrinho" className="text-gray-700 hover:text-green-600 transition-colors">
+          Carrinho
+        </Link>
+        {isAuthenticated ? (
+          <Link href="/conta" className="text-gray-700 hover:text-green-600 transition-colors flex items-center gap-1">
+            <PersonIcon fontSize="small" />
+            {customer?.name?.split(' ')[0] || 'Conta'}
+          </Link>
+        ) : (
+          <Link href="/auth" className="text-gray-700 hover:text-green-600 transition-colors">
+            Entrar
+          </Link>
+        )}
+      </nav>
     </Container>
   );
 };

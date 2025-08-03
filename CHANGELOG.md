@@ -5,41 +5,49 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
-## [0.1.1] - 2024-01-03
+## [0.2.0] - 2025-08-03
 
 ### Adicionado
-- Configuração do ambiente para integração com Nuvemshop API
-- Arquivo `.env.local` e `.env.example` com variáveis necessárias
-- Estrutura de pastas completa seguindo arquitetura definida
-- Configuração do Axios com:
-  - Rate limiting (2 requisições por segundo)
-  - Headers de autenticação Bearer Token
-  - Interceptors para loading global
-  - Tratamento de erros 429 (rate limit exceeded)
-- Script `type-check` no package.json
-- Estrutura de diretórios para e-commerce:
-  - `/components/{product,cart,checkout,category,common}`
-  - `/components/{atoms,molecules,organisms}` (Atomic Design)
-  - `/services/nuvemshop`
-  - `/app/{produtos,produto,carrinho,checkout,conta,busca}`
+- Sistema completo de autenticação de clientes com JWT
+- Arquitetura DDD (Domain-Driven Design) com camadas bem definidas
+- Banco de dados PostgreSQL com Prisma ORM
+- Docker Compose para ambiente de desenvolvimento
+- Sistema de envio de emails com Nodemailer
+  - Email de boas-vindas ao cadastrar
+  - Notificação de login com IP e dispositivo
+- Páginas de autenticação (login/cadastro)
+- Área do cliente com edição de dados pessoais
+- Alteração de senha com logout automático
+- Máscara de telefone brasileiro
+- Middleware de proteção de rotas
+- BFF (Backend for Frontend) para integração com Nuvemshop API
+- Token Manager para gerenciamento centralizado de tokens
 
-### Modificado
-- `src/services/api.ts` - Adaptado para Nuvemshop API
-- `src/middleware.ts` - Corrigido warnings de lint
-- `package.json` - Adicionado script type-check
+### Melhorado
+- Context API para gerenciamento de estado de autenticação
+- Header dinâmico mostrando status de login
+- Validação de formulários com react-hook-form
+- Tratamento de erros padronizado
+- Responsividade em todas as páginas
 
 ### Corrigido
-- Erros de lint em `api.ts` e `middleware.ts`
-- Warnings de tipos não utilizados
+- Problema de CORS com chamadas diretas à API
+- Compatibilidade de máscaras com React 19
+- Sincronização de dados após atualização
 
-## [0.1.0] - 2024-01-03
+### Segurança
+- Cookies HTTPOnly para tokens JWT
+- Hash de senha com bcrypt
+- Validação de entrada com Zod
+- Proteção contra acesso não autorizado
+
+## [0.1.0] - 2025-08-02
 
 ### Adicionado
-- Estrutura inicial do projeto Next.js 15 com TypeScript
-- Configuração de styled-components + Tailwind CSS
-- Documentação completa (README.md, ARCHITECTURE.md, DEVELOPMENT_PLAN.md)
-- Configuração de Docker e docker-compose
-- Setup de linting com ESLint e Husky
-- Contextos base (Auth e Loader)
-- Componentes iniciais (Header, Footer, Spinner)
-- Integração com Storybook
+- Estrutura inicial do projeto Next.js
+- Integração OAuth 2.0 com Nuvemshop
+- Configuração básica do ambiente
+- Documentação inicial
+
+[0.2.0]: https://github.com/nutreon/nutreon-br/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/nutreon/nutreon-br/releases/tag/v0.1.0

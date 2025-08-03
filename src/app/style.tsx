@@ -79,7 +79,6 @@ export const GlobalStyle = createGlobalStyle `
         font-style: normal;
         overflow-x: hidden;
         font-size: ${pxToRem(16)};
-        background: ${props => props.theme._colors.primary.bdm9};
         * { 
             transition: 30ms ease-in-out all;
         }

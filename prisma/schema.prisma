@@ -1,0 +1,195 @@
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "windows", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Agregado Customer
+model Customer {
+  id              String          @id @default(uuid())
+  email           String          @unique
+  name            String
+  phone           String?
+  passwordHash    String?         @map("password_hash")
+  verified        Boolean         @default(false)
+  nuvemshopId     String?         @unique @map("nuvemshop_id")
+  
+  // Objetos de valor
+  addresses       Address[]
+  
+  // Relacionamentos
+  orders          Order[]
+  sessions        Session[]
+  cart            Cart?
+  
+  // Auditoria
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+  
+  @@map("customers")
+}
+
+// Objeto de Valor
+model Address {
+  id              String          @id @default(uuid())
+  customerId      String          @map("customer_id")
+  street          String
+  number          String
+  complement      String?
+  neighborhood    String
+  city            String
+  state           String
+  zipCode         String          @map("zip_code")
+  country         String          @default("BR")
+  isDefault       Boolean         @default(false) @map("is_default")
+  
+  customer        Customer        @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+  
+  @@map("addresses")
+}
+
+// Agregado Order
+model Order {
+  id              String          @id @default(uuid())
+  customerId      String          @map("customer_id")
+  nuvemshopId     String?         @unique @map("nuvemshop_id")
+  orderNumber     String          @unique @map("order_number")
+  status          OrderStatus     @default(PENDING)
+  subtotal        Decimal         @db.Decimal(10, 2)
+  shipping        Decimal         @db.Decimal(10, 2)
+  discount        Decimal         @db.Decimal(10, 2) @default(0)
+  total           Decimal         @db.Decimal(10, 2)
+  
+  // Endereço de entrega (snapshot)
+  shippingAddress Json            @map("shipping_address")
+  
+  // Relacionamentos
+  customer        Customer        @relation(fields: [customerId], references: [id])
+  items           OrderItem[]
+  payment         Payment?
+  
+  // Auditoria
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+  
+  @@map("orders")
+}
+
+model OrderItem {
+  id              String          @id @default(uuid())
+  orderId         String          @map("order_id")
+  productId       String          @map("product_id")
+  variantId       String?         @map("variant_id")
+  name            String
+  price           Decimal         @db.Decimal(10, 2)
+  quantity        Int
+  total           Decimal         @db.Decimal(10, 2)
+  
+  order           Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  createdAt       DateTime        @default(now()) @map("created_at")
+  
+  @@map("order_items")
+}
+
+// Agregado Payment
+model Payment {
+  id              String          @id @default(uuid())
+  orderId         String          @unique @map("order_id")
+  method          PaymentMethod
+  status          PaymentStatus   @default(PENDING)
+  amount          Decimal         @db.Decimal(10, 2)
+  installments    Int             @default(1)
+  transactionId   String?         @map("transaction_id")
+  gatewayData     Json?           @map("gateway_data")
+  
+  order           Order           @relation(fields: [orderId], references: [id])
+  
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+  
+  @@map("payments")
+}
+
+// Agregado Cart (efêmero)
+model Cart {
+  id              String          @id @default(uuid())
+  customerId      String?         @unique @map("customer_id")
+  sessionId       String?         @map("session_id")
+  
+  items           CartItem[]
+  customer        Customer?       @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  
+  expiresAt       DateTime        @map("expires_at")
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+  
+  @@map("carts")
+}
+
+model CartItem {
+  id              String          @id @default(uuid())
+  cartId          String          @map("cart_id")
+  productId       String          @map("product_id")
+  variantId       String?         @map("variant_id")
+  quantity        Int
+  
+  cart            Cart            @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+  
+  @@unique([cartId, productId, variantId])
+  @@map("cart_items")
+}
+
+// Sessão para autenticação
+model Session {
+  id              String          @id @default(uuid())
+  customerId      String          @map("customer_id")
+  token           String          @unique
+  userAgent       String?         @map("user_agent")
+  ipAddress       String?         @map("ip_address")
+  
+  customer        Customer        @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  
+  expiresAt       DateTime        @map("expires_at")
+  createdAt       DateTime        @default(now()) @map("created_at")
+  
+  @@map("sessions")
+}
+
+// Enums
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  APPROVED
+  DECLINED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  DEBIT_CARD
+  PIX
+  BOLETO
+  PAYPAL
+}

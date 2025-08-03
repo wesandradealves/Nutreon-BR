@@ -1,46 +1,156 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { Login } from '@/services/userService';
+
+interface Customer {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  verified?: boolean;
+  addresses?: Array<{
+    id: string;
+    street: string;
+    number: string;
+    complement?: string;
+    neighborhood: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+    isDefault: boolean;
+  }>;
+}
 
 interface AuthContextProps {
-  token: string | null;
+  customer: Customer | null;
   isAuthenticated: boolean;
-  login: () => Promise<void>;
+  isLoading: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+  register: (data: { name: string; email: string; phone?: string; password?: string }) => Promise<void>;
+  updateCustomer: (data: Partial<Customer>) => void;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [token, setToken] = useState<string | null>(null);
+  const [customer, setCustomer] = useState<Customer | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const login = async () => {
+  // Verificar se cliente está autenticado
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+  const checkAuth = async () => {
     try {
-      const storedToken = localStorage.getItem('token');
-
-      if (storedToken) {
-        setToken(storedToken);
+      const response = await fetch('/api/customer/me');
+      const data = await response.json();
+      
+      if (response.ok && data.authenticated) {
+        setCustomer(data.customer);
         setIsAuthenticated(true);
-        return;
+        localStorage.setItem('customer_data', JSON.stringify(data.customer));
+      } else {
+        // Tentar dados locais como fallback
+        const savedCustomer = localStorage.getItem('customer_data');
+        if (savedCustomer) {
+          try {
+            const customerData = JSON.parse(savedCustomer);
+            setCustomer(customerData);
+            setIsAuthenticated(true);
+          } catch {
+            localStorage.removeItem('customer_data');
+          }
+        }
       }
-
-      const data = await Login(process.env.NEXT_PUBLIC_API_USERNAME || '', process.env.NEXT_PUBLIC_API_PWD || '');
-
-      localStorage.setItem('token', data.token);
-      setToken(data.token);
-      setIsAuthenticated(true);
-      console.info(`✅ Você está logado como ${data.user_display_name} (${data.user_email})`);
-    } catch (error: unknown) {
-      console.error('❌ Login Error:', error);
-      setIsAuthenticated(false);
+    } catch (error) {
+      console.error('Erro ao verificar autenticação:', error);
     }
   };
 
-  useEffect(() => {
-    login();
-  }, []);
+  const login = async (email: string, password: string) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/customer/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao fazer login');
+      }
+
+      setCustomer(data.data.customer);
+      setIsAuthenticated(true);
+      localStorage.setItem('customer_data', JSON.stringify(data.data.customer));
+    } catch (error) {
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await fetch('/api/customer/logout', { method: 'POST' });
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+    }
+    
+    localStorage.removeItem('customer_data');
+    localStorage.removeItem('cart'); // Limpar carrinho também
+    setCustomer(null);
+    setIsAuthenticated(false);
+  };
+
+  const register = async (data: { name: string; email: string; phone?: string; password?: string }) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/customer/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Erro ao criar conta');
+      }
+
+      // Fazer login automático após registro
+      if (data.password) {
+        await login(data.email, data.password);
+      }
+    } catch (error) {
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updateCustomer = (data: Partial<Customer>) => {
+    if (customer) {
+      const updatedCustomer = { ...customer, ...data };
+      setCustomer(updatedCustomer);
+      localStorage.setItem('customer_data', JSON.stringify(updatedCustomer));
+    }
+  };
 
   return (
-    <AuthContext.Provider value={{ token, isAuthenticated, login }}>
+    <AuthContext.Provider value={{ 
+      customer, 
+      isAuthenticated, 
+      isLoading,
+      login, 
+      logout,
+      register,
+      updateCustomer 
+    }}>
       {children}
     </AuthContext.Provider>
   );
