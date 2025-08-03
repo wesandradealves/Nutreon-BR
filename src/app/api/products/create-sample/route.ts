@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { nuvemshopClient } from '@/lib/nuvemshop-client';
+import type { NuvemshopProduct } from '@/types';
 
 export async function POST() {
   console.log('\n🏪 [BFF] Criando produtos de exemplo...');
@@ -59,13 +60,13 @@ export async function POST() {
     }
   ];
   
-  const created = [];
-  const errors = [];
+  const created: NuvemshopProduct[] = [];
+  const errors: Array<{ product: string | undefined; error: string }> = [];
   
   for (const product of sampleProducts) {
     try {
       console.log(`📦 Criando: ${product.name.pt}...`);
-      const result = await nuvemshopClient.post('/products', product);
+      const result = await nuvemshopClient.post<NuvemshopProduct>('/products', product);
       created.push(result);
       console.log(`✅ Criado com ID: ${result.id}`);
     } catch (error) {
@@ -85,8 +86,8 @@ export async function POST() {
     errors: errors.length,
     products: created.map(p => ({
       id: p.id,
-      name: p.name.pt,
-      price: p.variants[0]?.price
+      name: p.name?.pt || 'Sem nome',
+      price: p.variants?.[0]?.price || '0'
     })),
     errorDetails: errors
   });

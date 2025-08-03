@@ -5,6 +5,24 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [0.3.4] - 2025-08-03
+
+### Corrigido
+- **TypeScript**: Correção completa dos últimos erros de tipo
+  - Tipados corretamente arquivos `products/[id]/route.ts` e `products/create-sample/route.ts`
+  - Resolvido problema de tipos do JWT com cast explícito `as jwt.SignOptions`
+  - Adicionado tratamento seguro para propriedades opcionais
+- **Projeto agora com 0 erros TypeScript** 🎉
+
+### Melhorado
+- **Type Safety**: 100% do código agora está tipado corretamente
+- **Imports JWT**: Mudança de `import * as jwt` para `import jwt` para melhor compatibilidade
+
+### Técnico
+- Todos os arquivos de API agora usam tipos específicos da Nuvemshop
+- Projeto completamente type-safe sem uso de `any`
+- Build e type-check passando sem erros
+
 ## [0.3.3] - 2025-08-03
 
 ### Corrigido

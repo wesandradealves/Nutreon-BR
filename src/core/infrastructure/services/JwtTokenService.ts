@@ -1,4 +1,4 @@
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { ITokenService, TokenPayload } from '@/core/application/interfaces/ITokenService';
 
 export class JwtTokenService implements ITokenService {
@@ -8,11 +8,12 @@ export class JwtTokenService implements ITokenService {
   ) {}
 
   async generateToken(payload: TokenPayload): Promise<string> {
-    return jwt.sign(
+    const token = jwt.sign(
       { customerId: payload.customerId, email: payload.email },
       this.secret,
-      { expiresIn: this.expiresIn }
+      { expiresIn: this.expiresIn } as jwt.SignOptions
     );
+    return token;
   }
 
   async verifyToken(token: string): Promise<TokenPayload | null> {

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { nuvemshopClient } from '@/lib/nuvemshop-client';
+import type { NuvemshopProduct } from '@/types';
 
 export async function GET(
   request: NextRequest,
@@ -9,9 +10,10 @@ export async function GET(
   
   try {
     console.log('🚀 [BFF] Buscando produto específico...');
-    const product = await nuvemshopClient.get(`/products/${params.id}`);
+    const product = await nuvemshopClient.get<NuvemshopProduct>(`/products/${params.id}`);
     
-    console.log(`✅ [BFF] Produto encontrado: ${product.name?.pt || product.name}`);
+    const productName = product.name?.pt || 'Sem nome';
+    console.log(`✅ [BFF] Produto encontrado: ${productName}`);
     console.log(`💰 [BFF] Preço: R$ ${product.variants?.[0]?.price || 'N/A'}`);
     console.log(`📸 [BFF] ${product.images?.length || 0} imagens`);
     
