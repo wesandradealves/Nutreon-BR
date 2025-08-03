@@ -9,14 +9,14 @@ export async function GET(request: NextRequest) {
     // Se houver erro, redirecionar com mensagem
     if (error) {
       return NextResponse.redirect(
-        new URL(`/auth?error=${encodeURIComponent(error)}`, request.url)
+        new URL(`/?error=${encodeURIComponent(error)}`, request.url)
       );
     }
 
     // Se não houver código, erro
     if (!code) {
       return NextResponse.redirect(
-        new URL('/auth?error=no_code', request.url)
+        new URL('/?error=no_code', request.url)
       );
     }
 
@@ -37,22 +37,13 @@ export async function GET(request: NextRequest) {
     const tokenData = await tokenResponse.json();
 
     if (!tokenResponse.ok || !tokenData.access_token) {
-      console.error('Erro ao obter token:', tokenData);
       return NextResponse.redirect(
-        new URL(`/auth?error=${encodeURIComponent(tokenData.error || 'token_error')}`, request.url)
+        new URL(`/?error=${encodeURIComponent(tokenData.error || 'token_error')}`, request.url)
       );
     }
 
-    // Salvar token e user_id no .env.local ou em um banco de dados
-    // Por enquanto, vamos apenas logar e redirecionar
-    console.log('Token obtido com sucesso:', {
-      access_token: tokenData.access_token,
-      user_id: tokenData.user_id,
-      scope: tokenData.scope
-    });
-
-    // Criar resposta com redirect
-    const response = NextResponse.redirect(new URL('/auth?success=true', request.url));
+    // Criar resposta com redirect para home
+    const response = NextResponse.redirect(new URL('/', request.url));
     
     // Salvar token em cookies seguros
     response.cookies.set('nuvemshop_token', tokenData.access_token, {
@@ -69,21 +60,11 @@ export async function GET(request: NextRequest) {
       maxAge: 60 * 60 * 24 * 30, // 30 dias
     });
 
-    // Log para desenvolvimento
-    console.log('\n🎉 Autenticação bem-sucedida!');
-    console.log('📦 Store ID:', tokenData.user_id);
-    console.log('🔑 Access Token:', tokenData.access_token);
-    console.log('📋 Scopes:', tokenData.scope);
-    console.log('\nAtualize seu .env.local com:');
-    console.log(`NUVEMSHOP_ACCESS_TOKEN=${tokenData.access_token}`);
-    console.log(`NEXT_PUBLIC_NUVEMSHOP_STORE_ID=${tokenData.user_id}\n`);
-
     return response;
 
-  } catch (error) {
-    console.error('Erro no callback OAuth:', error);
+  } catch {
     return NextResponse.redirect(
-      new URL('/auth?error=server_error', request.url)
+      new URL('/?error=server_error', request.url)
     );
   }
 }
