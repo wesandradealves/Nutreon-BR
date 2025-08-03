@@ -5,6 +5,25 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [0.3.1] - 2025-08-03
+
+### Corrigido
+- **CRÍTICO**: Header de autenticação da API Nuvemshop corrigido para `Authentication` (não `Authorization`)
+- Remoção de arquivos de teste e debug que não deveriam estar em produção
+- Correção de imports de styles que foram removidos
+- Limpeza de código não utilizado e redundante
+
+### Removido
+- APIs de debug e teste (/api/debug, /api/test, etc.)
+- Componentes não utilizados (auth-guard)
+- Hooks duplicados (useAuth antigo)
+- Arquivos de estilo vazios
+
+### Importante
+- A API Nuvemshop usa o header `Authentication: bearer TOKEN` conforme documentação oficial
+- Token deve ser configurado uma única vez no `.env.local`
+- Usuários finais não precisam fazer OAuth, apenas o dono da loja
+
 ## [0.3.0] - 2025-08-03
 
 ### Adicionado
@@ -104,6 +123,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Configuração básica do ambiente
 - Documentação inicial
 
+[0.3.1]: https://github.com/nutreon/nutreon-br/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/nutreon/nutreon-br/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/nutreon/nutreon-br/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/nutreon/nutreon-br/releases/tag/v0.1.0
