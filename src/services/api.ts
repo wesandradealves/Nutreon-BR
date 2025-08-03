@@ -52,7 +52,7 @@ export const setupInterceptors = (setLoading: (loading: boolean) => void, getLoc
         process.env.NUVEMSHOP_ACCESS_TOKEN;
       
       if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+        config.headers.Authentication = `bearer ${token}`;
       }
 
       // Add language header
