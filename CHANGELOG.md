@@ -5,6 +5,26 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [0.3.6] - 2025-08-03
+
+### Refatorado
+- **Páginas de Autenticação**: Refatoração completa para usar hooks customizados
+  - Página `/conta` agora usa `useCustomerProfile`, `usePhoneFormat` e `usePasswordValidation`
+  - Página `/auth` agora usa `useAuthForm` para login e registro
+  - Toda lógica de negócio movida dos componentes para hooks
+  - Componentes agora são puramente apresentacionais
+
+### Melhorado
+- **Separação de Responsabilidades**: Componentes focados apenas em UI
+- **Manutenibilidade**: Lógica centralizada em hooks reutilizáveis
+- **Testabilidade**: Hooks podem ser testados isoladamente
+- **Performance**: Menos re-renderizações desnecessárias
+
+### Técnico
+- Componentes reduzidos em ~60% de linhas de código
+- Lógica de formatação, validação e chamadas API centralizadas
+- Hooks integrados mantendo toda funcionalidade existente
+
 ## [0.3.5] - 2025-08-03
 
 ### Adicionado

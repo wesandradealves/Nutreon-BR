@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/auth';
+import { useCustomerProfile } from '@/hooks/useCustomerProfile';
+import { usePhoneFormat } from '@/hooks/usePhoneFormat';
+import { usePasswordValidation } from '@/hooks/usePasswordValidation';
 import { useForm, Controller } from 'react-hook-form';
 import { PatternFormat } from 'react-number-format';
 import {
@@ -39,12 +42,22 @@ interface PasswordForm {
 
 export default function AccountPage() {
   const router = useRouter();
-  const { customer, logout, updateCustomer } = useAuth();
+  const { customer } = useAuth();
+  const { formatPhone } = usePhoneFormat();
+  const { validatePasswordMatch } = usePasswordValidation();
+  const {
+    loading,
+    message,
+    error,
+    updateProfile,
+    changePassword,
+    handleLogout,
+    clearMessage,
+    clearError,
+  } = useCustomerProfile();
+
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
 
   // Form para dados pessoais
   const {
@@ -68,7 +81,7 @@ export default function AccountPage() {
         phone: formatPhone(customer.phone),
       });
     }
-  }, [customer, reset]);
+  }, [customer, reset, formatPhone]);
 
   // Form para senha
   const {
@@ -81,108 +94,34 @@ export default function AccountPage() {
 
   const newPassword = watch('newPassword');
 
-  // Função para formatar telefone
-  const formatPhone = (phone: string | undefined): string => {
-    if (!phone) return '';
-    const cleaned = phone.replace(/\D/g, '');
-    if (cleaned.length === 11) {
-      return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 7)}-${cleaned.slice(7)}`;
-    } else if (cleaned.length === 10) {
-      return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 6)}-${cleaned.slice(6)}`;
-    }
-    return phone;
-  };
-
-  const handleLogout = async () => {
-    await logout();
-    router.push('/');
-  };
-
   const onSubmit = async (data: PersonalDataForm) => {
-    setLoading(true);
-    setError('');
-    
-    try {
-      // Remover máscara do telefone antes de enviar
-      const cleanPhone = data.phone ? data.phone.replace(/\D/g, '') : '';
-      
-      const response = await fetch('/api/customer/update', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...data,
-          phone: cleanPhone,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Erro ao atualizar dados');
-      }
-
-      setMessage('Dados atualizados com sucesso!');
+    const result = await updateProfile(data);
+    if (result.success) {
       setIsEditing(false);
-      
-      // Atualizar dados no contexto
-      if (result.customer) {
-        updateCustomer({
-          name: result.customer.name,
-          phone: result.customer.phone,
-        });
-      }
-    } catch (err) {
-      setError((err as Error).message || 'Erro ao atualizar dados');
-    } finally {
-      setLoading(false);
     }
   };
 
   const onPasswordSubmit = async (data: PasswordForm) => {
-    setLoading(true);
-    setError('');
-    
-    try {
-      const response = await fetch('/api/customer/change-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Erro ao alterar senha');
-      }
-
-      setMessage('Senha alterada com sucesso! Redirecionando para login...');
+    const result = await changePassword(data);
+    if (result.success) {
       resetPassword();
       setIsEditingPassword(false);
-      
-      // Redirecionar para login após 2 segundos
-      setTimeout(() => {
-        router.push('/auth');
-      }, 2000);
-    } catch (err) {
-      setError((err as Error).message || 'Erro ao alterar senha');
-    } finally {
-      setLoading(false);
     }
   };
 
   const handleCancelEdit = () => {
     reset({
       name: customer?.name || '',
-      phone: customer?.phone || '',
+      phone: formatPhone(customer?.phone),
     });
     setIsEditing(false);
-    setError('');
+    clearError();
   };
 
   const handleCancelPasswordEdit = () => {
     resetPassword();
     setIsEditingPassword(false);
-    setError('');
+    clearError();
   };
 
   if (!customer) {
@@ -212,16 +151,16 @@ export default function AccountPage() {
         <Snackbar
           open={!!message}
           autoHideDuration={6000}
-          onClose={() => setMessage('')}
+          onClose={clearMessage}
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
-          <Alert onClose={() => setMessage('')} severity="success" sx={{ width: '100%' }}>
+          <Alert onClose={clearMessage} severity="success" sx={{ width: '100%' }}>
             {message}
           </Alert>
         </Snackbar>
 
         {error && (
-          <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError('')}>
+          <Alert severity="error" sx={{ mb: 2 }} onClose={clearError}>
             {error}
           </Alert>
         )}
@@ -375,7 +314,7 @@ export default function AccountPage() {
                 {...registerPassword('confirmPassword', {
                   required: isEditingPassword ? 'Confirmação de senha é obrigatória' : false,
                   validate: isEditingPassword ? (value) =>
-                    value === newPassword || 'As senhas não conferem' : undefined,
+                    validatePasswordMatch(newPassword || '', value || '') || 'As senhas não conferem' : undefined,
                 })}
                 error={!!passwordErrors.confirmPassword}
                 helperText={passwordErrors.confirmPassword?.message}

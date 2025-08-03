@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useAuth } from '@/context/auth';
+import { useSearchParams } from 'next/navigation';
+import { useAuthForm } from '@/hooks/useAuthForm';
+import { PatternFormat } from 'react-number-format';
 import {
   Container,
   Paper,
@@ -12,104 +12,25 @@ import {
   TextField,
   Button,
   Alert,
-  CircularProgress,
 } from '@mui/material';
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`auth-tabpanel-${index}`}
-      aria-labelledby={`auth-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
-  );
-}
-
 export default function AuthPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const { login, register, isLoading } = useAuth();
-  const [tab, setTab] = useState(0);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-
-  // Pegar redirect da URL se houver
   const redirectTo = searchParams?.get('redirect') || '/conta';
-
-  // Estados do formulário de login
-  const [loginData, setLoginData] = useState({
-    email: '',
-    password: '',
-  });
-
-  // Estados do formulário de cadastro
-  const [registerData, setRegisterData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    password: '',
-    confirmPassword: '',
-  });
-
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-    setTab(newValue);
-    setError('');
-    setSuccess('');
-  };
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    
-    try {
-      await login(loginData.email, loginData.password);
-      router.push(redirectTo);
-    } catch (err) {
-      setError((err as Error).message || 'Erro ao fazer login');
-    }
-  };
-
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    
-    if (registerData.password !== registerData.confirmPassword) {
-      setError('As senhas não conferem');
-      return;
-    }
-
-    if (registerData.password.length < 6) {
-      setError('A senha deve ter pelo menos 6 caracteres');
-      return;
-    }
-
-    try {
-      await register({
-        name: registerData.name,
-        email: registerData.email,
-        phone: registerData.phone,
-        password: registerData.password,
-      });
-      setSuccess('Cadastro realizado com sucesso! Você já está logado.');
-      setTimeout(() => {
-        router.push(redirectTo);
-      }, 2000);
-    } catch (err) {
-      setError((err as Error).message || 'Erro ao criar conta');
-    }
-  };
+  
+  const {
+    tab,
+    loading,
+    error,
+    success,
+    loginData,
+    registerData,
+    handleTabChange,
+    handleLogin,
+    handleRegister,
+    updateLoginData,
+    updateRegisterData,
+  } = useAuthForm(redirectTo);
 
   return (
     <Container maxWidth="sm" sx={{ mt: 8 }}>
@@ -131,102 +52,108 @@ export default function AuthPage() {
           </Alert>
         )}
 
-        <TabPanel value={tab} index={0}>
-          <form onSubmit={handleLogin}>
+        {/* Formulário de Login */}
+        {tab === 0 && (
+          <Box component="form" onSubmit={handleLogin} sx={{ p: 3 }}>
             <TextField
               fullWidth
               label="Email"
               type="email"
               value={loginData.email}
-              onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+              onChange={(e) => updateLoginData('email', e.target.value)}
               margin="normal"
               required
-              autoComplete="email"
+              disabled={loading}
             />
             <TextField
               fullWidth
               label="Senha"
               type="password"
               value={loginData.password}
-              onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+              onChange={(e) => updateLoginData('password', e.target.value)}
               margin="normal"
               required
-              autoComplete="current-password"
+              disabled={loading}
             />
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              disabled={isLoading}
+              sx={{ mt: 3 }}
+              disabled={loading}
             >
-              {isLoading ? <CircularProgress size={24} /> : 'Entrar'}
+              {loading ? 'Entrando...' : 'Entrar'}
             </Button>
-          </form>
-        </TabPanel>
+          </Box>
+        )}
 
-        <TabPanel value={tab} index={1}>
-          <form onSubmit={handleRegister}>
+        {/* Formulário de Cadastro */}
+        {tab === 1 && (
+          <Box component="form" onSubmit={handleRegister} sx={{ p: 3 }}>
             <TextField
               fullWidth
-              label="Nome completo"
+              label="Nome"
               value={registerData.name}
-              onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })}
+              onChange={(e) => updateRegisterData('name', e.target.value)}
               margin="normal"
               required
-              autoComplete="name"
+              disabled={loading}
             />
             <TextField
               fullWidth
               label="Email"
               type="email"
               value={registerData.email}
-              onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
+              onChange={(e) => updateRegisterData('email', e.target.value)}
               margin="normal"
               required
-              autoComplete="email"
+              disabled={loading}
             />
-            <TextField
-              fullWidth
-              label="Telefone (opcional)"
+            <PatternFormat
+              format="(##) #####-####"
+              mask=""
               value={registerData.phone}
-              onChange={(e) => setRegisterData({ ...registerData, phone: e.target.value })}
+              onValueChange={(values) => {
+                updateRegisterData('phone', values.formattedValue);
+              }}
+              customInput={TextField}
+              label="Telefone"
               margin="normal"
-              placeholder="11999999999"
-              autoComplete="tel"
+              fullWidth
+              disabled={loading}
             />
             <TextField
               fullWidth
               label="Senha"
               type="password"
               value={registerData.password}
-              onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
+              onChange={(e) => updateRegisterData('password', e.target.value)}
               margin="normal"
               required
-              autoComplete="new-password"
+              disabled={loading}
               helperText="Mínimo 6 caracteres"
             />
             <TextField
               fullWidth
-              label="Confirmar senha"
+              label="Confirmar Senha"
               type="password"
               value={registerData.confirmPassword}
-              onChange={(e) => setRegisterData({ ...registerData, confirmPassword: e.target.value })}
+              onChange={(e) => updateRegisterData('confirmPassword', e.target.value)}
               margin="normal"
               required
-              autoComplete="new-password"
+              disabled={loading}
             />
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              disabled={isLoading}
+              sx={{ mt: 3 }}
+              disabled={loading}
             >
-              {isLoading ? <CircularProgress size={24} /> : 'Criar conta'}
+              {loading ? 'Cadastrando...' : 'Cadastrar'}
             </Button>
-          </form>
-        </TabPanel>
+          </Box>
+        )}
       </Paper>
     </Container>
   );
