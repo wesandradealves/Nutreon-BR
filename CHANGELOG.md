@@ -5,6 +5,25 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [0.3.5] - 2025-08-03
+
+### Adicionado
+- **Hooks Customizados**: Criação de hooks para centralizar lógica de negócio
+  - `usePhoneFormat` - Formatação e validação de telefones brasileiros
+  - `usePasswordValidation` - Validação de senhas e força de senha
+  - `useCustomerProfile` - Gerenciamento de perfil do usuário
+  - `useAuthForm` - Lógica unificada para formulários de login/registro
+
+### Melhorado
+- **Separação de Responsabilidades**: Preparação para mover lógica dos componentes para hooks
+- **Reutilização**: Lógica de formatação e validação agora compartilhada entre componentes
+- **Manutenibilidade**: Código mais modular e testável
+
+### Técnico
+- Todos os hooks seguem o padrão de nomenclatura com prefixo `use`
+- Hooks são client-side com diretiva 'use client'
+- Integração completa com hooks existentes (useAuth, usePhoneFormat)
+
 ## [0.3.4] - 2025-08-03
 
 ### Corrigido
