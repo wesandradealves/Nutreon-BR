@@ -5,6 +5,25 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [0.4.2] - 2025-08-03
+
+### Corrigido
+- **CSS Reset**: Ordem de carregamento do GlobalStyle ajustada
+  - GlobalStyle movido para logo após ThemeProvider
+  - Bullets de listas agora são removidos corretamente
+  - Reset CSS sobrescreve estilos padrão do navegador
+
+### Melhorado
+- **Header**: Refatoração completa seguindo padrão Atomic Design
+  - Estrutura HTML exata mantida conforme especificação
+  - Ícones Font Awesome atualizados para versão 6
+  - Cores centralizadas em `/src/styles/theme.ts`
+  
+### Removido
+- Arquivos SCSS redundantes de cores e variáveis
+- Styled.d.ts duplicado
+- Cores hardcoded dos componentes
+
 ## [0.4.1] - 2025-08-03
 
 ### Adicionado

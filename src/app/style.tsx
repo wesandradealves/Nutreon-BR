@@ -60,7 +60,8 @@ export const GlobalStyle = createGlobalStyle `
     header,
     nav,
     section,
-    video {
+    video,
+    button {
         margin: 0;
         padding: 0;
         border: 0;
@@ -69,6 +70,19 @@ export const GlobalStyle = createGlobalStyle `
         -webkit-font-smoothing: antialiased;
         text-size-adjust: none;
         text-decoration: none;
+    }
+    
+    button {
+        background: none;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: inherit;
+    }
+    
+    a {
+        color: inherit;
+        text-decoration: none;
+        cursor: pointer;
     }
 
     html,
@@ -115,15 +129,59 @@ export const GlobalStyle = createGlobalStyle `
 
     .pace {
         &-progress {
-            background-color: ${props => props.theme._colors.primary.bdm0} !important;
+            background-color: ${props => props.theme.colors.primary} !important;
         }
     } 
 
     ol,
     ul {
-        list-style: disc;
+        list-style: none !important;
         line-height: 1.6;
         margin: 0;
+        padding: 0;
+    }
+    
+    li {
+        list-style: none !important;
+        list-style-type: none !important;
+    }
+    
+    /* Reset específico para classes do Bootstrap */
+    .nav,
+    .nav-pills,
+    .navbar-nav,
+    .dropdown-menu {
+        list-style: none !important;
+        padding-left: 0 !important;
+        margin-bottom: 0 !important;
+    }
+    
+    .nav li,
+    .navbar-nav li,
+    .dropdown-menu li {
+        list-style: none !important;
+        list-style-type: none !important;
+        &::before {
+            content: none !important;
+        }
+    }
+    
+    /* Force remove any pseudo-element bullets */
+    ul li::before,
+    ol li::before {
+        content: none !important;
+    }
+    
+    /* Ensure Font Awesome icons show properly */
+    .fa,
+    .fas,
+    .far,
+    .fab {
+        display: inline-block;
+        font-style: normal;
+        font-variant: normal;
+        text-rendering: auto;
+        line-height: 1;
     }
 
     .container {

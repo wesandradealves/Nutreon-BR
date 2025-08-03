@@ -12,16 +12,8 @@ import Header from '@/components/header/header';
 import Footer from '@/components/footer/footer';
 import { setupInterceptors } from '@/services/api';
 
-import {
-  _colors,
-  _breakpoints,
-} from '@/assets/scss/variables';
 import { useMetadata } from '@/hooks/useMetadata';
-
-const theme = {
-  _colors,
-  _breakpoints,
-};
+import { theme } from '@/styles/theme';
 
 export default function ClientProviders({ children }: { children: React.ReactNode }) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -47,6 +39,7 @@ export default function ClientProviders({ children }: { children: React.ReactNod
 
   return (
     <ThemeProvider theme={theme}>
+      <GlobalStyle />
       <LoaderProvider>
         <LoaderSetup />
         <AuthProvider>
@@ -76,7 +69,6 @@ export default function ClientProviders({ children }: { children: React.ReactNod
           </Suspense>
         </AuthProvider>
       </LoaderProvider>
-      <GlobalStyle />
     </ThemeProvider>
   );
 }

@@ -46,3 +46,4 @@ next-env.d.ts
 !README.md
 !CHANGELOG.md
 /src/generated/prisma
+docs
