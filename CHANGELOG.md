@@ -5,6 +5,28 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [0.3.2] - 2025-08-03
+
+### Melhorado
+- Refatoração DRY (Don't Repeat Yourself) extensiva para eliminar redundâncias
+- Consolidação de componentes de autenticação (mantido apenas ProtectedRoute)
+- Renomeação de hooks para maior clareza: `useAuth` → `useStoreAuth` (Nuvemshop)
+- Criação de types centralizados em `/src/types`
+  - `api.types.ts` - Types de resposta de API
+  - `customer.types.ts` - Types de cliente/endereço
+  - `auth.types.ts` - Types de autenticação
+- Remoção de styled components vazios (footer, home)
+
+### Removido
+- `userService.ts` - serviço legado não utilizado
+- `utils/index.ts` - arquivo vazio
+- `auth-guard` - componente duplicado do ProtectedRoute
+- Styled components vazios que apenas importavam sem estilização
+
+### Refatorado
+- Footer e HomePage agora usam elementos HTML diretos sem styled components vazios
+- Hook `useAuth` renomeado para `useStoreAuth` para evitar confusão com autenticação de clientes
+
 ## [0.3.1] - 2025-08-03
 
 ### Corrigido

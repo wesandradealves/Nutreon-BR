@@ -20,16 +20,10 @@ class NuvemshopTokenManager {
   }
   
   async getToken(): Promise<string | null> {
-    console.log('🔐 [TokenManager] Iniciando busca por token...');
-    
     // Primeiro, tentar pegar o token do ambiente (para desenvolvimento)
     if (process.env.NUVEMSHOP_ACCESS_TOKEN) {
-      console.log('✅ [TokenManager] Token encontrado no ambiente (.env)');
-      console.log(`📍 [TokenManager] Token: ${process.env.NUVEMSHOP_ACCESS_TOKEN.substring(0, 10)}...`);
       return process.env.NUVEMSHOP_ACCESS_TOKEN;
     }
-    
-    console.log('🔍 [TokenManager] Token não encontrado no .env, verificando cookies...');
     
     // Depois, tentar pegar dos cookies (produção com OAuth)
     try {
@@ -37,28 +31,19 @@ class NuvemshopTokenManager {
       const tokenCookie = cookieStore.get('nuvemshop_token');
       
       if (tokenCookie) {
-        console.log('🍪 [TokenManager] Token encontrado nos cookies!');
-        console.log(`📍 [TokenManager] Token: ${tokenCookie.value.substring(0, 10)}...`);
         return tokenCookie.value;
       }
-      
-      console.log('❌ [TokenManager] Token não encontrado nos cookies');
     } catch (error) {
       console.error('💥 [TokenManager] Erro ao buscar token dos cookies:', error);
     }
     
     // Se não encontrar, tentar fazer OAuth automaticamente
-    console.log('🔄 [TokenManager] Tentando OAuth automático...');
     return await this.performOAuth();
   }
   
   async getUserId(): Promise<string | null> {
-    console.log('🏪 [TokenManager] Buscando User/Store ID...');
-    
     // Primeiro, tentar pegar do ambiente
     if (process.env.NEXT_PUBLIC_NUVEMSHOP_USER_ID) {
-      console.log('✅ [TokenManager] User ID encontrado no .env');
-      console.log(`📍 [TokenManager] User ID: ${process.env.NEXT_PUBLIC_NUVEMSHOP_USER_ID}`);
       return process.env.NEXT_PUBLIC_NUVEMSHOP_USER_ID;
     }
     
@@ -68,8 +53,6 @@ class NuvemshopTokenManager {
       const userIdCookie = cookieStore.get('nuvemshop_user_id');
       
       if (userIdCookie) {
-        console.log('🍪 [TokenManager] User ID encontrado nos cookies!');
-        console.log(`📍 [TokenManager] User ID: ${userIdCookie.value}`);
         return userIdCookie.value;
       }
     } catch (error) {
@@ -77,12 +60,9 @@ class NuvemshopTokenManager {
     }
     
     if (process.env.NEXT_PUBLIC_NUVEMSHOP_STORE_ID) {
-      console.log('🏬 [TokenManager] Usando Store ID como fallback');
-      console.log(`📍 [TokenManager] Store ID: ${process.env.NEXT_PUBLIC_NUVEMSHOP_STORE_ID}`);
       return process.env.NEXT_PUBLIC_NUVEMSHOP_STORE_ID;
     }
     
-    console.log('❌ [TokenManager] Nenhum User/Store ID encontrado!');
     return null;
   }
   

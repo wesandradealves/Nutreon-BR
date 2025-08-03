@@ -18,7 +18,7 @@ interface AuthState {
   storeData: StoreData | null;
 }
 
-export function useAuth() {
+export function useStoreAuth() {
   const [authState, setAuthState] = useState<AuthState>({
     isAuthenticated: false,
     isLoading: true,

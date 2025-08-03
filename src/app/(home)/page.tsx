@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Container } from './styles';
 import { useBFF } from '@/hooks/useBFF';
 import Image from 'next/image';
 
@@ -30,10 +29,6 @@ export default function HomePage() {
   const loadData = async () => {
     console.log('🏠 [HomePage] Carregando dados...');
     
-    // Primeiro, verificar debug
-    const debug = await request('/debug');
-    console.log('🔍 [HomePage] Debug info:', debug?.data);
-    
     // Verificar saúde do sistema
     const health = await request('/health');
     console.log('🏥 [HomePage] Status do sistema:', health?.data);
@@ -53,17 +48,17 @@ export default function HomePage() {
 
   if (loading) {
     return (
-      <Container className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto"></div>
           <p className="mt-4 text-gray-600">Carregando loja...</p>
         </div>
-      </Container>
+      </div>
     );
   }
 
   return (
-    <Container className="min-h-screen p-8">
+    <div className="min-h-screen p-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">
@@ -124,6 +119,6 @@ export default function HomePage() {
           </button>
         </div>
       </div>
-    </Container>
+    </div>
   );
 }
