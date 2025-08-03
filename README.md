@@ -194,8 +194,6 @@ docker-compose down # Para containers
 
 ### Padrões de Código
 
-O projeto segue padrões rigorosos documentados em `ARCHITECTURE.md` e `DEVELOPMENT_PROMPT.md`:
-
 - **Arquitetura:** Domain-Driven Design (DDD) com 4 camadas
 - **Componentes:** 3 arquivos (componente.tsx, styles.tsx, typo.ts)
 - **Estilização:** Styled Components + Tailwind CSS
@@ -415,10 +413,6 @@ NEXT_PUBLIC_APP_URL=https://seudominio.com
 ```
 
 ## 📚 Documentação Adicional
-
-### Documentação do Projeto
-- [ARCHITECTURE.md](./ARCHITECTURE.md) - Guia completo de arquitetura e padrões
-- [DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md) - Plano de desenvolvimento detalhado
 
 ### Documentação Nuvemshop API
 
