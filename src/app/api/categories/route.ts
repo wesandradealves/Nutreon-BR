@@ -1,20 +1,22 @@
 import { NextResponse } from 'next/server';
 import { nuvemshopClient } from '@/lib/nuvemshop-client';
+import type { NuvemshopCategory } from '@/types';
 
 export async function GET() {
   console.log('\n🎯 [BFF] ==> GET /api/categories');
   
   try {
     console.log('🚀 [BFF] Buscando categorias...');
-    const categories = await nuvemshopClient.get('/categories');
+    const categories = await nuvemshopClient.get<NuvemshopCategory[]>('/categories');
     
     console.log(`✅ [BFF] ${categories.length} categorias encontradas`);
     
     // Log das categorias principais
-    const mainCategories = categories.filter((cat: { parent: number | null }) => !cat.parent);
+    const mainCategories = categories.filter((cat) => !cat.parent);
     console.log(`📂 [BFF] Categorias principais: ${mainCategories.length}`);
-    mainCategories.forEach((cat: { name?: { pt?: string } | string; id: number }) => {
-      console.log(`  📁 ${cat.name?.pt || cat.name} (ID: ${cat.id})`);
+    mainCategories.forEach((cat) => {
+      const name = typeof cat.name === 'string' ? cat.name : cat.name?.pt || 'Sem nome';
+      console.log(`  📁 ${name} (ID: ${cat.id})`);
     });
     
     return NextResponse.json({

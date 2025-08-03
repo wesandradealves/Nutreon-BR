@@ -46,7 +46,7 @@ export default function AuthPage() {
   const [success, setSuccess] = useState('');
 
   // Pegar redirect da URL se houver
-  const redirectTo = searchParams.get('redirect') || '/conta';
+  const redirectTo = searchParams?.get('redirect') || '/conta';
 
   // Estados do formulário de login
   const [loginData, setLoginData] = useState({

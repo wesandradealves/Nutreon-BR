@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { nuvemshopClient } from '@/lib/nuvemshop-client';
+import type { NuvemshopStore } from '@/types';
 
 export async function GET() {
   console.log('\n🎯 [BFF] ==> GET /api/store');
@@ -7,9 +8,10 @@ export async function GET() {
   
   try {
     console.log('🚀 [BFF] Chamando endpoint /store...');
-    const store = await nuvemshopClient.get('/store');
+    const store = await nuvemshopClient.get<NuvemshopStore>('/store');
     
-    console.log(`✅ [BFF] Loja: ${store.name?.pt || store.name}`);
+    const storeName = typeof store.name === 'string' ? store.name : store.name?.pt || 'Sem nome';
+    console.log(`✅ [BFF] Loja: ${storeName}`);
     console.log(`📧 [BFF] Email: ${store.email}`);
     console.log(`🌍 [BFF] País: ${store.country}`);
     console.log(`💼 [BFF] Plano: ${store.plan_name || 'N/A'}`);

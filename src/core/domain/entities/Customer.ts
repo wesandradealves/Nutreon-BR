@@ -84,4 +84,12 @@ export class Customer extends AggregateRoot<CustomerProps> {
   linkNuvemshop(nuvemshopId: string): void {
     this.props.nuvemshopId = nuvemshopId;
   }
+
+  updateName(name: string): void {
+    this.props.name = name;
+  }
+
+  updatePhone(phone?: Phone): void {
+    this.props.phone = phone;
+  }
 }

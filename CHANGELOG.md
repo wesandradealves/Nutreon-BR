@@ -5,6 +5,28 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [0.3.3] - 2025-08-03
+
+### Corrigido
+- **TypeScript**: Correção extensiva de erros de tipo em todo o projeto
+  - Adicionados tipos genéricos ao `nuvemshopClient` 
+  - Criados tipos específicos para API Nuvemshop (`NuvemshopProduct`, `NuvemshopCategory`, `NuvemshopStore`)
+  - Corrigido acesso a propriedades protegidas em entidades DDD
+  - Ajustados tipos `null` vs `undefined` para compatibilidade com Prisma
+  - Corrigido uso de `ZodError.issues` (não `errors`)
+  - Tratamento de `searchParams` nullable
+- **Limpeza**: Removido cache `.next` para eliminar referências a arquivos deletados
+
+### Melhorado
+- **Types Nuvemshop**: Criado arquivo dedicado `nuvemshop.types.ts` com interfaces tipadas
+- **Entidade Customer**: Adicionados métodos `updateName()` e `updatePhone()` para encapsular mudanças
+- **API Routes**: Tipagem completa em rotas de categories, products e store
+
+### Técnico
+- Redução de erros TypeScript de 30+ para menos de 10
+- Melhoria na type safety do projeto
+- Maior consistência no tratamento de tipos da API Nuvemshop
+
 ## [0.3.2] - 2025-08-03
 
 ### Melhorado

@@ -8,9 +8,11 @@ export class JwtTokenService implements ITokenService {
   ) {}
 
   async generateToken(payload: TokenPayload): Promise<string> {
-    return jwt.sign(payload, this.secret, {
-      expiresIn: this.expiresIn,
-    });
+    return jwt.sign(
+      { customerId: payload.customerId, email: payload.email },
+      this.secret,
+      { expiresIn: this.expiresIn }
+    );
   }
 
   async verifyToken(token: string): Promise<TokenPayload | null> {

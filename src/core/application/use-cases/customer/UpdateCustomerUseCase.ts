@@ -21,13 +21,13 @@ export class UpdateCustomerUseCase {
     }
 
     // Atualizar dados (email não pode ser alterado)
-    customer.props.name = dto.name;
+    customer.updateName(dto.name);
     
     // Atualizar telefone se fornecido
     if (dto.phone) {
-      customer.props.phone = Phone.create(dto.phone);
+      customer.updatePhone(Phone.create(dto.phone));
     } else {
-      customer.props.phone = undefined;
+      customer.updatePhone(undefined);
     }
 
     // Salvar alterações

@@ -60,30 +60,30 @@ class NuvemshopClient {
     
     const data = await response.json();
     
-    return data;
+    return data as T;
   }
   
   // Métodos de conveniência
-  async get(endpoint: string) {
-    return this.request(endpoint);
+  async get<T = unknown>(endpoint: string): Promise<T> {
+    return this.request<T>(endpoint);
   }
   
-  async post(endpoint: string, data: unknown) {
-    return this.request(endpoint, {
+  async post<T = unknown>(endpoint: string, data: unknown): Promise<T> {
+    return this.request<T>(endpoint, {
       method: 'POST',
       body: data,
     });
   }
   
-  async put(endpoint: string, data: unknown) {
-    return this.request(endpoint, {
+  async put<T = unknown>(endpoint: string, data: unknown): Promise<T> {
+    return this.request<T>(endpoint, {
       method: 'PUT',
       body: data,
     });
   }
   
-  async delete(endpoint: string) {
-    return this.request(endpoint, {
+  async delete<T = unknown>(endpoint: string): Promise<T> {
+    return this.request<T>(endpoint, {
       method: 'DELETE',
     });
   }
