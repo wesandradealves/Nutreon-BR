@@ -270,9 +270,30 @@ NEXT_PUBLIC_APP_URL=https://seudominio.com
 
 ## 📚 Documentação Adicional
 
+### Documentação do Projeto
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - Guia completo de arquitetura e padrões
-- [Nuvemshop API Docs](https://tiendanube.github.io/api-documentation/intro)
-- [Nimbus Design System](https://nimbus.nuvemshop.com.br)
+- [DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md) - Plano de desenvolvimento detalhado
+
+### Documentação Nuvemshop API
+
+#### Recursos Principais
+- [API Documentation](https://tiendanube.github.io/api-documentation/intro) - Documentação completa da API
+- [Developer Portal](https://dev.nuvemshop.com.br) - Portal do desenvolvedor
+- [Partner Panel](https://partners.nuvemshop.com.br) - Painel de parceiros
+- [API Playground](https://tiendanube.github.io/api-documentation/playground) - Teste as APIs
+
+#### Ferramentas
+- [Nimbus Design System](https://nimbus.nuvemshop.com.br) - Sistema de design oficial
+- [Nexo Framework](https://dev.nuvemshop.com.br/docs/developer-tools/nexo) - Framework de integração
+
+#### Recursos da API
+- [OAuth Authentication](https://dev.nuvemshop.com.br/docs/applications/authentication)
+- [Products](https://tiendanube.github.io/api-documentation/resources/product)
+- [Orders](https://tiendanube.github.io/api-documentation/resources/order)
+- [Customers](https://tiendanube.github.io/api-documentation/resources/customer)
+- [Categories](https://tiendanube.github.io/api-documentation/resources/category)
+- [Checkout](https://tiendanube.github.io/api-documentation/resources/checkout)
+- [Webhooks](https://tiendanube.github.io/api-documentation/webhooks)
 
 ## 🤝 Contribuindo
 
