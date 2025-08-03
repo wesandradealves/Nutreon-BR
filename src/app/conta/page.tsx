@@ -81,7 +81,7 @@ export default function AccountPage() {
         phone: formatPhone(customer.phone),
       });
     }
-  }, [customer, reset, formatPhone]);
+  }, [customer, reset]);
 
   // Form para senha
   const {

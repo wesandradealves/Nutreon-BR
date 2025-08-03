@@ -1,7 +1,9 @@
 'use client';
 
+import { useCallback } from 'react';
+
 export function usePhoneFormat() {
-  const formatPhone = (phone: string | undefined): string => {
+  const formatPhone = useCallback((phone: string | undefined): string => {
     if (!phone) return '';
     const cleaned = phone.replace(/\D/g, '');
     if (cleaned.length === 11) {
@@ -10,16 +12,16 @@ export function usePhoneFormat() {
       return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 6)}-${cleaned.slice(6)}`;
     }
     return phone;
-  };
+  }, []);
 
-  const removePhoneMask = (phone: string): string => {
+  const removePhoneMask = useCallback((phone: string): string => {
     return phone.replace(/\D/g, '');
-  };
+  }, []);
 
-  const isValidPhone = (phone: string): boolean => {
+  const isValidPhone = useCallback((phone: string): boolean => {
     const cleaned = removePhoneMask(phone);
     return cleaned.length === 10 || cleaned.length === 11;
-  };
+  }, [removePhoneMask]);
 
   return {
     formatPhone,

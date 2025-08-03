@@ -5,6 +5,18 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [0.3.7] - 2025-08-03
+
+### Corrigido
+- **Loop Infinito**: Corrigido erro "Maximum update depth exceeded" na página de conta
+  - Removido `formatPhone` das dependências do useEffect
+  - Memoizado funções no hook `usePhoneFormat` com useCallback
+  - Previne re-renderizações desnecessárias
+
+### Técnico
+- Funções utilitárias agora são memoizadas para melhor performance
+- Dependências do useEffect otimizadas para evitar loops
+
 ## [0.3.6] - 2025-08-03
 
 ### Refatorado
