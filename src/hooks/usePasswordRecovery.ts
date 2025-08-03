@@ -26,7 +26,8 @@ export function usePasswordRecovery() {
       })
 
       if (response && response.success) {
-        toast.success(response.message || 'Email de recuperação enviado! Verifique sua caixa de entrada.')
+        const message = (response as { message?: string }).message || 'Email de recuperação enviado! Verifique sua caixa de entrada.'
+        toast.success(message)
         return true
       }
       return false
@@ -50,7 +51,8 @@ export function usePasswordRecovery() {
       })
 
       if (response && response.success) {
-        toast.success(response.message || 'Senha redefinida com sucesso!')
+        const message = (response as { message?: string }).message || 'Senha redefinida com sucesso!'
+        toast.success(message)
         return true
       }
       return false

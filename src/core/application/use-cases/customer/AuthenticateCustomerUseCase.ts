@@ -1,4 +1,5 @@
 import { ICustomerRepository } from '@/core/domain/repositories/ICustomerRepository';
+import { ISessionRepository } from '@/core/domain/repositories/ISessionRepository';
 import { Email } from '@/core/domain/value-objects/Email';
 import { IPasswordHasher } from '@/core/application/interfaces/IPasswordHasher';
 import { ITokenService } from '@/core/application/interfaces/ITokenService';
@@ -14,6 +15,7 @@ export interface LoginContext {
 export class AuthenticateCustomerUseCase {
   constructor(
     private readonly customerRepository: ICustomerRepository,
+    private readonly sessionRepository: ISessionRepository,
     private readonly passwordHasher: IPasswordHasher,
     private readonly tokenService: ITokenService,
     private readonly emailService?: IEmailService
@@ -48,6 +50,18 @@ export class AuthenticateCustomerUseCase {
     const token = await this.tokenService.generateToken({
       customerId: customer.id,
       email: customer.email.value,
+    });
+
+    // Criar sessão no banco
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7); // Sessão válida por 7 dias
+    
+    await this.sessionRepository.create({
+      customerId: customer.id,
+      token,
+      userAgent: context?.userAgent,
+      ipAddress: context?.ipAddress,
+      expiresAt,
     });
 
     // Enviar notificação de login (não bloqueia o fluxo)

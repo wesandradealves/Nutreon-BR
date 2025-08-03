@@ -44,6 +44,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const checkLocalAuth = () => {
+    // Verificar se estamos no cliente antes de acessar localStorage
+    if (typeof window === 'undefined') return;
+    
     // Apenas verificar dados locais, sem fazer chamada à API
     const savedCustomer = localStorage.getItem('customer_data');
     if (savedCustomer) {
@@ -65,10 +68,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (response.ok && data.authenticated) {
         setCustomer(data.customer);
         setIsAuthenticated(true);
-        localStorage.setItem('customer_data', JSON.stringify(data.customer));
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('customer_data', JSON.stringify(data.customer));
+        }
       } else {
         // Se não autenticado, limpar dados locais
-        localStorage.removeItem('customer_data');
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('customer_data');
+        }
         setCustomer(null);
         setIsAuthenticated(false);
       }
@@ -95,7 +102,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       setCustomer(data.data.customer);
       setIsAuthenticated(true);
-      localStorage.setItem('customer_data', JSON.stringify(data.data.customer));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('customer_data', JSON.stringify(data.data.customer));
+      }
     } catch (error) {
       throw error;
     } finally {
@@ -110,8 +119,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('Erro ao fazer logout:', error);
     }
     
-    localStorage.removeItem('customer_data');
-    localStorage.removeItem('cart'); // Limpar carrinho também
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('customer_data');
+      localStorage.removeItem('cart'); // Limpar carrinho também
+    }
     setCustomer(null);
     setIsAuthenticated(false);
   };
@@ -146,7 +157,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (customer) {
       const updatedCustomer = { ...customer, ...data };
       setCustomer(updatedCustomer);
-      localStorage.setItem('customer_data', JSON.stringify(updatedCustomer));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('customer_data', JSON.stringify(updatedCustomer));
+      }
     }
   };
 

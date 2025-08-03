@@ -5,6 +5,37 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [0.3.9] - 2025-08-03
+
+### Adicionado
+- **Sistema de Sessões**: Tracking completo de sessões de usuário no banco de dados
+  - Registro de login com IP e User Agent
+  - Histórico de sessões mantido para auditoria
+  - Logout marca sessão como inativa (não apaga)
+  - Campos `isActive` e `loggedOutAt` na tabela sessions
+  - Use cases `AuthenticateCustomerUseCase` e `LogoutCustomerUseCase` atualizados
+  - Repositório `PrismaSessionRepository` para gerenciar sessões
+
+### Corrigido
+- **Erro de Hidratação**: Resolvido problema de diferença entre SSR e cliente
+  - Adicionadas verificações `typeof window !== 'undefined'` no AuthContext
+  - Header component atualizado para evitar diferenças de renderização
+  - Estado inicial consistente entre servidor e cliente
+- **Erros de TypeScript**: Corrigidos todos os erros de tipo
+  - Removido uso de `any` explícito
+  - Corrigido acesso a params em rotas dinâmicas
+  - Tipos adequados em hooks e componentes
+
+### Melhorado
+- **Segurança**: Melhor rastreamento de sessões com informações de contexto
+- **Auditoria**: Histórico completo de logins e logouts
+- **Performance**: Eliminação de chamadas desnecessárias ao localStorage durante SSR
+
+### Técnico
+- Migração `add_session_tracking` aplicada ao banco
+- Container atualizado com `SessionRepository` e use cases
+- Endpoint `/api/customer/logout` atualizado para desativar sessão
+
 ## [0.3.8] - 2025-08-03
 
 ### Adicionado
@@ -270,6 +301,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Configuração básica do ambiente
 - Documentação inicial
 
+[0.3.9]: https://github.com/nutreon/nutreon-br/compare/v0.3.8...v0.3.9
 [0.3.8]: https://github.com/nutreon/nutreon-br/compare/v0.3.7...v0.3.8
 [0.3.7]: https://github.com/nutreon/nutreon-br/compare/v0.3.6...v0.3.7
 [0.3.6]: https://github.com/nutreon/nutreon-br/compare/v0.3.5...v0.3.6

@@ -7,9 +7,15 @@ import Props from './typo';
 import Link from 'next/link';
 import { useAuth } from '@/context/auth';
 import { Person as PersonIcon } from '@mui/icons-material';
+import { useState, useEffect } from 'react';
 
 const Header = ({ scrollPosition }: Props) => {
   const { isAuthenticated, customer } = useAuth();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   
   return (
     <Container
@@ -33,7 +39,11 @@ const Header = ({ scrollPosition }: Props) => {
         <Link href="/carrinho" className="text-gray-700 hover:text-green-600 transition-colors">
           Carrinho
         </Link>
-        {isAuthenticated ? (
+        {!isClient ? (
+          <Link href="/auth" className="text-gray-700 hover:text-green-600 transition-colors">
+            Entrar
+          </Link>
+        ) : isAuthenticated ? (
           <Link href="/conta" className="text-gray-700 hover:text-green-600 transition-colors flex items-center gap-1">
             <PersonIcon fontSize="small" />
             {customer?.name?.split(' ')[0] || 'Conta'}

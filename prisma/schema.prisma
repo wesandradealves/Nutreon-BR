@@ -158,6 +158,8 @@ model Session {
   token           String          @unique
   userAgent       String?         @map("user_agent")
   ipAddress       String?         @map("ip_address")
+  isActive        Boolean         @default(true) @map("is_active")
+  loggedOutAt     DateTime?       @map("logged_out_at")
   
   customer        Customer        @relation(fields: [customerId], references: [id], onDelete: Cascade)
   

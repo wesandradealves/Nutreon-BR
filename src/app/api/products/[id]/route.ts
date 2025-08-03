@@ -25,7 +25,7 @@ export async function GET(
     });
     
   } catch (error) {
-    console.error(`❌ [BFF] Erro ao buscar produto ${params.id}:`, error);
+    console.error(`❌ [BFF] Erro ao buscar produto ${id}:`, error);
     return NextResponse.json(
       { 
         success: false,

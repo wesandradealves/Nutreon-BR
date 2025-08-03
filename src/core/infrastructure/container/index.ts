@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaCustomerRepository } from '../repositories/PrismaCustomerRepository';
 import { PrismaPasswordResetRepository } from '../repositories/PrismaPasswordResetRepository';
+import { PrismaSessionRepository } from '../repositories/PrismaSessionRepository';
 import { BcryptPasswordHasher } from '../services/BcryptPasswordHasher';
 import { JwtTokenService } from '../services/JwtTokenService';
 import { NodemailerEmailService } from '../email/NodemailerEmailService';
@@ -10,6 +11,7 @@ import { UpdateCustomerUseCase } from '@/core/application/use-cases/customer/Upd
 import { ChangePasswordUseCase } from '@/core/application/use-cases/customer/ChangePasswordUseCase';
 import { RequestPasswordResetUseCase } from '@/core/application/use-cases/customer/RequestPasswordResetUseCase';
 import { ResetPasswordUseCase } from '@/core/application/use-cases/customer/ResetPasswordUseCase';
+import { LogoutCustomerUseCase } from '@/core/application/use-cases/customer/LogoutCustomerUseCase';
 
 // Singleton do Prisma
 const prisma = new PrismaClient();
@@ -17,6 +19,7 @@ const prisma = new PrismaClient();
 // Repositories
 const customerRepository = new PrismaCustomerRepository(prisma);
 const passwordResetRepository = new PrismaPasswordResetRepository(prisma);
+const sessionRepository = new PrismaSessionRepository(prisma);
 
 // Services
 const passwordHasher = new BcryptPasswordHasher();
@@ -41,6 +44,7 @@ const registerCustomerUseCase = new RegisterCustomerUseCase(
 
 const authenticateCustomerUseCase = new AuthenticateCustomerUseCase(
   customerRepository,
+  sessionRepository,
   passwordHasher,
   tokenService,
   emailService
@@ -67,6 +71,10 @@ const resetPasswordUseCase = new ResetPasswordUseCase(
   passwordHasher
 );
 
+const logoutCustomerUseCase = new LogoutCustomerUseCase(
+  sessionRepository
+);
+
 export const container = {
   // Database
   prisma,
@@ -74,6 +82,7 @@ export const container = {
   // Repositories
   customerRepository,
   passwordResetRepository,
+  sessionRepository,
   
   // Services
   passwordHasher,
@@ -87,6 +96,7 @@ export const container = {
   changePasswordUseCase,
   requestPasswordResetUseCase,
   resetPasswordUseCase,
+  logoutCustomerUseCase,
   
   // Helper method to resolve dependencies
   resolve<T>(key: string): T {
