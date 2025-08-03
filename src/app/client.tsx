@@ -16,6 +16,7 @@ import {
   _colors,
   _breakpoints,
 } from '@/assets/scss/variables';
+import { useMetadata } from '@/hooks/useMetadata';
 
 const theme = {
   _colors,
@@ -38,6 +39,11 @@ export default function ClientProviders({ children }: { children: React.ReactNod
     };
 
   }, [scrollY]);
+
+  useMetadata({
+    title: `Nutreon BR`,
+    ogTitle: `Nutreon BR`
+  });
 
   return (
     <ThemeProvider theme={theme}>

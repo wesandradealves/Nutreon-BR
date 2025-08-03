@@ -6,8 +6,6 @@ import classNames from 'classnames';
 import ClientProviders from '@/app/client';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  // const baseURL = `${process.env.NEXT_PUBLIC_API_URL_HML ?? process.env.NEXT_PUBLIC_API_URL_DEV}`;
-
   return (
     <html lang="pt-br">
       <body

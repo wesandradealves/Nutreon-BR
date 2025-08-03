@@ -34,10 +34,11 @@ const Header = ({ scrollPosition }: Props) => {
 
   return (
     <Container
-      className={classNames("w-full fixed top-0 left-0 z-50 header", {
+      className={classNames("w-full header", {
         'scrolled': scrollPosition > 0,
       })}
     >
+      Header
     </Container>
   );
 };
