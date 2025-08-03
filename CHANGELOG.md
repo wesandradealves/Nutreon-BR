@@ -5,6 +5,32 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [0.4.1] - 2025-08-03
+
+### Adicionado
+- **Sistema de Reenvio de Email de Verificação**
+  - Endpoint `/api/auth/resend-verification` para solicitar novo email
+  - Hook `useResendVerification` para gerenciar estado
+  - Botão "Reenviar Email de Verificação" na página de conta
+  - Use case `ResendVerificationEmailUseCase` com segurança aprimorada
+  - Métodos `findByCustomerId` e `delete` no `IEmailVerificationRepository`
+  - Tokens antigos são invalidados ao solicitar reenvio
+
+### Corrigido
+- **Middleware**: Páginas `/auth/verify-email` e `/auth/reset-password` agora são acessíveis independente do status de autenticação
+  - Corrigido redirecionamento indevido que impedia verificação de email
+  - Adicionadas rotas públicas no middleware
+
+### Melhorado
+- **UX de Verificação**: Feedback visual de sucesso/erro ao reenviar email
+- **Segurança**: Mensagem genérica ao reenviar (não revela se email existe)
+- **Performance**: Página de conta recarrega dados ao montar
+
+### Técnico
+- Hook `useCustomerProfile` atualizado para incluir reenvio
+- Página `/conta` agora chama `checkAuth()` ao carregar
+- Limpeza de logs de debug em produção
+
 ## [0.4.0] - 2025-08-03
 
 ### Adicionado

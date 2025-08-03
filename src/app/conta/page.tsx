@@ -6,6 +6,7 @@ import { useAuth } from '@/context/auth';
 import { useCustomerProfile } from '@/hooks/useCustomerProfile';
 import { usePhoneFormat } from '@/hooks/usePhoneFormat';
 import { usePasswordValidation } from '@/hooks/usePasswordValidation';
+import { useResendVerification } from '@/hooks/useResendVerification';
 import { useForm, Controller } from 'react-hook-form';
 import { PatternFormat } from 'react-number-format';
 import {
@@ -42,7 +43,7 @@ interface PasswordForm {
 
 export default function AccountPage() {
   const router = useRouter();
-  const { customer } = useAuth();
+  const { customer, checkAuth } = useAuth();
   const { formatPhone } = usePhoneFormat();
   const { validatePasswordMatch } = usePasswordValidation();
   const {
@@ -59,6 +60,13 @@ export default function AccountPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  
+  const {
+    loading: resendLoading,
+    success: resendSuccess,
+    error: resendError,
+    resendEmail
+  } = useResendVerification();
 
   // Form para dados pessoais
   const {
@@ -77,7 +85,9 @@ export default function AccountPage() {
   // Garante que o componente está montado no cliente
   useEffect(() => {
     setIsMounted(true);
-  }, []);
+    // Recarregar dados do cliente ao montar a página apenas uma vez
+    checkAuth();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Atualizar valores do formulário quando customer mudar
   useEffect(() => {
@@ -148,9 +158,29 @@ export default function AccountPage() {
           <Alert severity="warning" sx={{ mb: 3 }}>
             Seu email ainda não foi verificado. Por favor, verifique sua caixa de entrada e clique no link de verificação.
           </Alert>
-          <Box sx={{ display: 'flex', gap: 2 }}>
+          
+          {resendSuccess && (
+            <Alert severity="success" sx={{ mb: 2 }}>
+              Email de verificação reenviado com sucesso! Verifique sua caixa de entrada.
+            </Alert>
+          )}
+          
+          {resendError && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {resendError}
+            </Alert>
+          )}
+          
+          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
             <Button variant="outlined" onClick={() => router.push('/')}>
               Voltar para Home
+            </Button>
+            <Button 
+              variant="contained" 
+              onClick={() => resendEmail(customer.email)}
+              disabled={resendLoading || resendSuccess}
+            >
+              {resendLoading ? 'Reenviando...' : 'Reenviar Email de Verificação'}
             </Button>
             <Button variant="contained" color="error" onClick={handleLogout}>
               Sair

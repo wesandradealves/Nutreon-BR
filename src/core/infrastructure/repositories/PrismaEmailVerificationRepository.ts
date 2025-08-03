@@ -28,12 +28,32 @@ export class PrismaEmailVerificationRepository implements IEmailVerificationRepo
     return verification;
   }
 
+  async findByCustomerId(customerId: string): Promise<{
+    id: string;
+    customerId: string;
+    token: string;
+    expiresAt: Date;
+    verifiedAt: Date | null;
+  }[]> {
+    const verifications = await this.prisma.emailVerification.findMany({
+      where: { customerId },
+    });
+
+    return verifications;
+  }
+
   async markAsVerified(token: string): Promise<void> {
     await this.prisma.emailVerification.update({
       where: { token },
       data: {
         verifiedAt: new Date(),
       },
+    });
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.prisma.emailVerification.delete({
+      where: { id },
     });
   }
 

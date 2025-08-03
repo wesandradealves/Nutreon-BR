@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { container } from '@/core/infrastructure/container';
-import { VerifyEmailUseCase } from '@/core/application/use-cases/customer/VerifyEmailUseCase';
 
 const verifyEmailSchema = z.object({
   token: z.string().min(1, 'Token é obrigatório'),
@@ -11,9 +10,8 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { token } = verifyEmailSchema.parse(body);
-
-    const useCase = container.resolve('verifyEmailUseCase') as VerifyEmailUseCase;
-    await useCase.execute(token);
+    
+    await container.verifyEmailUseCase.execute(token);
 
     return NextResponse.json({
       success: true,

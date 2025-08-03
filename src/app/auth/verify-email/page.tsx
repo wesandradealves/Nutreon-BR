@@ -20,10 +20,15 @@ export default function VerifyEmailPage() {
   const { request } = useBFF();
   const token = searchParams?.get('token');
   
+  console.log('VerifyEmailPage renderizada, searchParams:', searchParams);
+  console.log('Token extraído:', token);
+  
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState('');
 
   useEffect(() => {
+    console.log('useEffect executado, token:', token);
+    
     if (!token) {
       setStatus('error');
       setMessage('Token de verificação não encontrado');
@@ -32,6 +37,7 @@ export default function VerifyEmailPage() {
 
     const verify = async () => {
       try {
+        console.log('Iniciando verificação do token:', token);
         const response = await request('/auth/verify-email', {
           method: 'POST',
           body: JSON.stringify({ token }),
@@ -39,9 +45,9 @@ export default function VerifyEmailPage() {
 
         if (response && response.success) {
           setStatus('success');
-          setMessage('Email verificado com sucesso! Você será redirecionado para o login...');
+          setMessage('Email verificado com sucesso! Você será redirecionado...');
           setTimeout(() => {
-            router.push('/auth?tab=0');
+            router.push('/conta');
           }, 3000);
         } else {
           setStatus('error');

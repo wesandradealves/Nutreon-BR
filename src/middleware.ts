@@ -13,6 +13,15 @@ export function middleware(request: NextRequest) {
   // Rotas apenas para visitantes (não autenticados)
   const guestOnlyRoutes = ['/auth', '/login', '/cadastro'];
   const isGuestOnlyRoute = guestOnlyRoutes.some(route => pathname.startsWith(route));
+  
+  // Exceções - rotas que devem funcionar independente do status de autenticação
+  const publicRoutes = ['/auth/verify-email', '/auth/reset-password'];
+  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
+
+  // Rotas públicas devem sempre ser acessíveis
+  if (isPublicRoute) {
+    return NextResponse.next();
+  }
 
   // Redirecionar usuários não autenticados tentando acessar rotas protegidas
   if (isProtectedRoute && !isAuthenticated) {

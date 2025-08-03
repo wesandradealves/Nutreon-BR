@@ -3,6 +3,7 @@
 import { useSearchParams } from 'next/navigation';
 import { useAuthForm } from '@/hooks/useAuthForm';
 import { usePasswordRecovery } from '@/hooks/usePasswordRecovery';
+import { useResendVerification } from '@/hooks/useResendVerification';
 import { PatternFormat } from 'react-number-format';
 import { useState } from 'react';
 import {
@@ -42,6 +43,17 @@ export default function AuthPage() {
 
   const [recoveryEmail, setRecoveryEmail] = useState('');
   const [recoverySuccess, setRecoverySuccess] = useState(false);
+  
+  const {
+    loading: resendLoading,
+    success: resendSuccess,
+    error: resendError,
+    resendEmail,
+    reset: resetResend
+  } = useResendVerification();
+  
+  const [showResendEmail, setShowResendEmail] = useState(false);
+  const [resendEmailValue, setResendEmailValue] = useState('');
 
   const handlePasswordRecovery = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,6 +64,11 @@ export default function AuthPage() {
       setRecoverySuccess(true);
       setRecoveryEmail('');
     }
+  };
+  
+  const handleResendVerification = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await resendEmail(resendEmailValue);
   };
 
   return (
@@ -66,6 +83,18 @@ export default function AuthPage() {
         {error && (
           <Alert severity="error" sx={{ m: 2 }}>
             {error}
+            {error.includes('Email não verificado') && !showResendEmail && (
+              <Button 
+                size="small" 
+                onClick={() => {
+                  setShowResendEmail(true);
+                  setResendEmailValue(loginData.email);
+                }}
+                sx={{ mt: 1, display: 'block' }}
+              >
+                Reenviar email de verificação
+              </Button>
+            )}
           </Alert>
         )}
 
@@ -73,6 +102,60 @@ export default function AuthPage() {
           <Alert severity="success" sx={{ m: 2 }}>
             {success}
           </Alert>
+        )}
+        
+        {/* Formulário de Reenvio de Email */}
+        {showResendEmail && (
+          <Box component="form" onSubmit={handleResendVerification} sx={{ p: 3, bgcolor: 'grey.50' }}>
+            <Alert severity="info" sx={{ mb: 2 }}>
+              Digite seu email para receber um novo link de verificação
+            </Alert>
+            
+            {resendError && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {resendError}
+              </Alert>
+            )}
+            
+            {resendSuccess && (
+              <Alert severity="success" sx={{ mb: 2 }}>
+                Email de verificação reenviado! Verifique sua caixa de entrada.
+              </Alert>
+            )}
+            
+            <TextField
+              fullWidth
+              label="Email"
+              type="email"
+              value={resendEmailValue}
+              onChange={(e) => setResendEmailValue(e.target.value)}
+              margin="normal"
+              required
+              disabled={resendLoading || resendSuccess}
+            />
+            
+            <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={resendLoading || resendSuccess || !resendEmailValue}
+              >
+                {resendLoading ? 'Enviando...' : 'Reenviar Email'}
+              </Button>
+              
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  setShowResendEmail(false);
+                  resetResend();
+                  setResendEmailValue('');
+                }}
+                disabled={resendLoading}
+              >
+                Cancelar
+              </Button>
+            </Box>
+          </Box>
         )}
 
         {/* Formulário de Login */}

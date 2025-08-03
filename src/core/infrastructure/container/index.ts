@@ -14,6 +14,7 @@ import { RequestPasswordResetUseCase } from '@/core/application/use-cases/custom
 import { ResetPasswordUseCase } from '@/core/application/use-cases/customer/ResetPasswordUseCase';
 import { LogoutCustomerUseCase } from '@/core/application/use-cases/customer/LogoutCustomerUseCase';
 import { VerifyEmailUseCase } from '@/core/application/use-cases/customer/VerifyEmailUseCase';
+import { ResendVerificationEmailUseCase } from '@/core/application/use-cases/customer/ResendVerificationEmailUseCase';
 
 // Singleton do Prisma
 const prisma = new PrismaClient();
@@ -84,6 +85,12 @@ const verifyEmailUseCase = new VerifyEmailUseCase(
   emailVerificationRepository
 );
 
+const resendVerificationEmailUseCase = new ResendVerificationEmailUseCase(
+  customerRepository,
+  emailVerificationRepository,
+  emailService
+);
+
 export const container = {
   // Database
   prisma,
@@ -108,6 +115,7 @@ export const container = {
   resetPasswordUseCase,
   logoutCustomerUseCase,
   verifyEmailUseCase,
+  resendVerificationEmailUseCase,
   
   // Helper method to resolve dependencies
   resolve<T>(key: string): T {
