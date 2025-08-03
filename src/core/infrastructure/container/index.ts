@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaCustomerRepository } from '../repositories/PrismaCustomerRepository';
+import { PrismaPasswordResetRepository } from '../repositories/PrismaPasswordResetRepository';
 import { BcryptPasswordHasher } from '../services/BcryptPasswordHasher';
 import { JwtTokenService } from '../services/JwtTokenService';
 import { NodemailerEmailService } from '../email/NodemailerEmailService';
@@ -7,12 +8,15 @@ import { RegisterCustomerUseCase } from '@/core/application/use-cases/customer/R
 import { AuthenticateCustomerUseCase } from '@/core/application/use-cases/customer/AuthenticateCustomerUseCase';
 import { UpdateCustomerUseCase } from '@/core/application/use-cases/customer/UpdateCustomerUseCase';
 import { ChangePasswordUseCase } from '@/core/application/use-cases/customer/ChangePasswordUseCase';
+import { RequestPasswordResetUseCase } from '@/core/application/use-cases/customer/RequestPasswordResetUseCase';
+import { ResetPasswordUseCase } from '@/core/application/use-cases/customer/ResetPasswordUseCase';
 
 // Singleton do Prisma
 const prisma = new PrismaClient();
 
 // Repositories
 const customerRepository = new PrismaCustomerRepository(prisma);
+const passwordResetRepository = new PrismaPasswordResetRepository(prisma);
 
 // Services
 const passwordHasher = new BcryptPasswordHasher();
@@ -51,12 +55,25 @@ const changePasswordUseCase = new ChangePasswordUseCase(
   passwordHasher
 );
 
+const requestPasswordResetUseCase = new RequestPasswordResetUseCase(
+  customerRepository,
+  passwordResetRepository,
+  emailService
+);
+
+const resetPasswordUseCase = new ResetPasswordUseCase(
+  customerRepository,
+  passwordResetRepository,
+  passwordHasher
+);
+
 export const container = {
   // Database
   prisma,
   
   // Repositories
   customerRepository,
+  passwordResetRepository,
   
   // Services
   passwordHasher,
@@ -68,6 +85,13 @@ export const container = {
   authenticateCustomerUseCase,
   updateCustomerUseCase,
   changePasswordUseCase,
+  requestPasswordResetUseCase,
+  resetPasswordUseCase,
+  
+  // Helper method to resolve dependencies
+  resolve<T>(key: string): T {
+    return (this as Record<string, unknown>)[key] as T;
+  }
 };
 
 export type Container = typeof container;

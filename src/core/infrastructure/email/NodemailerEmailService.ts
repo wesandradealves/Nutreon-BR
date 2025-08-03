@@ -1,6 +1,7 @@
 import { IEmailService, EmailData } from '@/core/domain/services/IEmailService';
 import { welcomeEmailTemplate } from './templates/welcome';
 import { loginNotificationTemplate } from './templates/login-notification';
+import { passwordResetEmailTemplate } from './templates/password-reset';
 import type { Transporter } from 'nodemailer';
 
 export class NodemailerEmailService implements IEmailService {
@@ -112,32 +113,13 @@ export class NodemailerEmailService implements IEmailService {
     resetToken: string
   ): Promise<void> {
     const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/auth/reset-password?token=${resetToken}`;
+    const template = passwordResetEmailTemplate(customerName, resetUrl);
     
     await this.sendEmail({
       to,
-      subject: 'Recuperação de Senha - Nutreon',
-      html: `
-        <h2>Olá, ${customerName}!</h2>
-        <p>Recebemos uma solicitação para redefinir sua senha.</p>
-        <p>Clique no link abaixo para criar uma nova senha:</p>
-        <a href="${resetUrl}" style="display: inline-block; padding: 12px 30px; background-color: #16a34a; color: white; text-decoration: none; border-radius: 5px;">
-          Redefinir Senha
-        </a>
-        <p>Este link expira em 1 hora.</p>
-        <p>Se você não solicitou esta alteração, pode ignorar este email.</p>
-      `,
-      text: `
-        Olá, ${customerName}!
-        
-        Recebemos uma solicitação para redefinir sua senha.
-        
-        Acesse o link abaixo para criar uma nova senha:
-        ${resetUrl}
-        
-        Este link expira em 1 hora.
-        
-        Se você não solicitou esta alteração, pode ignorar este email.
-      `,
+      subject: template.subject,
+      html: template.html,
+      text: template.text,
     });
   }
 }

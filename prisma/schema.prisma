@@ -25,6 +25,7 @@ model Customer {
   orders          Order[]
   sessions        Session[]
   cart            Cart?
+  passwordResets  PasswordReset[]
   
   // Auditoria
   createdAt       DateTime        @default(now()) @map("created_at")
@@ -164,6 +165,21 @@ model Session {
   createdAt       DateTime        @default(now()) @map("created_at")
   
   @@map("sessions")
+}
+
+// Token de recuperação de senha
+model PasswordReset {
+  id              String          @id @default(uuid())
+  customerId      String          @map("customer_id")
+  token           String          @unique
+  
+  customer        Customer        @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  
+  expiresAt       DateTime        @map("expires_at")
+  usedAt          DateTime?       @map("used_at")
+  createdAt       DateTime        @default(now()) @map("created_at")
+  
+  @@map("password_resets")
 }
 
 // Enums

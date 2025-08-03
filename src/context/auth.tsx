@@ -28,6 +28,7 @@ interface AuthContextProps {
   logout: () => Promise<void>;
   register: (data: { name: string; email: string; phone?: string; password?: string }) => Promise<void>;
   updateCustomer: (data: Partial<Customer>) => void;
+  checkAuth: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -37,10 +38,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Verificar se cliente está autenticado
+  // Verificar se há dados salvos localmente (sem fazer chamada à API)
   useEffect(() => {
-    checkAuth();
+    checkLocalAuth();
   }, []);
+
+  const checkLocalAuth = () => {
+    // Apenas verificar dados locais, sem fazer chamada à API
+    const savedCustomer = localStorage.getItem('customer_data');
+    if (savedCustomer) {
+      try {
+        const customerData = JSON.parse(savedCustomer);
+        setCustomer(customerData);
+        setIsAuthenticated(true);
+      } catch {
+        localStorage.removeItem('customer_data');
+      }
+    }
+  };
 
   const checkAuth = async () => {
     try {
@@ -52,20 +67,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setIsAuthenticated(true);
         localStorage.setItem('customer_data', JSON.stringify(data.customer));
       } else {
-        // Tentar dados locais como fallback
-        const savedCustomer = localStorage.getItem('customer_data');
-        if (savedCustomer) {
-          try {
-            const customerData = JSON.parse(savedCustomer);
-            setCustomer(customerData);
-            setIsAuthenticated(true);
-          } catch {
-            localStorage.removeItem('customer_data');
-          }
-        }
+        // Se não autenticado, limpar dados locais
+        localStorage.removeItem('customer_data');
+        setCustomer(null);
+        setIsAuthenticated(false);
       }
     } catch (error) {
       console.error('Erro ao verificar autenticação:', error);
+      // Em caso de erro, manter estado atual
     }
   };
 
@@ -149,7 +158,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       login, 
       logout,
       register,
-      updateCustomer 
+      updateCustomer,
+      checkAuth 
     }}>
       {children}
     </AuthContext.Provider>

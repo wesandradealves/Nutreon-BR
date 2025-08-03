@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
         name: customer.name,
         phone: customer.phone?.value,
         verified: customer.verified,
-        addresses: customer.addresses.map(addr => ({
+        addresses: customer.addresses.map((addr) => ({
           id: addr.id,
           street: addr.street,
           number: addr.number,

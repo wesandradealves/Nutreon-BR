@@ -2,7 +2,9 @@
 
 import { useSearchParams } from 'next/navigation';
 import { useAuthForm } from '@/hooks/useAuthForm';
+import { usePasswordRecovery } from '@/hooks/usePasswordRecovery';
 import { PatternFormat } from 'react-number-format';
+import { useState } from 'react';
 import {
   Container,
   Paper,
@@ -32,12 +34,33 @@ export default function AuthPage() {
     updateRegisterData,
   } = useAuthForm(redirectTo);
 
+  const { 
+    loading: recoveryLoading, 
+    error: recoveryError,
+    requestPasswordReset 
+  } = usePasswordRecovery();
+
+  const [recoveryEmail, setRecoveryEmail] = useState('');
+  const [recoverySuccess, setRecoverySuccess] = useState(false);
+
+  const handlePasswordRecovery = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setRecoverySuccess(false);
+    
+    const success = await requestPasswordReset(recoveryEmail);
+    if (success) {
+      setRecoverySuccess(true);
+      setRecoveryEmail('');
+    }
+  };
+
   return (
     <Container maxWidth="sm" sx={{ mt: 8 }}>
       <Paper elevation={3}>
         <Tabs value={tab} onChange={handleTabChange} variant="fullWidth">
           <Tab label="Login" />
           <Tab label="Cadastro" />
+          <Tab label="Recuperar Senha" />
         </Tabs>
 
         {error && (
@@ -83,6 +106,15 @@ export default function AuthPage() {
               disabled={loading}
             >
               {loading ? 'Entrando...' : 'Entrar'}
+            </Button>
+            <Button
+              fullWidth
+              variant="text"
+              sx={{ mt: 2 }}
+              onClick={() => handleTabChange(null as unknown as React.SyntheticEvent, 2)}
+              disabled={loading}
+            >
+              Esqueceu sua senha?
             </Button>
           </Box>
         )}
@@ -152,6 +184,54 @@ export default function AuthPage() {
             >
               {loading ? 'Cadastrando...' : 'Cadastrar'}
             </Button>
+          </Box>
+        )}
+
+        {/* Formulário de Recuperação de Senha */}
+        {tab === 2 && (
+          <Box component="form" onSubmit={handlePasswordRecovery} sx={{ p: 3 }}>
+            {recoverySuccess ? (
+              <Alert severity="success">
+                Email de recuperação enviado! Verifique sua caixa de entrada.
+              </Alert>
+            ) : (
+              <>
+                {recoveryError && (
+                  <Alert severity="error" sx={{ mb: 2 }}>
+                    {recoveryError}
+                  </Alert>
+                )}
+                <TextField
+                  fullWidth
+                  label="Email"
+                  type="email"
+                  value={recoveryEmail}
+                  onChange={(e) => setRecoveryEmail(e.target.value)}
+                  margin="normal"
+                  required
+                  disabled={recoveryLoading}
+                  helperText="Digite o email cadastrado para receber as instruções de recuperação"
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3 }}
+                  disabled={recoveryLoading || !recoveryEmail}
+                >
+                  {recoveryLoading ? 'Enviando...' : 'Enviar Email de Recuperação'}
+                </Button>
+                <Button
+                  fullWidth
+                  variant="text"
+                  sx={{ mt: 2 }}
+                  onClick={() => handleTabChange(null as unknown as React.SyntheticEvent, 0)}
+                  disabled={recoveryLoading}
+                >
+                  Voltar para Login
+                </Button>
+              </>
+            )}
           </Box>
         )}
       </Paper>

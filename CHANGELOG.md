@@ -5,6 +5,40 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [0.3.8] - 2025-08-03
+
+### Adicionado
+- **Recuperação de Senha**: Sistema completo de recuperação de senha por email
+  - Terceira aba "Recuperar Senha" na página `/auth`
+  - Página `/auth/reset-password` para redefinir senha com token
+  - Endpoints API `/api/auth/request-password-reset` e `/api/auth/reset-password`
+  - Hook `usePasswordRecovery` para gerenciar estado
+  - Template de email HTML profissional
+  - Tokens seguros com expiração de 1 hora
+  - Link "Esqueceu sua senha?" no formulário de login
+
+### Corrigido
+- **Chamada desnecessária de API**: Removida chamada automática para `/api/customer/me` ao carregar aplicação
+  - Agora verifica apenas localStorage para estado inicial
+  - API só é chamada quando necessário (login, páginas protegidas)
+- **Formato de resposta da API**: Padronizado respostas dos endpoints de recuperação de senha
+  - Adicionado campo `success` em todas as respostas
+  - Corrigido erro no console ao enviar email de recuperação
+
+### Melhorado
+- **Performance**: Redução de chamadas desnecessárias à API
+- **Segurança**: Sistema de recuperação não revela se email existe no banco
+- **Hook usePasswordValidation**: Adicionado estado completo para validação de senhas
+  - Força da senha com feedback visual
+  - Validação em tempo real
+  - Suporte para confirmação de senha
+
+### Técnico
+- Criada tabela `password_resets` no banco de dados
+- Implementados use cases `RequestPasswordResetUseCase` e `ResetPasswordUseCase`
+- Adicionado repositório `PrismaPasswordResetRepository`
+- Atualizado `AuthContext` para verificar apenas dados locais no carregamento inicial
+
 ## [0.3.7] - 2025-08-03
 
 ### Corrigido
@@ -236,6 +270,13 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Configuração básica do ambiente
 - Documentação inicial
 
+[0.3.8]: https://github.com/nutreon/nutreon-br/compare/v0.3.7...v0.3.8
+[0.3.7]: https://github.com/nutreon/nutreon-br/compare/v0.3.6...v0.3.7
+[0.3.6]: https://github.com/nutreon/nutreon-br/compare/v0.3.5...v0.3.6
+[0.3.5]: https://github.com/nutreon/nutreon-br/compare/v0.3.4...v0.3.5
+[0.3.4]: https://github.com/nutreon/nutreon-br/compare/v0.3.3...v0.3.4
+[0.3.3]: https://github.com/nutreon/nutreon-br/compare/v0.3.2...v0.3.3
+[0.3.2]: https://github.com/nutreon/nutreon-br/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/nutreon/nutreon-br/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/nutreon/nutreon-br/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/nutreon/nutreon-br/compare/v0.1.0...v0.2.0

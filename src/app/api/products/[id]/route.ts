@@ -4,13 +4,14 @@ import type { NuvemshopProduct } from '@/types';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  console.log(`\n🎯 [BFF] ==> GET /api/products/${params.id}`);
+  const { id } = await params;
+  console.log(`\n🎯 [BFF] ==> GET /api/products/${id}`);
   
   try {
     console.log('🚀 [BFF] Buscando produto específico...');
-    const product = await nuvemshopClient.get<NuvemshopProduct>(`/products/${params.id}`);
+    const product = await nuvemshopClient.get<NuvemshopProduct>(`/products/${id}`);
     
     const productName = product.name?.pt || 'Sem nome';
     console.log(`✅ [BFF] Produto encontrado: ${productName}`);
