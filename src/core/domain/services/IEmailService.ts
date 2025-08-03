@@ -6,7 +6,7 @@ export interface EmailData {
 }
 
 export interface IEmailService {
-  sendWelcomeEmail(to: string, customerName: string): Promise<void>;
+  sendWelcomeEmail(to: string, customerName: string, verificationLink?: string): Promise<void>;
   sendLoginNotificationEmail(to: string, customerName: string, ipAddress?: string, userAgent?: string): Promise<void>;
   sendPasswordResetEmail(to: string, customerName: string, resetToken: string): Promise<void>;
   sendEmail(data: EmailData): Promise<void>;

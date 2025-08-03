@@ -54,6 +54,9 @@ Nutreon é uma solução e-commerce headless que combina a robustez da API Nuvem
 - 🔍 SEO otimizado
 - 🌐 Suporte multi-idioma (pt, es, en)
 - 🔐 Autenticação JWT + OAuth 2.0
+- ✉️ Verificação de email obrigatória
+- 🔄 Recuperação de senha por email
+- 📊 Tracking de sessões de usuário
 - 👤 Sistema completo de gestão de clientes
 - 📊 Rate limiting automático
 - 🎨 Tema customizável
@@ -291,7 +294,30 @@ graph TD
 1. **AuthContext**: Gerencia autenticação JWT/OAuth
    - Login/logout de clientes
    - Estado de autenticação
-   - Refresh automático de sessão
+   - Verificação de email
+   - Tracking de sessões
+
+### Fluxo de Autenticação de Clientes
+
+1. **Registro**:
+   - Cliente se cadastra com email e senha
+   - Sistema envia email de verificação
+   - Conta criada mas não ativa
+
+2. **Verificação de Email**:
+   - Cliente clica no link do email
+   - Token validado (expira em 24h)
+   - Conta ativada para login
+
+3. **Login**:
+   - Apenas contas verificadas
+   - Geração de JWT token
+   - Sessão registrada no banco
+
+4. **Recuperação de Senha**:
+   - Solicitação por email
+   - Link com token (expira em 1h)
+   - Nova senha e logout automático
 
 ### BFF (Backend for Frontend)
 
@@ -305,10 +331,14 @@ O projeto implementa o padrão BFF para otimizar chamadas à API:
 ### Services & Use Cases
 
 #### Autenticação
-- **RegisterCustomerUseCase**: Cadastro com validação completa
-- **AuthenticateCustomerUseCase**: Login seguro com JWT
-- **ChangePasswordUseCase**: Alteração de senha com logout
+- **RegisterCustomerUseCase**: Cadastro com validação completa e envio de email
+- **AuthenticateCustomerUseCase**: Login seguro com JWT e tracking de sessão
+- **VerifyEmailUseCase**: Verificação de email com token seguro
+- **ChangePasswordUseCase**: Alteração de senha com logout automático
 - **UpdateCustomerUseCase**: Atualização de dados pessoais
+- **RequestPasswordResetUseCase**: Solicitação de recuperação de senha
+- **ResetPasswordUseCase**: Redefinição de senha com token
+- **LogoutCustomerUseCase**: Logout com desativação de sessão
 
 #### Integração Nuvemshop
 - **Products**: Busca e filtragem via BFF

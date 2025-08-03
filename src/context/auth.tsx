@@ -142,10 +142,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw new Error(result.error || 'Erro ao criar conta');
       }
 
-      // Fazer login automático após registro
-      if (data.password) {
-        await login(data.email, data.password);
-      }
+      // Não fazer login automático - aguardar verificação de email
+      return result;
     } catch (error) {
       throw error;
     } finally {

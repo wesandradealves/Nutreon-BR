@@ -97,10 +97,15 @@ export function useAuthForm(redirectTo: string = '/conta') {
         password: registerData.password,
       });
       
-      setSuccess('Cadastro realizado com sucesso! Você já está logado.');
-      setTimeout(() => {
-        router.push(redirectTo);
-      }, 2000);
+      setSuccess('Cadastro realizado com sucesso! Verifique seu email para ativar sua conta.');
+      // Limpar formulário após sucesso
+      setRegisterData({
+        name: '',
+        email: '',
+        phone: '',
+        password: '',
+        confirmPassword: '',
+      });
     } catch (err) {
       setError((err as Error).message || 'Erro ao criar conta');
     } finally {

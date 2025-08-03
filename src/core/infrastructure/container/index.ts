@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { PrismaCustomerRepository } from '../repositories/PrismaCustomerRepository';
 import { PrismaPasswordResetRepository } from '../repositories/PrismaPasswordResetRepository';
 import { PrismaSessionRepository } from '../repositories/PrismaSessionRepository';
+import { PrismaEmailVerificationRepository } from '../repositories/PrismaEmailVerificationRepository';
 import { BcryptPasswordHasher } from '../services/BcryptPasswordHasher';
 import { JwtTokenService } from '../services/JwtTokenService';
 import { NodemailerEmailService } from '../email/NodemailerEmailService';
@@ -12,6 +13,7 @@ import { ChangePasswordUseCase } from '@/core/application/use-cases/customer/Cha
 import { RequestPasswordResetUseCase } from '@/core/application/use-cases/customer/RequestPasswordResetUseCase';
 import { ResetPasswordUseCase } from '@/core/application/use-cases/customer/ResetPasswordUseCase';
 import { LogoutCustomerUseCase } from '@/core/application/use-cases/customer/LogoutCustomerUseCase';
+import { VerifyEmailUseCase } from '@/core/application/use-cases/customer/VerifyEmailUseCase';
 
 // Singleton do Prisma
 const prisma = new PrismaClient();
@@ -20,6 +22,7 @@ const prisma = new PrismaClient();
 const customerRepository = new PrismaCustomerRepository(prisma);
 const passwordResetRepository = new PrismaPasswordResetRepository(prisma);
 const sessionRepository = new PrismaSessionRepository(prisma);
+const emailVerificationRepository = new PrismaEmailVerificationRepository(prisma);
 
 // Services
 const passwordHasher = new BcryptPasswordHasher();
@@ -38,6 +41,7 @@ const emailService = new NodemailerEmailService();
 // Use Cases
 const registerCustomerUseCase = new RegisterCustomerUseCase(
   customerRepository,
+  emailVerificationRepository,
   passwordHasher,
   emailService
 );
@@ -75,6 +79,11 @@ const logoutCustomerUseCase = new LogoutCustomerUseCase(
   sessionRepository
 );
 
+const verifyEmailUseCase = new VerifyEmailUseCase(
+  customerRepository,
+  emailVerificationRepository
+);
+
 export const container = {
   // Database
   prisma,
@@ -83,6 +92,7 @@ export const container = {
   customerRepository,
   passwordResetRepository,
   sessionRepository,
+  emailVerificationRepository,
   
   // Services
   passwordHasher,
@@ -97,6 +107,7 @@ export const container = {
   requestPasswordResetUseCase,
   resetPasswordUseCase,
   logoutCustomerUseCase,
+  verifyEmailUseCase,
   
   // Helper method to resolve dependencies
   resolve<T>(key: string): T {

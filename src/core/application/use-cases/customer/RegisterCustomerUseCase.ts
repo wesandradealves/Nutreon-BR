@@ -1,4 +1,6 @@
+import { randomBytes } from 'crypto';
 import { ICustomerRepository } from '@/core/domain/repositories/ICustomerRepository';
+import { IEmailVerificationRepository } from '@/core/domain/repositories/IEmailVerificationRepository';
 import { Customer } from '@/core/domain/entities/Customer';
 import { Email } from '@/core/domain/value-objects/Email';
 import { Phone } from '@/core/domain/value-objects/Phone';
@@ -9,6 +11,7 @@ import { RegisterCustomerDTO } from '@/core/application/dtos/customer/RegisterCu
 export class RegisterCustomerUseCase {
   constructor(
     private readonly customerRepository: ICustomerRepository,
+    private readonly emailVerificationRepository: IEmailVerificationRepository,
     private readonly passwordHasher: IPasswordHasher,
     private readonly emailService?: IEmailService
   ) {}
@@ -43,9 +46,21 @@ export class RegisterCustomerUseCase {
     // Salvar no repositório
     await this.customerRepository.save(customer);
 
-    // Enviar email de boas-vindas (não bloqueia o fluxo)
+    // Criar token de verificação
+    const verificationToken = randomBytes(32).toString('hex');
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + 24); // Token válido por 24 horas
+
+    await this.emailVerificationRepository.create(
+      customer.id,
+      verificationToken,
+      expiresAt
+    );
+
+    // Enviar email de boas-vindas com link de verificação
     if (this.emailService) {
-      this.emailService.sendWelcomeEmail(dto.email, dto.name)
+      const verificationLink = `${process.env.NEXT_PUBLIC_APP_URL}/auth/verify-email?token=${verificationToken}`;
+      this.emailService.sendWelcomeEmail(dto.email, dto.name, verificationLink)
         .catch(error => console.error('Erro ao enviar email de boas-vindas:', error));
     }
 

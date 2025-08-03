@@ -1,4 +1,4 @@
-export const welcomeEmailTemplate = (customerName: string) => ({
+export const welcomeEmailTemplate = (customerName: string, verificationLink?: string) => ({
   subject: 'Bem-vindo à Nutreon! 🎉',
   html: `
     <!DOCTYPE html>
@@ -75,7 +75,18 @@ export const welcomeEmailTemplate = (customerName: string) => ({
           
           <p>É com grande prazer que damos as boas-vindas a você em nossa loja de suplementos!</p>
           
-          <p>Sua conta foi criada com sucesso e agora você tem acesso a:</p>
+          ${verificationLink ? `
+          <div style="background-color: #fef3c7; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #f59e0b;">
+            <p style="margin: 0; color: #92400e;"><strong>⚠️ Importante:</strong> Para ativar sua conta e começar a fazer compras, você precisa verificar seu email.</p>
+            <div style="text-align: center; margin-top: 15px;">
+              <a href="${verificationLink}" class="button" style="background-color: #f59e0b;">
+                Verificar Email Agora
+              </a>
+            </div>
+          </div>
+          ` : ''}
+          
+          <p>Sua conta foi criada com sucesso e ${verificationLink ? 'após a verificação você terá' : 'agora você tem'} acesso a:</p>
           
           <div class="benefits">
             <ul>
@@ -116,7 +127,12 @@ export const welcomeEmailTemplate = (customerName: string) => ({
     
     É com grande prazer que damos as boas-vindas a você em nossa loja de suplementos!
     
-    Sua conta foi criada com sucesso e agora você tem acesso a:
+    ${verificationLink ? `
+    IMPORTANTE: Para ativar sua conta, você precisa verificar seu email.
+    Acesse: ${verificationLink}
+    
+    ` : ''}
+    Sua conta foi criada com sucesso e ${verificationLink ? 'após a verificação você terá' : 'agora você tem'} acesso a:
     - Compras rápidas e seguras
     - Acompanhamento de pedidos em tempo real
     - Ofertas exclusivas para clientes

@@ -82,8 +82,8 @@ export class NodemailerEmailService implements IEmailService {
     }
   }
 
-  async sendWelcomeEmail(to: string, customerName: string): Promise<void> {
-    const template = welcomeEmailTemplate(customerName);
+  async sendWelcomeEmail(to: string, customerName: string, verificationLink?: string): Promise<void> {
+    const template = welcomeEmailTemplate(customerName, verificationLink);
     await this.sendEmail({
       to,
       subject: template.subject,

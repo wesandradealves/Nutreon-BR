@@ -26,6 +26,7 @@ model Customer {
   sessions        Session[]
   cart            Cart?
   passwordResets  PasswordReset[]
+  emailVerifications EmailVerification[]
   
   // Auditoria
   createdAt       DateTime        @default(now()) @map("created_at")
@@ -182,6 +183,21 @@ model PasswordReset {
   createdAt       DateTime        @default(now()) @map("created_at")
   
   @@map("password_resets")
+}
+
+// Token de verificação de email
+model EmailVerification {
+  id              String          @id @default(uuid())
+  customerId      String          @map("customer_id")
+  token           String          @unique
+  
+  customer        Customer        @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  
+  expiresAt       DateTime        @map("expires_at")
+  verifiedAt      DateTime?       @map("verified_at")
+  createdAt       DateTime        @default(now()) @map("created_at")
+  
+  @@map("email_verifications")
 }
 
 // Enums

@@ -58,6 +58,7 @@ export default function AccountPage() {
 
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   // Form para dados pessoais
   const {
@@ -73,15 +74,20 @@ export default function AccountPage() {
     },
   });
 
+  // Garante que o componente está montado no cliente
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   // Atualizar valores do formulário quando customer mudar
   useEffect(() => {
-    if (customer) {
+    if (customer && isMounted) {
       reset({
         name: customer.name || '',
         phone: formatPhone(customer.phone),
       });
     }
-  }, [customer, reset]);
+  }, [customer, reset, formatPhone, isMounted]);
 
   // Form para senha
   const {
@@ -124,8 +130,35 @@ export default function AccountPage() {
     clearError();
   };
 
-  if (!customer) {
-    return null;
+  if (!customer || !isMounted) {
+    return (
+      <Container maxWidth="md" sx={{ mt: 8, mb: 4 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+          <CircularProgress />
+        </Box>
+      </Container>
+    );
+  }
+
+  // Verificar se o email foi verificado
+  if (!customer.verified) {
+    return (
+      <Container maxWidth="md" sx={{ mt: 8, mb: 4 }}>
+        <Paper elevation={3} sx={{ p: 4 }}>
+          <Alert severity="warning" sx={{ mb: 3 }}>
+            Seu email ainda não foi verificado. Por favor, verifique sua caixa de entrada e clique no link de verificação.
+          </Alert>
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <Button variant="outlined" onClick={() => router.push('/')}>
+              Voltar para Home
+            </Button>
+            <Button variant="contained" color="error" onClick={handleLogout}>
+              Sair
+            </Button>
+          </Box>
+        </Paper>
+      </Container>
+    );
   }
 
   return (
