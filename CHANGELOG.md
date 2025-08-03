@@ -5,6 +5,61 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [0.3.0] - 2025-08-03
+
+### Adicionado
+- Arquitetura completa Domain-Driven Design (DDD) com separação clara de camadas
+  - Domain Layer: Entidades, Value Objects, Repositórios (interfaces) e Serviços de domínio
+  - Application Layer: Use Cases, DTOs e interfaces de serviços
+  - Infrastructure Layer: Implementações concretas, ORM, serviços externos
+  - Presentation Layer: Controllers API e páginas
+- Sistema robusto de autenticação JWT
+  - Registro com validação completa de dados
+  - Login com geração de tokens seguros
+  - Gestão de sessão com cookies HTTPOnly
+  - Refresh token automático
+  - Logout com limpeza de sessão
+- Value Objects para garantir integridade dos dados
+  - Email com validação de formato
+  - Phone com formatação brasileira
+  - Address com validação de CEP
+- Container de injeção de dependências (DI Container)
+- Repositórios com Prisma ORM seguindo padrões DDD
+- Use Cases implementando regras de negócio isoladas
+- Sistema de notificações por email
+  - Templates HTML responsivos
+  - Email de boas-vindas personalizado
+  - Notificação de login com detalhes de segurança
+- Validação de dados com Zod schemas
+- Middlewares customizados
+  - Autenticação com verificação JWT
+  - Tratamento global de erros
+  - CORS configurado para segurança
+- ESLint configurado para manter qualidade do código
+- Hooks React customizados para integração com BFF
+- Páginas protegidas com verificação de autenticação
+- Componente ProtectedRoute para controle de acesso
+
+### Melhorado
+- Estrutura de pastas seguindo princípios DDD
+- Separação clara de responsabilidades entre camadas
+- Tipagem forte com TypeScript em todo o projeto
+- Tratamento de erros padronizado com classes específicas
+- Performance com lazy loading de componentes
+- Reutilização de código com componentes compartilhados
+
+### Modificado
+- Migração completa da arquitetura MVC para DDD
+- Refatoração de todos os endpoints para usar Use Cases
+- Atualização da estrutura de autenticação para padrão DDD
+
+### Segurança
+- Implementação de Value Objects para validação de dados sensíveis
+- Criptografia de senhas com salt rounds configuráveis
+- Tokens JWT com expiração configurável
+- Validação em múltiplas camadas (frontend e backend)
+- Proteção contra injeção SQL com Prisma ORM
+
 ## [0.2.0] - 2025-08-03
 
 ### Adicionado
@@ -49,5 +104,6 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Configuração básica do ambiente
 - Documentação inicial
 
+[0.3.0]: https://github.com/nutreon/nutreon-br/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/nutreon/nutreon-br/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/nutreon/nutreon-br/releases/tag/v0.1.0
