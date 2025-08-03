@@ -19,6 +19,10 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
   - Removido axios em favor de fetch padronizado
   - Código reduzido de 52 para 43 linhas
   - Mantém mesma interface pública
+- **useStoreAuth**: Refatorado para usar useApiRequest
+  - Adicionada tipagem TypeScript adequada
+  - Melhor tratamento de erros
+  - Código mais limpo e consistente
 
 ## [0.4.2] - 2025-08-03
 

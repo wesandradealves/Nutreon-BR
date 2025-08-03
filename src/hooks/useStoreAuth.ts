@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { useApiRequest } from './useApiRequest';
 
 interface StoreData {
   id: number;
@@ -18,6 +19,11 @@ interface AuthState {
   storeData: StoreData | null;
 }
 
+interface AuthResponse {
+  authenticated: boolean;
+  store?: StoreData;
+}
+
 export function useStoreAuth() {
   const [authState, setAuthState] = useState<AuthState>({
     isAuthenticated: false,
@@ -25,21 +31,17 @@ export function useStoreAuth() {
     storeData: null,
   });
   const router = useRouter();
+  const { request } = useApiRequest<AuthResponse>();
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
-    try {
-      const response = await fetch('/api/auth/me');
-      const data = await response.json();
-      
-      if (data.authenticated) {
+  const checkAuth = useCallback(async () => {
+    const response = await request('/api/auth/me');
+    
+    if (response.success && response.data) {
+      if (response.data.authenticated) {
         setAuthState({
           isAuthenticated: true,
           isLoading: false,
-          storeData: data.store,
+          storeData: response.data.store || null,
         });
       } else {
         setAuthState({
@@ -48,18 +50,22 @@ export function useStoreAuth() {
           storeData: null,
         });
       }
-    } catch {
+    } else {
       setAuthState({
         isAuthenticated: false,
         isLoading: false,
         storeData: null,
       });
     }
-  };
+  }, [request]);
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
   const logout = async () => {
     // Limpar cookies via API route
-    await fetch('/api/auth/logout', { method: 'POST' });
+    await request('/api/auth/logout', { method: 'POST' });
     setAuthState({
       isAuthenticated: false,
       isLoading: false,
