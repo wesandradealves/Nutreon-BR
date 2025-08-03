@@ -5,6 +5,21 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [Unreleased]
+
+### Adicionado
+- **Hook useApiRequest**: Centraliza lógica de chamadas API
+  - Tratamento de erro padronizado
+  - Loading state automático
+  - Headers padrão configurados
+  - Reduz duplicação de código
+
+### Melhorado
+- **useResendVerification**: Refatorado para usar useApiRequest
+  - Removido axios em favor de fetch padronizado
+  - Código reduzido de 52 para 43 linhas
+  - Mantém mesma interface pública
+
 ## [0.4.2] - 2025-08-03
 
 ### Corrigido
