@@ -65,11 +65,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const response = await fetch('/api/customer/me');
       const data = await response.json();
       
-      if (response.ok && data.authenticated) {
-        setCustomer(data.customer);
+      if (response.ok && data.success && data.data?.authenticated) {
+        setCustomer(data.data.customer);
         setIsAuthenticated(true);
         if (typeof window !== 'undefined') {
-          localStorage.setItem('customer_data', JSON.stringify(data.customer));
+          localStorage.setItem('customer_data', JSON.stringify(data.data.customer));
         }
       } else {
         // Se não autenticado, limpar dados locais

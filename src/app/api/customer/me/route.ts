@@ -1,43 +1,28 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { container } from '@/core/infrastructure/container';
+import { successResponse, errorResponse, handleApiError } from '@/lib/api-utils';
 
 export async function GET(request: NextRequest) {
   try {
-    // Obter token do cookie
     const token = request.cookies.get('auth-token')?.value;
     
     if (!token) {
-      return NextResponse.json({
-        success: false,
-        authenticated: false,
-        error: 'Não autenticado',
-      }, { status: 401 });
+      return errorResponse('Não autenticado', 401);
     }
 
-    // Verificar token
     const payload = await container.tokenService.verifyToken(token);
     
     if (!payload) {
-      return NextResponse.json({
-        success: false,
-        authenticated: false,
-        error: 'Token inválido',
-      }, { status: 401 });
+      return errorResponse('Token inválido', 401);
     }
 
-    // Buscar cliente
     const customer = await container.customerRepository.findById(payload.customerId);
     
     if (!customer) {
-      return NextResponse.json({
-        success: false,
-        authenticated: false,
-        error: 'Cliente não encontrado',
-      }, { status: 404 });
+      return errorResponse('Cliente não encontrado', 404);
     }
 
-    return NextResponse.json({
-      success: true,
+    const customerData = {
       authenticated: true,
       customer: {
         id: customer.id,
@@ -58,14 +43,10 @@ export async function GET(request: NextRequest) {
           isDefault: addr.isDefault,
         })),
       },
-    });
+    };
+
+    return successResponse(customerData);
   } catch (error) {
-    console.error('Erro ao buscar dados do cliente:', error);
-    
-    return NextResponse.json({
-      success: false,
-      authenticated: false,
-      error: 'Erro ao buscar dados do cliente',
-    }, { status: 500 });
+    return handleApiError(error, 'ao buscar dados do cliente');
   }
 }

@@ -1,9 +1,8 @@
-import { NextResponse } from 'next/server';
+import { successResponse } from '@/lib/api-utils';
 
 export async function POST() {
-  const response = NextResponse.json({ success: true });
+  const response = successResponse({ message: 'Logout realizado com sucesso' });
   
-  // Remover cookies
   response.cookies.delete('nuvemshop_token');
   response.cookies.delete('nuvemshop_user_id');
   

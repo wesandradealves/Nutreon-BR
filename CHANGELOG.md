@@ -15,6 +15,28 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
   - Eliminada duplicação de lógica de estado
   - Padrão único para todas as chamadas API
 
+- **Padronização de Tratamento de Erros em APIs**: Migração de rotas para usar utilitários centralizados
+  - 11 rotas padronizadas com `handleApiError`, `successResponse` e `errorResponse`
+  - `/api/customer/me`: 71 → 50 linhas (30% redução)
+  - `/api/customer/login`: 58 → 31 linhas (47% redução)  
+  - `/api/auth/logout`: 11 → 10 linhas
+  - `/api/customer/logout`: 50 → 35 linhas
+  - `/api/store`: 37 → 24 linhas
+  - Respostas 100% consistentes com formato padrão
+  - Status HTTP automático baseado em mensagens de erro
+  - Suporte nativo para erros Zod
+
+### Adicionado
+- **Guia de Padronização de APIs**: Documentação completa em `docs/API_ERROR_HANDLING_GUIDE.md`
+  - Exemplos práticos de migração
+  - Padrões de resposta documentados
+  - Benefícios e boas práticas
+
+### Corrigido
+- **AuthContext**: Ajustado para nova estrutura de resposta das APIs padronizadas
+  - `checkAuth` agora lê corretamente `data.data.authenticated` e `data.data.customer`
+  - Corrige spinner infinito na página `/conta`
+
 ## [0.5.0] - 2025-08-04
 
 ### Mudanças Significativas (BREAKING CHANGES)

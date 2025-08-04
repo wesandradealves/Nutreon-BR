@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
 import { nuvemshopClient } from '@/lib/nuvemshop-client';
+import { successResponse, handleApiError } from '@/lib/api-utils';
 import type { NuvemshopStore } from '@/types';
 
 export async function GET() {
@@ -17,21 +17,8 @@ export async function GET() {
     console.log(`💼 [BFF] Plano: ${store.plan_name || 'N/A'}`);
     console.log(`🏢 [BFF] CNPJ: ${store.business_id || 'N/A'}`);
     
-    return NextResponse.json({
-      success: true,
-      data: store,
-      timestamp: new Date().toISOString(),
-    });
-    
+    return successResponse(store);
   } catch (error) {
-    console.error('❌ [BFF] Erro ao buscar informações da loja:', error);
-    return NextResponse.json(
-      { 
-        success: false,
-        error: error instanceof Error ? error.message : 'Erro desconhecido',
-        timestamp: new Date().toISOString(),
-      },
-      { status: 500 }
-    );
+    return handleApiError(error, 'ao buscar informações da loja');
   }
 }
