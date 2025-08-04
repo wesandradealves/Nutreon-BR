@@ -1,73 +1,63 @@
 'use client'
 
-import { useState, useCallback } from 'react'
-import { useBFF } from './useBFF'
+import { useCallback } from 'react'
+import { useApiRequest } from './useApiRequest'
 import { toast } from 'react-hot-toast'
 
-interface PasswordRecoveryState {
-  loading: boolean
-  error: string | null
+interface PasswordResetRequestResponse {
+  message: string
+}
+
+interface PasswordResetResponse {
+  message: string
 }
 
 export function usePasswordRecovery() {
-  const { request } = useBFF()
-  const [state, setState] = useState<PasswordRecoveryState>({
-    loading: false,
-    error: null
-  })
+  const requestResetApi = useApiRequest<PasswordResetRequestResponse>()
+  const resetPasswordApi = useApiRequest<PasswordResetResponse>()
 
   const requestPasswordReset = useCallback(async (email: string) => {
-    setState({ loading: true, error: null })
+    const result = await requestResetApi.request('/api/auth/request-password-reset', {
+      method: 'POST',
+      data: { email }
+    })
 
-    try {
-      const response = await request('/auth/request-password-reset', {
-        method: 'POST',
-        body: JSON.stringify({ email })
-      })
-
-      if (response && response.success) {
-        const message = (response as { message?: string }).message || 'Email de recuperação enviado! Verifique sua caixa de entrada.'
-        toast.success(message)
-        return true
-      }
-      return false
-    } catch (error) {
-      const message = (error as Error & { response?: { data?: { message?: string } } }).response?.data?.message || 'Erro ao solicitar recuperação'
-      setState({ loading: false, error: message })
-      toast.error(message)
-      return false
-    } finally {
-      setState(prev => ({ ...prev, loading: false }))
+    if (result.success && result.data) {
+      const message = result.data.message || 'Email de recuperação enviado! Verifique sua caixa de entrada.'
+      toast.success(message)
+      return true
     }
-  }, [request])
+    
+    if (result.error) {
+      toast.error(result.error)
+    }
+    return false
+  }, [requestResetApi])
 
   const resetPassword = useCallback(async (token: string, password: string) => {
-    setState({ loading: true, error: null })
+    const result = await resetPasswordApi.request('/api/auth/reset-password', {
+      method: 'POST',
+      data: { token, password }
+    })
 
-    try {
-      const response = await request('/auth/reset-password', {
-        method: 'POST',
-        body: JSON.stringify({ token, password })
-      })
-
-      if (response && response.success) {
-        const message = (response as { message?: string }).message || 'Senha redefinida com sucesso!'
-        toast.success(message)
-        return true
-      }
-      return false
-    } catch (error) {
-      const message = (error as Error & { response?: { data?: { message?: string } } }).response?.data?.message || 'Erro ao redefinir senha'
-      setState({ loading: false, error: message })
-      toast.error(message)
-      return false
-    } finally {
-      setState(prev => ({ ...prev, loading: false }))
+    if (result.success && result.data) {
+      const message = result.data.message || 'Senha redefinida com sucesso!'
+      toast.success(message)
+      return true
     }
-  }, [request])
+    
+    if (result.error) {
+      toast.error(result.error)
+    }
+    return false
+  }, [resetPasswordApi])
+
+  const loading = requestResetApi.loading || resetPasswordApi.loading
+  const error = requestResetApi.error || resetPasswordApi.error
 
   return {
-    ...state,
+    loading,
+    error,
     requestPasswordReset,
     resetPassword
   }

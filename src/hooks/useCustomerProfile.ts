@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/auth';
 import { usePhoneFormat } from './usePhoneFormat';
+import { useApiRequest } from './useApiRequest';
 
 interface UpdateProfileData {
   name: string;
@@ -16,89 +17,71 @@ interface ChangePasswordData {
   confirmPassword: string;
 }
 
+interface UpdateProfileResponse {
+  message: string;
+  customer: {
+    name: string;
+    phone: string;
+  };
+}
+
+interface ChangePasswordResponse {
+  message: string;
+}
+
 export function useCustomerProfile() {
   const router = useRouter();
   const { logout, updateCustomer } = useAuth();
   const { removePhoneMask } = usePhoneFormat();
+  const updateProfileApi = useApiRequest<UpdateProfileResponse>();
+  const changePasswordApi = useApiRequest<ChangePasswordResponse>();
   
-  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
 
   const updateProfile = async (data: UpdateProfileData) => {
-    setLoading(true);
-    setError('');
+    const cleanPhone = removePhoneMask(data.phone);
     
-    try {
-      const cleanPhone = removePhoneMask(data.phone);
+    const result = await updateProfileApi.request('/api/customer/update', {
+      method: 'PUT',
+      data: {
+        name: data.name,
+        phone: cleanPhone,
+      },
+    });
+
+    if (result.success && result.data) {
+      setMessage(result.data.message || 'Dados atualizados com sucesso!');
       
-      const response = await fetch('/api/customer/update', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: data.name,
-          phone: cleanPhone,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Erro ao atualizar dados');
-      }
-
-      setMessage('Dados atualizados com sucesso!');
-      
-      // Atualizar contexto de autenticação
-      if (result.customer) {
+      if (result.data.customer) {
         updateCustomer({
-          name: result.customer.name,
-          phone: result.customer.phone,
+          name: result.data.customer.name,
+          phone: result.data.customer.phone,
         });
       }
       
-      return { success: true, data: result.customer };
-    } catch (err) {
-      const errorMessage = (err as Error).message || 'Erro ao atualizar dados';
-      setError(errorMessage);
-      return { success: false, error: errorMessage };
-    } finally {
-      setLoading(false);
+      return { success: true, data: result.data.customer };
     }
+
+    return { success: false, error: result.error };
   };
 
   const changePassword = async (data: ChangePasswordData) => {
-    setLoading(true);
-    setError('');
-    
-    try {
-      const response = await fetch('/api/customer/change-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
+    const result = await changePasswordApi.request('/api/customer/change-password', {
+      method: 'POST',
+      data,
+    });
 
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Erro ao alterar senha');
-      }
-
-      setMessage('Senha alterada com sucesso! Redirecionando para login...');
+    if (result.success && result.data) {
+      setMessage(result.data.message || 'Senha alterada com sucesso! Redirecionando para login...');
       
-      // Redirecionar para login após 2 segundos
       setTimeout(() => {
         router.push('/auth');
       }, 2000);
       
       return { success: true };
-    } catch (err) {
-      const errorMessage = (err as Error).message || 'Erro ao alterar senha';
-      setError(errorMessage);
-      return { success: false, error: errorMessage };
-    } finally {
-      setLoading(false);
     }
+
+    return { success: false, error: result.error };
   };
 
   const handleLogout = async () => {
@@ -107,7 +90,13 @@ export function useCustomerProfile() {
   };
 
   const clearMessage = () => setMessage('');
-  const clearError = () => setError('');
+  const clearError = () => {
+    updateProfileApi.clearError();
+    changePasswordApi.clearError();
+  };
+
+  const loading = updateProfileApi.loading || changePasswordApi.loading;
+  const error = updateProfileApi.error || changePasswordApi.error;
 
   return {
     loading,
