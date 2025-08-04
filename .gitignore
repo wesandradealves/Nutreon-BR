@@ -47,3 +47,6 @@ next-env.d.ts
 !CHANGELOG.md
 /src/generated/prisma
 docs
+
+# Claude AI
+.claude/
