@@ -7,6 +7,14 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Melhorado
+- **Hooks Refatorados para useApiRequest**: Migração de hooks para usar o cliente API centralizado
+  - `useCustomerProfile`: Migrado de fetch nativo (122 → 111 linhas)
+  - `usePasswordRecovery`: Migrado de useBFF (74 → 64 linhas)
+  - Tratamento de erro centralizado e consistente
+  - Eliminada duplicação de lógica de estado
+  - Padrão único para todas as chamadas API
+
 ## [0.5.0] - 2025-08-04
 
 ### Mudanças Significativas (BREAKING CHANGES)
