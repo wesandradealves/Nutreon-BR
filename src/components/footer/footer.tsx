@@ -1,10 +1,12 @@
 "use client";
 
+import { FooterContainer } from './styles';
+
 export default function Footer() {
   // const year = new Date().getFullYear();
   return (
-    <footer className="w-full">
+    <FooterContainer className="w-full">
       footer
-    </footer>
+    </FooterContainer>
   );
 }

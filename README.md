@@ -195,8 +195,8 @@ docker-compose down # Para containers
 ### Padrões de Código
 
 - **Arquitetura:** Domain-Driven Design (DDD) com 4 camadas
-- **Componentes:** 3 arquivos (componente.tsx, styles.tsx, typo.ts)
-- **Estilização:** Styled Components + Tailwind CSS
+- **Componentes:** Atomic Design (atoms, molecules, organisms)
+- **Estilização:** Styled Components + Tailwind CSS (ver seção abaixo)
 - **Estado:** Context API para estado global
 - **BFF:** Backend for Frontend para otimização de APIs
 - **Services:** Camada de abstração para API
@@ -204,6 +204,50 @@ docker-compose down # Para containers
 - **Validação:** Zod schemas em todas as entradas
 - **Segurança:** JWT + cookies HTTPOnly + middlewares
 - **Commits:** Convenção em português
+
+### Padrões de Estilização
+
+O projeto segue um padrão específico de estilização que combina o melhor de Styled Components e Tailwind CSS:
+
+#### 1. Estrutura de Componentes
+```tsx
+// Sempre usar styled-components para elementos estruturais
+export const Container = styled.div``;
+export const Title = styled.h1``;
+export const Button = styled.button``;
+
+// Classes Tailwind aplicadas diretamente no JSX
+<Container className="max-w-7xl mx-auto px-4">
+  <Title className="text-2xl font-bold text-gray-900">
+    Título
+  </Title>
+</Container>
+```
+
+#### 2. Regras de Estilização
+- **Styled Components**: Para estrutura semântica e elementos HTML
+- **Tailwind CSS**: Para estilos visuais aplicados via className
+- **Zero estilos inline**: Nunca usar style={{}}
+- **Zero CSS/SCSS**: Não criar arquivos .css ou .scss
+- **Sem Material-UI**: Usar apenas componentes próprios
+
+#### 3. Organização de Arquivos
+```
+componente/
+├── index.tsx       # Componente principal
+└── styles.tsx      # Styled components (estrutura apenas)
+```
+
+#### 4. Cores e Tema
+- **Cor Primária**: `#00e8d4` (ciano/turquesa)
+- **Tema Escuro**: Header e navegação usam `bg-dark-900`
+- **Textos**: `text-gray-300` em fundos escuros
+- **Hovers**: `hover:text-primary-500`
+
+#### 5. Ícones
+- **Font Awesome**: Para todos os ícones
+- **Exemplo**: `<i className="fa fa-user" />`
+- **Não usar**: Material Icons, React Icons, etc
 
 ## 📁 Estrutura do Projeto
 

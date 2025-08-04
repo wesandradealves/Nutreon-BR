@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/auth';
-import { CircularProgress, Container } from '@mui/material';
+import { LoadingContainer, SpinnerWrapper } from './styles';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -22,9 +22,11 @@ export function ProtectedRoute({ children, redirectTo = '/auth' }: ProtectedRout
 
   if (isLoading) {
     return (
-      <Container sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
-        <CircularProgress />
-      </Container>
+      <LoadingContainer className="max-w-7xl mx-auto px-4 flex justify-center mt-32">
+        <SpinnerWrapper>
+          <div className="spinner w-10 h-10 rounded-full" />
+        </SpinnerWrapper>
+      </LoadingContainer>
     );
   }
 

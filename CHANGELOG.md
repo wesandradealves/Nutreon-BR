@@ -7,6 +7,56 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+## [0.5.0] - 2025-08-04
+
+### Mudanças Significativas (BREAKING CHANGES)
+- **Padrão de Estilização**: Migração completa para Styled Components + Tailwind CSS
+  - Removido Material-UI de todos os componentes
+  - Styled Components agora usado APENAS para estrutura semântica
+  - Tailwind CSS para TODOS os estilos visuais
+  - Proibido uso de estilos inline e arquivos CSS/SCSS
+
+### Adicionado
+- **Nova Cor Primária**: #00e8d4 (ciano/turquesa do logo)
+  - Paleta completa de cores primárias (50-900)
+  - Paleta de cores escuras para tema dark (100-950)
+- **Componentes Typography**: Atoms reutilizáveis para textos
+- **Organização Atomic Design**: 
+  - TopBar movido para organisms
+  - MobileMenu movido para molecules
+  - Estrutura clara: atoms → molecules → organisms
+
+### Melhorado
+- **Header Refatorado**: 
+  - Tema escuro com fundo dark-900
+  - Reduzido de 350 para ~130 linhas
+  - Extraído em componentes menores (TopBar, MobileMenu)
+  - HeaderStyled renomeado para HeaderContainer (padrão)
+- **Componentes Refatorados**:
+  - DeliveryCheck: Removido Material-UI e estilos inline
+  - SearchButton: Migrado para Font Awesome
+  - SocialLinks: Ícones Font Awesome
+  - Navigation: Submenu com tema escuro
+  - UserActions: Adicionado submenu (Minha Conta/Logout)
+  - CartButton: Visual atualizado
+  - IconButton: Badge ajustado com posicionamento -top-[12px]
+- **HomePage**: Cores atualizadas para nova paleta
+- **ProtectedRoute**: Removido Material-UI
+- **Documentação Atualizada**:
+  - README.md: Seção completa de padrões de estilização
+  - ARCHITECTURE.md: Atomic Design e regras de estilização
+  - DEVELOPMENT_PROMPT.md: Anti-patterns e exemplos práticos
+
+### Removido
+- Todas as dependências do Material-UI (@mui/*)
+- Estilos inline em todos os componentes
+- Arquivos CSS/SCSS desnecessários
+
+### Corrigido
+- MobileMenu: Removida prop `showMenu` não utilizada
+- Tailwind Config: Removidos patterns de safelist inválidos
+- Build: Todos os erros de TypeScript corrigidos
+
 ### Melhorado
 - **Tratamento de Erros Padronizado**: Refatorado 6 endpoints para usar funções utilitárias
   - `/api/health` - Usa `successResponse` e `errorResponse`

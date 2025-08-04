@@ -1,6 +1,6 @@
 'use client';
 
-import { Search } from '@mui/icons-material';
+import IconButton from '../IconButton';
 import { SearchButtonContainer } from './styles';
 
 interface SearchButtonProps {
@@ -15,18 +15,15 @@ const SearchButton = ({
   className = ''
 }: SearchButtonProps) => {
   return (
-    <SearchButtonContainer className={className}>
-      <a 
-        href="#" 
-        className="btn-abrir js-abrir-busca"
-        onClick={(e) => {
-          e.preventDefault();
-          onClick();
-        }}
+    <SearchButtonContainer className={`busca mod-full ${className}`}>
+      <IconButton
+        onClick={onClick}
+        icon={<i className="fa fa-search w-4 h-4" />}
+        ariaLabel="Buscar"
+        className="flex items-center gap-2 px-4 py-1.5 border border-dark-700 rounded text-gray-300 text-sm transition-all duration-300 hover:border-primary-500 hover:text-primary-500"
       >
         {text}
-        <Search className="icon" />
-      </a>
+      </IconButton>
     </SearchButtonContainer>
   );
 };

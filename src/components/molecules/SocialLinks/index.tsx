@@ -1,7 +1,6 @@
 'use client';
 
-import { Facebook, Instagram, YouTube, WhatsApp } from '@mui/icons-material';
-import { SocialLinksContainer } from './styles';
+import { SocialLinksContainer, SocialLink, SocialIcon } from './styles';
 
 interface SocialLinksProps {
   facebook?: string;
@@ -19,23 +18,43 @@ const SocialLinks = ({
   className = ''
 }: SocialLinksProps) => {
   return (
-    <SocialLinksContainer className={className}>
-      <a href={facebook} target="_blank" rel="noopener">
-        <Facebook />
+    <SocialLinksContainer className={`flex items-center gap-2 ${className}`}>
+      <SocialLink 
+        href={facebook} 
+        target="_blank" 
+        rel="noopener"
+        className="inline-flex items-center justify-center w-6 h-6 text-gray-300 hover:text-primary-500 transition-colors"
+      >
+        <SocialIcon className="fa-brands fa-facebook-f text-base" />
         <span className="sr-only">Facebook</span>
-      </a>
-      <a href={youtube} target="_blank" rel="noopener">
-        <YouTube />
+      </SocialLink>
+      <SocialLink 
+        href={youtube} 
+        target="_blank" 
+        rel="noopener"
+        className="inline-flex items-center justify-center w-6 h-6 text-gray-300 hover:text-primary-500 transition-colors"
+      >
+        <SocialIcon className="fa-brands fa-youtube text-base" />
         <span className="sr-only">YouTube</span>
-      </a>
-      <a href={instagram} target="_blank" rel="noopener">
-        <Instagram />
+      </SocialLink>
+      <SocialLink 
+        href={instagram} 
+        target="_blank" 
+        rel="noopener"
+        className="inline-flex items-center justify-center w-6 h-6 text-gray-300 hover:text-primary-500 transition-colors"
+      >
+        <SocialIcon className="fa-brands fa-instagram text-base" />
         <span className="sr-only">Instagram</span>
-      </a>
-      <a href={whatsapp} target="_blank" rel="noopener" className="desktop">
-        <WhatsApp />
+      </SocialLink>
+      <SocialLink 
+        href={whatsapp} 
+        target="_blank" 
+        rel="noopener" 
+        className="inline-flex items-center justify-center w-6 h-6 text-gray-300 hover:text-primary-500 transition-colors hidden lg:inline-flex"
+      >
+        <SocialIcon className="fa-brands fa-whatsapp text-base" />
         <span className="sr-only">WhatsApp</span>
-      </a>
+      </SocialLink>
     </SocialLinksContainer>
   );
 };

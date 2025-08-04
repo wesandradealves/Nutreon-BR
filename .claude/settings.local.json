@@ -8,7 +8,9 @@
       "Bash(npm uninstall:*)",
       "Bash(npm install:*)",
       "Bash(grep:*)",
-      "WebFetch(domain:tiendanube.github.io)"
+      "WebFetch(domain:tiendanube.github.io)",
+      "Bash(mkdir:*)",
+      "Bash(mv:*)"
     ],
     "deny": []
   }

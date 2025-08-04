@@ -1,6 +1,7 @@
 'use client';
 
-import { CartButtonContainer } from './styles';
+import IconButton from '../IconButton';
+import { CartButtonContainer, CartButtonWrapper } from './styles';
 
 interface CartButtonProps {
   count?: number;
@@ -15,22 +16,14 @@ const CartButton = ({
 }: CartButtonProps) => {
   return (
     <CartButtonContainer className={className}>
-      <div className="box-carrinho-mobile">
-        <a 
-          href="#" 
-          onClick={(e) => {
-            e.preventDefault();
-            onClick();
-          }}
-          className="btn-open"
-          aria-label="Carrinho"
-        >
-          <i className="fa fa-shopping-cart"></i>
-          <span className="badge js-cesta-total-produtos-notext">
-            {count}
-          </span>
-        </a>
-      </div>
+      <CartButtonWrapper className="flex items-center justify-center w-10 h-10 rounded-full bg-dark-800 hover:bg-dark-700 transition-all duration-300 border border-dark-700">
+        <IconButton
+          onClick={onClick}
+          icon={<i className="fa-solid fa-cart-shopping text-gray-300" />}
+          badge={count}
+          ariaLabel="Carrinho"
+        />
+      </CartButtonWrapper>
     </CartButtonContainer>
   );
 };

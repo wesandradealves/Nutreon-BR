@@ -1,8 +1,19 @@
 'use client';
 
 import Link from 'next/link';
-import { PersonOutline, Share } from '@mui/icons-material';
-import { UserActionsContainer } from './styles';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/auth';
+import { 
+  UserActionsContainer, 
+  ActionsList, 
+  ActionItem, 
+  ActionLink,
+  ActionIcon,
+  UserDropdown,
+  UserDropdownMenu,
+  UserDropdownItem,
+  UserDropdownLink
+} from './styles';
 import CartButton from '@/components/atoms/CartButton';
 
 interface UserActionsProps {
@@ -20,39 +31,79 @@ const UserActions = ({
   onCartClick,
   className = ''
 }: UserActionsProps) => {
+  const router = useRouter();
+  const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+    router.push('/');
+  };
+
   return (
-    <UserActionsContainer className={`user-actions ${className}`}>
-      <ul className="user-actions__list">
+    <UserActionsContainer className={`hidden md:block ${className}`}>
+      <ActionsList className="flex items-center gap-4 m-0 p-0 list-none">
         {/* Carrinho */}
-        <li className="user-actions__item user-actions__item--cart">
+        <ActionItem className="relative">
           <CartButton count={cartCount} onClick={onCartClick} />
-        </li>
+        </ActionItem>
 
         {/* Login/Cadastro */}
         {isAuthenticated ? (
-          <li className="user-actions__item user-actions__item--account">
-            <Link href="/conta" className="user-actions__link" aria-label="Minha Conta">
-              <PersonOutline className="user-actions__icon" />
-              Olá, {userName}
-            </Link>
-          </li>
+          <ActionItem className="relative group">
+            <UserDropdown>
+              <ActionLink 
+                href="#" 
+                className="flex items-center gap-1 text-gray-300 no-underline text-sm transition-colors hover:text-primary-500 cursor-pointer" 
+                aria-label="Minha Conta"
+              >
+                <ActionIcon className="fa fa-user-o text-lg" />
+                Olá, {userName}
+                <ActionIcon className="fa fa-chevron-down text-xs ml-1" />
+              </ActionLink>
+              
+              <UserDropdownMenu className="absolute top-full right-0 mt-1 min-w-[180px] bg-dark-800 border border-dark-700 rounded shadow-md py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 list-none">
+                <UserDropdownItem>
+                  <UserDropdownLink 
+                    href="/conta" 
+                    className="block px-4 py-2 text-gray-300 no-underline text-sm transition-all hover:bg-dark-700 hover:text-primary-500"
+                  >
+                    <ActionIcon className="fa fa-user mr-2" />
+                    Minha Conta
+                  </UserDropdownLink>
+                </UserDropdownItem>
+                <UserDropdownItem>
+                  <ActionLink
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleLogout();
+                    }}
+                    className="block px-4 py-2 text-gray-300 no-underline text-sm transition-all hover:bg-dark-700 hover:text-primary-500 cursor-pointer"
+                  >
+                    <ActionIcon className="fa fa-sign-out mr-2" />
+                    Sair
+                  </ActionLink>
+                </UserDropdownItem>
+              </UserDropdownMenu>
+            </UserDropdown>
+          </ActionItem>
         ) : (
           <>
-            <li className="user-actions__item user-actions__item--register">
-              <Link href="/auth?tab=1" className="user-actions__link" aria-label="Cadastre-se">
-                <PersonOutline className="user-actions__icon" />
+            <ActionItem>
+              <Link href="/auth?tab=1" className="flex items-center gap-1 text-gray-300 no-underline text-sm transition-colors hover:text-primary-500" aria-label="Cadastre-se">
+                <ActionIcon className="fa fa-user-o text-lg" />
                 Cadastre-se
               </Link>
-            </li>
-            <li className="user-actions__item user-actions__item--login">
-              <Link href="/auth" className="user-actions__link" aria-label="Login">
-                <Share className="user-actions__icon" />
+            </ActionItem>
+            <ActionItem>
+              <Link href="/auth" className="flex items-center gap-1 text-gray-300 no-underline text-sm transition-colors hover:text-primary-500" aria-label="Login">
+                <ActionIcon className="fa fa-share text-lg" />
                 Login
               </Link>
-            </li>
+            </ActionItem>
           </>
         )}
-      </ul>
+      </ActionsList>
     </UserActionsContainer>
   );
 };

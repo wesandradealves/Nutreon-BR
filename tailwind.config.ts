@@ -30,14 +30,12 @@ export default {
     'sm:ms-auto',
     'sm:me-auto',
     'sm:m-auto',
-    {
-      pattern: /^(p|pt|pr|pb|pl|px|py|m|mt|mr|mb|ml|mx|my|w|h|gap)-\[\w+(-\w+)*\]$/,
-      variants: ['sm', 'md', 'lg', 'xl', '2xl'],
-    },
-    {
-      pattern: /^(min-w|min-h|max-w|max-h)-\[\w+(-\w+)*\]$/,
-      variants: ['sm', 'md', 'lg', 'xl', '2xl'],
-    },
+    '-top-[8px]',
+    '-right-[8px]',
+    '-top-[10px]',
+    '-right-[10px]',
+    '-top-[12px]',
+    '-right-[12px]',
   ],
   darkMode: ["class", '[data-theme="dark"]'],
   theme: {
@@ -45,6 +43,30 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        primary: {
+          50: '#e6fcfa',
+          100: '#b3f5f0',
+          200: '#80ede6',
+          300: '#4de6dc',
+          400: '#1adfd2',
+          500: '#00e8d4', // Cor principal
+          600: '#00b8a9',
+          700: '#00897e',
+          800: '#005953',
+          900: '#002a28',
+        },
+        dark: {
+          100: '#f5f5f5',
+          200: '#e5e5e5',
+          300: '#d4d4d4',
+          400: '#a3a3a3',
+          500: '#737373',
+          600: '#525252',
+          700: '#404040',
+          800: '#262626',
+          900: '#171717',
+          950: '#0a0a0a',
+        }
       },
     },
   },

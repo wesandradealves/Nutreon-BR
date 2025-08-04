@@ -3,6 +3,20 @@
 import { useEffect, useState } from 'react';
 import { useBFF } from '@/hooks/useBFF';
 import Image from 'next/image';
+import {
+  PageContainer,
+  LoadingContainer,
+  ContentSection,
+  Title,
+  Subtitle,
+  Text,
+  ProductGrid,
+  ProductCard,
+  ProductImage,
+  ProductTitle,
+  ProductPrice,
+  Button
+} from './styles';
 
 interface Product {
   id: number;
@@ -48,36 +62,36 @@ export default function HomePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <LoadingContainer className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Carregando loja...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto"></div>
+          <Text className="mt-4 text-gray-600">Carregando loja...</Text>
         </div>
-      </div>
+      </LoadingContainer>
     );
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <PageContainer className="min-h-screen p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">
+        <ContentSection className="text-center mb-12">
+          <Title className="text-4xl font-bold mb-4">
             {storeInfo?.name?.pt || 'Nutreon E-commerce'}
-          </h1>
-          <p className="text-gray-600">
+          </Title>
+          <Text className="text-gray-600">
             Bem-vindo à nossa loja! Confira nossos produtos abaixo.
-          </p>
-        </div>
+          </Text>
+        </ContentSection>
         
-        <div className="mb-8">
-          <h2 className="text-2xl font-semibold mb-6">Produtos em Destaque</h2>
+        <ContentSection className="mb-8">
+          <Subtitle className="text-2xl font-semibold mb-6">Produtos em Destaque</Subtitle>
           
           {products.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <ProductGrid className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {products.map((product) => (
-                <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                <ProductCard key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
                   {product.images?.[0] && (
-                    <div className="aspect-square bg-gray-100">
+                    <ProductImage className="aspect-square bg-gray-100">
                       <Image 
                         src={product.images[0].src} 
                         alt={product.name.pt || 'Produto'}
@@ -85,40 +99,40 @@ export default function HomePage() {
                         height={300}
                         className="w-full h-full object-cover"
                       />
-                    </div>
+                    </ProductImage>
                   )}
                   <div className="p-4">
-                    <h3 className="font-medium text-lg mb-2">
+                    <ProductTitle className="font-medium text-lg mb-2">
                       {product.name.pt || 'Produto sem nome'}
-                    </h3>
+                    </ProductTitle>
                     {product.variants?.[0] && (
-                      <p className="text-green-600 font-bold text-xl">
+                      <ProductPrice className="text-primary-500 font-bold text-xl">
                         R$ {product.variants[0].price}
-                      </p>
+                      </ProductPrice>
                     )}
-                    <button className="mt-4 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors">
+                    <Button className="mt-4 w-full bg-primary-500 text-white py-2 rounded-lg hover:bg-primary-600 transition-colors">
                       Ver Detalhes
-                    </button>
+                    </Button>
                   </div>
-                </div>
+                </ProductCard>
               ))}
-            </div>
+            </ProductGrid>
           ) : (
-            <div className="text-center py-12 bg-gray-50 rounded-lg">
-              <p className="text-gray-500">Nenhum produto disponível no momento.</p>
-            </div>
+            <ContentSection className="text-center py-12 bg-gray-50 rounded-lg">
+              <Text className="text-gray-500">Nenhum produto disponível no momento.</Text>
+            </ContentSection>
           )}
-        </div>
+        </ContentSection>
         
-        <div className="mt-12 text-center">
-          <button 
+        <ContentSection className="mt-12 text-center">
+          <Button 
             onClick={loadData}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+            className="bg-primary-500 text-white px-6 py-3 rounded-lg hover:bg-primary-600 transition-colors"
           >
             Recarregar Dados
-          </button>
-        </div>
+          </Button>
+        </ContentSection>
       </div>
-    </div>
+    </PageContainer>
   );
 }

@@ -1,7 +1,15 @@
 'use client';
 
-import { LocationOn } from '@mui/icons-material';
-import { DeliveryCheckContainer } from './styles';
+import { 
+  DeliveryCheckContainer,
+  DeliveryContent,
+  DeliveryIcon,
+  DeliveryMessage,
+  DeliveryAddress,
+  DeliveryTitle,
+  DeliveryLabel,
+  DeliveryLocation
+} from './styles';
 
 interface DeliveryCheckProps {
   isDelivering?: boolean;
@@ -23,24 +31,22 @@ const DeliveryCheck = ({
         e.preventDefault();
         onClick();
       }}
-      className={`delivery-check ${className}`}
+      className={`flex items-center gap-2 px-4 py-1.5 border border-dark-700 rounded text-gray-300 hover:border-primary-500 hover:text-primary-500 transition-all ${className}`}
     >
-      <div className="delivery-check__content">
-        <LocationOn className="delivery-check__icon" />
-        <div 
-          className="delivery-check__message" 
-          style={{ display: isDelivering ? 'none' : 'block' }}
+      <DeliveryContent className="flex items-center gap-2">
+        <DeliveryIcon className="fa fa-map-marker text-lg" />
+        <DeliveryMessage 
+          className={`${isDelivering ? 'hidden' : 'block'}`}
         >
-          <h5 className="delivery-check__title">Será que entrega?</h5>
-        </div>
-        <div 
-          className="delivery-check__address" 
-          style={{ display: isDelivering ? 'block' : 'none' }}
+          <DeliveryTitle className="text-sm font-normal m-0">Será que entrega?</DeliveryTitle>
+        </DeliveryMessage>
+        <DeliveryAddress 
+          className={`${isDelivering ? 'block' : 'hidden'}`}
         >
-          <h6 className="delivery-check__label">Entregar em</h6>
-          <h6 className="delivery-check__location">{address}</h6>
-        </div>
-      </div>
+          <DeliveryLabel className="text-xs font-normal m-0">Entregar em</DeliveryLabel>
+          <DeliveryLocation className="text-xs font-normal m-0">{address}</DeliveryLocation>
+        </DeliveryAddress>
+      </DeliveryContent>
     </DeliveryCheckContainer>
   );
 };
