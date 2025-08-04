@@ -7,6 +7,30 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+## [0.6.0] - 2025-08-04
+
+### Adicionado
+- **Login Automático após Verificação de Email**: Usuário é autenticado automaticamente ao verificar email
+  - VerifyEmailUseCase agora retorna token JWT e cria sessão
+  - Cookie de autenticação configurado automaticamente
+  - Redirecionamento direto para conta após verificação
+
+### Corrigido
+- **CRÍTICO: Verificação de Email Obrigatória**: Restaurada validação que impede acesso sem email verificado
+  - Usuários não verificados veem tela de bloqueio na página de conta
+  - Opção de reenviar email de verificação disponível
+  - Previne bypass de segurança identificado durante refatoração
+- **Grid de Produtos Responsivo**: Ajustado para 3 colunas desktop, 2 tablet, 1 mobile
+  - Removida configuração dinâmica que causava problemas com Tailwind
+  - Classes CSS fixas para melhor performance
+
+### Refatorado
+- **Páginas de Autenticação**: Migração completa para padrão Styled Components + Tailwind
+  - `/auth/reset-password`: Removido Material-UI, adicionada barra de força de senha visual
+  - `/auth/verify-email`: Removido Material-UI e ícones Material Icons
+  - Todos os componentes agora seguem padrão único de estilização
+  - Toast notifications para feedback de reenvio de email
+
 ### Melhorado
 - **Hooks Refatorados para useApiRequest**: Migração de hooks para usar o cliente API centralizado
   - `useCustomerProfile`: Migrado de fetch nativo (122 → 111 linhas)
@@ -514,6 +538,11 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Configuração básica do ambiente
 - Documentação inicial
 
+[0.6.0]: https://github.com/nutreon/nutreon-br/compare/v0.5.0...v0.6.0
+[0.5.0]: https://github.com/nutreon/nutreon-br/compare/v0.4.3...v0.5.0
+[0.4.3]: https://github.com/nutreon/nutreon-br/compare/v0.4.2...v0.4.3
+[0.4.2]: https://github.com/nutreon/nutreon-br/compare/v0.4.1...v0.4.2
+[0.4.1]: https://github.com/nutreon/nutreon-br/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/nutreon/nutreon-br/compare/v0.3.9...v0.4.0
 [0.3.9]: https://github.com/nutreon/nutreon-br/compare/v0.3.8...v0.3.9
 [0.3.8]: https://github.com/nutreon/nutreon-br/compare/v0.3.7...v0.3.8

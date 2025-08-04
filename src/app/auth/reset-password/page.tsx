@@ -4,16 +4,10 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { usePasswordRecovery } from '@/hooks/usePasswordRecovery';
 import { usePasswordValidation } from '@/hooks/usePasswordValidation';
-import {
-  Container,
-  Paper,
-  Box,
-  TextField,
-  Button,
-  Alert,
-  Typography,
-  LinearProgress,
-} from '@mui/material';
+import { TextField } from '@/components/atoms/TextField';
+import { Button } from '@/components/atoms/Button';
+import { Alert } from '@/components/atoms/Alert';
+import { Container, Card, Form, Title, PasswordStrengthBar } from './styles';
 
 export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
@@ -63,10 +57,10 @@ export default function ResetPasswordPage() {
   };
 
   const getPasswordStrengthColor = () => {
-    if (passwordStrength.score <= 1) return 'error';
-    if (passwordStrength.score <= 2) return 'warning';
-    if (passwordStrength.score <= 3) return 'info';
-    return 'success';
+    if (passwordStrength.score <= 1) return 'bg-red-500';
+    if (passwordStrength.score <= 2) return 'bg-yellow-500';
+    if (passwordStrength.score <= 3) return 'bg-blue-500';
+    return 'bg-green-500';
   };
 
   const getPasswordStrengthValue = () => {
@@ -75,29 +69,29 @@ export default function ResetPasswordPage() {
 
   if (success) {
     return (
-      <Container maxWidth="sm" sx={{ mt: 8 }}>
-        <Paper elevation={3} sx={{ p: 4, textAlign: 'center' }}>
-          <Alert severity="success" sx={{ mb: 2 }}>
+      <Container className="min-h-screen flex items-center justify-center px-4">
+        <Card className="w-full max-w-md bg-white rounded-lg shadow-lg p-8 text-center">
+          <Alert severity="success" className="mb-4">
             Senha redefinida com sucesso!
           </Alert>
-          <Typography>
+          <p className="text-gray-700">
             Você será redirecionado para a página de login...
-          </Typography>
-        </Paper>
+          </p>
+        </Card>
       </Container>
     );
   }
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 8 }}>
-      <Paper elevation={3}>
-        <Box sx={{ p: 4 }}>
-          <Typography variant="h5" align="center" gutterBottom>
+    <Container className="min-h-screen flex items-center justify-center px-4">
+      <Card className="w-full max-w-md bg-white rounded-lg shadow-lg">
+        <div className="p-8">
+          <Title className="text-2xl font-bold text-center text-gray-800 mb-6">
             Redefinir Senha
-          </Typography>
+          </Title>
           
           {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
+            <Alert severity="error" className="mb-4">
               {error}
             </Alert>
           )}
@@ -107,41 +101,38 @@ export default function ResetPasswordPage() {
               Link de recuperação inválido. Por favor, solicite um novo email de recuperação.
             </Alert>
           ) : (
-            <Box component="form" onSubmit={handleSubmit}>
+            <Form onSubmit={handleSubmit}>
               <TextField
-                fullWidth
                 label="Nova Senha"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                margin="normal"
                 required
                 disabled={loading}
                 error={!!passwordError}
                 helperText={passwordError}
+                className="mb-4"
               />
               
               {password && (
-                <Box sx={{ mt: 1, mb: 2 }}>
-                  <Typography variant="caption" color="text.secondary">
+                <div className="mb-4">
+                  <span className="text-sm text-gray-600">
                     Força da senha: {passwordStrength.feedback}
-                  </Typography>
-                  <LinearProgress
-                    variant="determinate"
-                    value={getPasswordStrengthValue()}
-                    color={getPasswordStrengthColor()}
-                    sx={{ height: 8, borderRadius: 4, mt: 0.5 }}
-                  />
-                </Box>
+                  </span>
+                  <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                    <PasswordStrengthBar 
+                      className={`h-2 rounded-full transition-all duration-300 ${getPasswordStrengthColor()}`}
+                      style={{ width: `${getPasswordStrengthValue()}%` }}
+                    />
+                  </div>
+                </div>
               )}
 
               <TextField
-                fullWidth
                 label="Confirmar Nova Senha"
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                margin="normal"
                 required
                 disabled={loading}
                 error={password !== confirmPassword && confirmPassword !== ''}
@@ -150,31 +141,31 @@ export default function ResetPasswordPage() {
                     ? 'As senhas não coincidem'
                     : ''
                 }
+                className="mb-6"
               />
 
               <Button
                 type="submit"
-                fullWidth
                 variant="contained"
-                sx={{ mt: 3 }}
+                fullWidth
                 disabled={loading || !password || !confirmPassword || !!passwordError}
+                className="mb-3"
               >
                 {loading ? 'Redefinindo...' : 'Redefinir Senha'}
               </Button>
 
               <Button
-                fullWidth
                 variant="text"
-                sx={{ mt: 2 }}
+                fullWidth
                 onClick={() => router.push('/auth')}
                 disabled={loading}
               >
                 Voltar para Login
               </Button>
-            </Box>
+            </Form>
           )}
-        </Box>
-      </Paper>
+        </div>
+      </Card>
     </Container>
   );
 }

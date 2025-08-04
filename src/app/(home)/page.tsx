@@ -2,28 +2,16 @@
 
 import { useEffect, useState } from 'react';
 import { useBFF } from '@/hooks/useBFF';
-import Image from 'next/image';
+import { ProductGrid } from '@/components/organisms/ProductGrid';
 import {
   PageContainer,
   LoadingContainer,
   ContentSection,
   Title,
   Subtitle,
-  Text,
-  ProductGrid,
-  ProductCard,
-  ProductImage,
-  ProductTitle,
-  ProductPrice,
-  Button
+  Text
 } from './styles';
-
-interface Product {
-  id: number;
-  name: { pt?: string; [key: string]: string | undefined };
-  images: Array<{ src: string }>;
-  variants: Array<{ price: string }>;
-}
+import type { NuvemshopProduct, NuvemshopCategory } from '@/types';
 
 interface StoreInfo {
   name: { pt?: string; [key: string]: string | undefined };
@@ -32,7 +20,8 @@ interface StoreInfo {
 }
 
 export default function HomePage() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<NuvemshopProduct[]>([]);
+  const [categories, setCategories] = useState<NuvemshopCategory[]>([]);
   const [storeInfo, setStoreInfo] = useState<StoreInfo | null>(null);
   const { request, loading } = useBFF();
 
@@ -53,8 +42,14 @@ export default function HomePage() {
       setStoreInfo(storeResponse.data);
     }
     
+    // Buscar categorias primeiro
+    const categoriesResponse = await request<NuvemshopCategory[]>('/categories');
+    if (categoriesResponse?.data) {
+      setCategories(categoriesResponse.data);
+    }
+    
     // Buscar produtos
-    const productsResponse = await request<Product[]>('/products?per_page=8');
+    const productsResponse = await request<NuvemshopProduct[]>('/products?per_page=12');
     if (productsResponse?.data) {
       setProducts(productsResponse.data);
     }
@@ -86,51 +81,10 @@ export default function HomePage() {
         <ContentSection className="mb-8">
           <Subtitle className="text-2xl font-semibold mb-6">Produtos em Destaque</Subtitle>
           
-          {products.length > 0 ? (
-            <ProductGrid className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {products.map((product) => (
-                <ProductCard key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                  {product.images?.[0] && (
-                    <ProductImage className="aspect-square bg-gray-100">
-                      <Image 
-                        src={product.images[0].src} 
-                        alt={product.name.pt || 'Produto'}
-                        width={300}
-                        height={300}
-                        className="w-full h-full object-cover"
-                      />
-                    </ProductImage>
-                  )}
-                  <div className="p-4">
-                    <ProductTitle className="font-medium text-lg mb-2">
-                      {product.name.pt || 'Produto sem nome'}
-                    </ProductTitle>
-                    {product.variants?.[0] && (
-                      <ProductPrice className="text-primary-500 font-bold text-xl">
-                        R$ {product.variants[0].price}
-                      </ProductPrice>
-                    )}
-                    <Button className="mt-4 w-full bg-primary-500 text-white py-2 rounded-lg hover:bg-primary-600 transition-colors">
-                      Ver Detalhes
-                    </Button>
-                  </div>
-                </ProductCard>
-              ))}
-            </ProductGrid>
-          ) : (
-            <ContentSection className="text-center py-12 bg-gray-50 rounded-lg">
-              <Text className="text-gray-500">Nenhum produto disponível no momento.</Text>
-            </ContentSection>
-          )}
-        </ContentSection>
-        
-        <ContentSection className="mt-12 text-center">
-          <Button 
-            onClick={loadData}
-            className="bg-primary-500 text-white px-6 py-3 rounded-lg hover:bg-primary-600 transition-colors"
-          >
-            Recarregar Dados
-          </Button>
+          <ProductGrid 
+            products={products}
+            categories={categories}
+          />
         </ContentSection>
       </div>
     </PageContainer>

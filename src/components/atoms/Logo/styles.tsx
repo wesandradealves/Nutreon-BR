@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 
-export const LogoContainer = styled.div.attrs({
-  className: 'logo'
-})`
+export const LogoContainer = styled.div`
   a {
     display: block;
   }
@@ -16,6 +14,6 @@ export const LogoContainer = styled.div.attrs({
     margin: 0;
     font-size: 32px;
     font-weight: bold;
-    color: ${props => props.theme.colors.primary};
+    color: ${props => props.theme?.colors?.primary || '#00e8d4'};
   }
 `;

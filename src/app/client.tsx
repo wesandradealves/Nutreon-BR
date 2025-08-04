@@ -11,6 +11,7 @@ import { Suspense, useRef, useState, useEffect } from 'react';
 import Header from '@/components/header/header';
 import Footer from '@/components/footer/footer';
 import { apiClient } from '@/services/api-client';
+import { Toaster } from 'react-hot-toast';
 
 import { useMetadata } from '@/hooks/useMetadata';
 import { theme } from '@/styles/theme';
@@ -63,6 +64,26 @@ export default function ClientProviders({ children }: { children: React.ReactNod
                     <Footer />
                   </motion.div>
                   <Spinner />
+                  <Toaster 
+                    position="top-center"
+                    toastOptions={{
+                      duration: 4000,
+                      style: {
+                        background: '#363636',
+                        color: '#fff',
+                      },
+                      success: {
+                        duration: 3000,
+                        iconTheme: {
+                          primary: '#00e8d4',
+                          secondary: '#fff',
+                        },
+                      },
+                      error: {
+                        duration: 4000,
+                      },
+                    }}
+                  />
                 </App>
               </AnimatePresence>
             </StyledJsxRegistry>

@@ -207,47 +207,89 @@ docker-compose down # Para containers
 
 ### Padrões de Estilização
 
-O projeto segue um padrão específico de estilização que combina o melhor de Styled Components e Tailwind CSS:
+O projeto segue um padrão rígido de estilização que combina Atomic Design, Styled Components e Tailwind CSS:
 
-#### 1. Estrutura de Componentes
+#### 1. Atomic Design
+```
+src/components/
+├── atoms/          # Componentes básicos (Button, Input, Icon)
+├── molecules/      # Combinações de átomos (SearchBar, ProductCard)
+├── organisms/      # Seções completas (Header, ProductList)
+└── templates/      # Layouts de página
+```
+
+#### 2. Regras de Styled Components + Tailwind
+
+##### ✅ CORRETO - Como deve ser feito:
 ```tsx
-// Sempre usar styled-components para elementos estruturais
+// styles.tsx - APENAS estrutura, SEM classes Tailwind
+import styled from 'styled-components';
+
 export const Container = styled.div``;
-export const Title = styled.h1``;
 export const Button = styled.button``;
+export const Title = styled.h1`
+  /* CSS customizado APENAS quando Tailwind não suporta */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+`;
 
-// Classes Tailwind aplicadas diretamente no JSX
-<Container className="max-w-7xl mx-auto px-4">
-  <Title className="text-2xl font-bold text-gray-900">
-    Título
-  </Title>
-</Container>
+// index.tsx - Classes Tailwind direto no componente
+export function Component() {
+  return (
+    <Container className="max-w-7xl mx-auto px-4">
+      <Button className="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded">
+        Clique aqui
+      </Button>
+      <Title className="text-2xl font-bold text-gray-900">
+        Título
+      </Title>
+    </Container>
+  );
+}
 ```
 
-#### 2. Regras de Estilização
-- **Styled Components**: Para estrutura semântica e elementos HTML
-- **Tailwind CSS**: Para estilos visuais aplicados via className
-- **Zero estilos inline**: Nunca usar style={{}}
-- **Zero CSS/SCSS**: Não criar arquivos .css ou .scss
-- **Sem Material-UI**: Usar apenas componentes próprios
+##### ❌ ERRADO - O que NÃO fazer:
+```tsx
+// NÃO use attrs com className
+export const Container = styled.div.attrs({
+  className: 'max-w-7xl mx-auto'  // ❌ ERRADO
+})``;
 
-#### 3. Organização de Arquivos
+// NÃO use estilos inline
+<div style={{ padding: '10px' }}>  // ❌ ERRADO
+
+// NÃO crie arquivos CSS/SCSS
+import './styles.css'  // ❌ ERRADO
+
+// NÃO misture bibliotecas de UI
+import { Button } from '@mui/material'  // ❌ ERRADO
 ```
-componente/
-├── index.tsx       # Componente principal
-└── styles.tsx      # Styled components (estrutura apenas)
+
+#### 3. Hierarquia de Componentes
+- **Atoms**: Sem lógica de negócio, apenas props
+- **Molecules**: Podem ter estado local simples
+- **Organisms**: Podem usar hooks e contextos
+- **Templates**: Definem layout geral da página
+
+#### 4. Organização de Arquivos
+```
+ComponentName/
+├── index.tsx       # Componente com classes Tailwind
+├── styles.tsx      # Styled components SEM classes
+└── types.ts        # Interfaces TypeScript (se necessário)
 ```
 
-#### 4. Cores e Tema
-- **Cor Primária**: `#00e8d4` (ciano/turquesa)
-- **Tema Escuro**: Header e navegação usam `bg-dark-900`
-- **Textos**: `text-gray-300` em fundos escuros
-- **Hovers**: `hover:text-primary-500`
+#### 5. Cores e Tema
+- **Cor Primária**: `#00e8d4` (cyan-500 customizado)
+- **Usar variáveis Tailwind**: `bg-gray-100`, `text-gray-900`
+- **Tema escuro**: Usar classes `dark:` do Tailwind
+- **Evitar cores hardcoded**: Sempre usar sistema de cores Tailwind
 
-#### 5. Ícones
-- **Font Awesome**: Para todos os ícones
-- **Exemplo**: `<i className="fa fa-user" />`
-- **Não usar**: Material Icons, React Icons, etc
+#### 6. Ícones
+- **Lucide React**: Para ícones modernos e otimizados
+- **Exemplo**: `import { Heart, ShoppingCart } from 'lucide-react'`
+- **Tamanho padrão**: `size={20}` ou `size={24}`
 
 ## 📁 Estrutura do Projeto
 

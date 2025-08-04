@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
 
 interface Customer {
   id: string;
@@ -105,6 +106,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (typeof window !== 'undefined') {
         localStorage.setItem('customer_data', JSON.stringify(data.data.customer));
       }
+      
+      toast.success(`Bem-vindo de volta, ${data.data.customer.name}!`);
     } catch (error) {
       throw error;
     } finally {
@@ -143,6 +146,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       // Não fazer login automático - aguardar verificação de email
+      toast.success('Conta criada com sucesso! Verifique seu email para ativar sua conta.');
       return result;
     } catch (error) {
       throw error;

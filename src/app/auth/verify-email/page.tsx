@@ -3,16 +3,9 @@
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useBFF } from '@/hooks/useBFF';
-import {
-  Container,
-  Paper,
-  Box,
-  Typography,
-  Button,
-  CircularProgress,
-  Alert,
-} from '@mui/material';
-import { CheckCircle as CheckCircleIcon, Error as ErrorIcon } from '@mui/icons-material';
+import { Button } from '@/components/atoms/Button';
+import { Alert } from '@/components/atoms/Alert';
+import { Container, Card, IconWrapper, Title, Message, ButtonGroup } from './styles';
 
 export default function VerifyEmailPage() {
   const searchParams = useSearchParams();
@@ -20,15 +13,10 @@ export default function VerifyEmailPage() {
   const { request } = useBFF();
   const token = searchParams?.get('token');
   
-  console.log('VerifyEmailPage renderizada, searchParams:', searchParams);
-  console.log('Token extraído:', token);
-  
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    console.log('useEffect executado, token:', token);
-    
     if (!token) {
       setStatus('error');
       setMessage('Token de verificação não encontrado');
@@ -37,7 +25,6 @@ export default function VerifyEmailPage() {
 
     const verify = async () => {
       try {
-        console.log('Iniciando verificação do token:', token);
         const response = await request('/auth/verify-email', {
           method: 'POST',
           body: JSON.stringify({ token }),
@@ -45,15 +32,17 @@ export default function VerifyEmailPage() {
 
         if (response && response.success) {
           setStatus('success');
-          setMessage('Email verificado com sucesso! Você será redirecionado...');
+          setMessage('Email verificado com sucesso! Você foi conectado automaticamente.');
+          
           setTimeout(() => {
             router.push('/conta');
-          }, 3000);
+          }, 2000);
         } else {
           setStatus('error');
           setMessage('Erro ao verificar email');
         }
-      } catch {
+      } catch (error) {
+        console.error('Erro na verificação:', error);
         setStatus('error');
         setMessage('Token inválido ou expirado');
       }
@@ -64,33 +53,37 @@ export default function VerifyEmailPage() {
 
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 8 }}>
-      <Paper elevation={3}>
-        <Box sx={{ p: 4, textAlign: 'center' }}>
+    <Container className="min-h-screen flex items-center justify-center px-4">
+      <Card className="w-full max-w-md bg-white rounded-lg shadow-lg p-8 text-center">
           {status === 'loading' && (
             <>
-              <CircularProgress size={60} sx={{ mb: 3 }} />
-              <Typography variant="h5" gutterBottom>
+              <IconWrapper className="flex justify-center mb-6">
+                <div className="w-16 h-16 border-4 border-primary-500 border-t-transparent rounded-full animate-spin" />
+              </IconWrapper>
+              <Title className="text-2xl font-bold text-gray-800 mb-3">
                 Verificando seu email...
-              </Typography>
-              <Typography color="text.secondary">
+              </Title>
+              <Message className="text-gray-600">
                 Por favor, aguarde enquanto confirmamos seu email.
-              </Typography>
+              </Message>
             </>
           )}
 
           {status === 'success' && (
             <>
-              <CheckCircleIcon sx={{ fontSize: 80, color: 'success.main', mb: 2 }} />
-              <Typography variant="h5" gutterBottom>
+              <IconWrapper className="flex justify-center mb-4">
+                <i className="fa fa-check-circle text-6xl text-green-500" />
+              </IconWrapper>
+              <Title className="text-2xl font-bold text-gray-800 mb-3">
                 Email Verificado!
-              </Typography>
-              <Alert severity="success" sx={{ mt: 2, mb: 3 }}>
+              </Title>
+              <Alert severity="success" className="mb-6">
                 {message}
               </Alert>
               <Button
                 variant="contained"
                 onClick={() => router.push('/auth?tab=0')}
+                fullWidth
               >
                 Ir para Login
               </Button>
@@ -99,14 +92,16 @@ export default function VerifyEmailPage() {
 
           {status === 'error' && (
             <>
-              <ErrorIcon sx={{ fontSize: 80, color: 'error.main', mb: 2 }} />
-              <Typography variant="h5" gutterBottom>
+              <IconWrapper className="flex justify-center mb-4">
+                <i className="fa fa-times-circle text-6xl text-red-500" />
+              </IconWrapper>
+              <Title className="text-2xl font-bold text-gray-800 mb-3">
                 Erro na Verificação
-              </Typography>
-              <Alert severity="error" sx={{ mt: 2, mb: 3 }}>
+              </Title>
+              <Alert severity="error" className="mb-6">
                 {message}
               </Alert>
-              <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
+              <ButtonGroup className="flex gap-3 justify-center">
                 <Button
                   variant="outlined"
                   onClick={() => router.push('/auth?tab=1')}
@@ -119,11 +114,10 @@ export default function VerifyEmailPage() {
                 >
                   Ir para Login
                 </Button>
-              </Box>
+              </ButtonGroup>
             </>
           )}
-        </Box>
-      </Paper>
+      </Card>
     </Container>
   );
 }

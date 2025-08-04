@@ -23,11 +23,19 @@ export interface NuvemshopProduct {
   variants: Array<{
     id: number;
     price: string;
-    compare_at_price?: string;
-    stock?: number;
+    promotional_price?: string;
+    stock?: number | string;
+    stock_management?: boolean;
     sku?: string;
-    barcode?: string;
     weight?: string;
+    width?: number | null;
+    height?: number | null;
+    depth?: number | null;
+    cost?: string | null;
+    values?: Array<{ [key: string]: string }>;
+    product_id?: number;
+    created_at?: string;
+    updated_at?: string;
   }>;
   categories?: number[];
   published?: boolean;

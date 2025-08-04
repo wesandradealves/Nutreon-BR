@@ -9,26 +9,26 @@ import { usePasswordValidation } from '@/hooks/usePasswordValidation';
 import { useResendVerification } from '@/hooks/useResendVerification';
 import { useForm, Controller } from 'react-hook-form';
 import { PatternFormat } from 'react-number-format';
+import { toast } from 'react-hot-toast';
+import { Pencil, Save, X, Lock, LogOut, CheckCircle, AlertCircle } from 'lucide-react';
+import { TextField } from '@/components/atoms/TextField';
+import { Button } from '@/components/atoms/Button';
+import { Alert } from '@/components/atoms/Alert';
 import {
   Container,
-  Paper,
-  Typography,
-  Box,
-  Button,
-  Divider,
-  TextField,
-  CircularProgress,
-  Alert,
-  IconButton,
-  Snackbar,
-} from '@mui/material';
-import { 
-  Logout as LogoutIcon,
-  Edit as EditIcon,
-  Save as SaveIcon,
-  Cancel as CancelIcon,
-  Lock as LockIcon,
-} from '@mui/icons-material';
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  Section,
+  SectionHeader,
+  SectionTitle,
+  InfoRow,
+  Label,
+  Value,
+  ButtonGroup,
+  Divider
+} from './styles';
 
 interface PersonalDataForm {
   name: string;
@@ -43,7 +43,7 @@ interface PasswordForm {
 
 export default function AccountPage() {
   const router = useRouter();
-  const { customer, checkAuth } = useAuth();
+  const { customer, isAuthenticated, checkAuth } = useAuth();
   const { formatPhone } = usePhoneFormat();
   const { validatePasswordMatch } = usePasswordValidation();
   const {
@@ -53,14 +53,44 @@ export default function AccountPage() {
     updateProfile,
     changePassword,
     handleLogout,
-    clearMessage,
-    clearError,
+    clearMessage
   } = useCustomerProfile();
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [isEditingPassword, setIsEditingPassword] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
-  
+  const [editMode, setEditMode] = useState(false);
+  const [changePasswordMode, setChangePasswordMode] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Form para dados pessoais
+  const {
+    control: personalControl,
+    handleSubmit: handlePersonalSubmit,
+    reset: resetPersonal,
+    formState: { errors: personalErrors }
+  } = useForm<PersonalDataForm>({
+    defaultValues: {
+      name: customer?.name || '',
+      phone: customer?.phone || ''
+    }
+  });
+
+  // Form para senha
+  const {
+    control: passwordControl,
+    handleSubmit: handlePasswordSubmit,
+    reset: resetPassword,
+    watch,
+    formState: { errors: passwordErrors }
+  } = useForm<PasswordForm>({
+    defaultValues: {
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: ''
+    }
+  });
+
+  const newPassword = watch('newPassword');
+
+  // Hook para reenvio de verificação
   const {
     loading: resendLoading,
     success: resendSuccess,
@@ -68,84 +98,77 @@ export default function AccountPage() {
     resendEmail
   } = useResendVerification();
 
-  // Form para dados pessoais
-  const {
-    register,
-    handleSubmit,
-    reset,
-    control,
-    formState: { errors },
-  } = useForm<PersonalDataForm>({
-    defaultValues: {
-      name: '',
-      phone: '',
-    },
-  });
-
-  // Garante que o componente está montado no cliente
   useEffect(() => {
-    setIsMounted(true);
-    // Recarregar dados do cliente ao montar a página apenas uma vez
-    checkAuth();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Atualizar valores do formulário quando customer mudar
-  useEffect(() => {
-    if (customer && isMounted) {
-      reset({
-        name: customer.name || '',
-        phone: formatPhone(customer.phone),
+    if (!isInitialized) {
+      setIsInitialized(true);
+      // Sempre atualizar dados ao montar a página
+      checkAuth().then(() => {
+        if (!isAuthenticated) {
+          router.push('/auth?redirect=/conta');
+        }
       });
     }
-  }, [customer, reset, formatPhone, isMounted]);
+  }, [isAuthenticated, router, isInitialized, checkAuth]);
 
-  // Form para senha
-  const {
-    register: registerPassword,
-    handleSubmit: handleSubmitPassword,
-    reset: resetPassword,
-    formState: { errors: passwordErrors },
-    watch,
-  } = useForm<PasswordForm>();
+  useEffect(() => {
+    if (customer) {
+      resetPersonal({
+        name: customer.name || '',
+        phone: customer.phone || ''
+      });
+    }
+  }, [customer, resetPersonal]);
 
-  const newPassword = watch('newPassword');
+  useEffect(() => {
+    if (message) {
+      toast.success(message);
+      clearMessage();
+    }
+  }, [message, clearMessage]);
 
-  const onSubmit = async (data: PersonalDataForm) => {
-    const result = await updateProfile(data);
-    if (result.success) {
-      setIsEditing(false);
+  useEffect(() => {
+    if (resendSuccess) {
+      toast.success('Email de verificação reenviado com sucesso! Verifique sua caixa de entrada.');
+    }
+  }, [resendSuccess]);
+
+  useEffect(() => {
+    if (resendError) {
+      toast.error(resendError);
+    }
+  }, [resendError]);
+
+
+
+  const onPersonalSubmit = async (data: PersonalDataForm) => {
+    const success = await updateProfile(data);
+    if (success) {
+      setEditMode(false);
+      // O contexto será atualizado automaticamente
     }
   };
 
   const onPasswordSubmit = async (data: PasswordForm) => {
     const result = await changePassword(data);
-    if (result.success) {
+    if (result && result.success) {
+      setChangePasswordMode(false);
       resetPassword();
-      setIsEditingPassword(false);
     }
   };
 
-  const handleCancelEdit = () => {
-    reset({
-      name: customer?.name || '',
-      phone: formatPhone(customer?.phone),
-    });
-    setIsEditing(false);
-    clearError();
+  const handleResendVerification = async () => {
+    if (customer?.email) {
+      await resendEmail(customer.email);
+    }
   };
 
-  const handleCancelPasswordEdit = () => {
-    resetPassword();
-    setIsEditingPassword(false);
-    clearError();
-  };
-
-  if (!customer || !isMounted) {
+  if (!isInitialized || !customer) {
     return (
-      <Container maxWidth="md" sx={{ mt: 8, mb: 4 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
-          <CircularProgress />
-        </Box>
+      <Container className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Carregando...</p>
+        </div>
       </Container>
     );
   }
@@ -153,280 +176,312 @@ export default function AccountPage() {
   // Verificar se o email foi verificado
   if (!customer.verified) {
     return (
-      <Container maxWidth="md" sx={{ mt: 8, mb: 4 }}>
-        <Paper elevation={3} sx={{ p: 4 }}>
-          <Alert severity="warning" sx={{ mb: 3 }}>
-            Seu email ainda não foi verificado. Por favor, verifique sua caixa de entrada e clique no link de verificação.
-          </Alert>
-          
-          {resendSuccess && (
-            <Alert severity="success" sx={{ mb: 2 }}>
-              Email de verificação reenviado com sucesso! Verifique sua caixa de entrada.
+      <Container className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-2xl mx-auto px-4">
+          <Card className="bg-white rounded-lg shadow-md p-6">
+            <Alert severity="warning" className="mb-6">
+              Seu email ainda não foi verificado. Por favor, verifique sua caixa de entrada e clique no link de verificação.
             </Alert>
-          )}
-          
-          {resendError && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {resendError}
-            </Alert>
-          )}
-          
-          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-            <Button variant="outlined" onClick={() => router.push('/')}>
-              Voltar para Home
-            </Button>
-            <Button 
-              variant="contained" 
-              onClick={() => resendEmail(customer.email)}
-              disabled={resendLoading || resendSuccess}
-            >
-              {resendLoading ? 'Reenviando...' : 'Reenviar Email de Verificação'}
-            </Button>
-            <Button variant="contained" color="error" onClick={handleLogout}>
-              Sair
-            </Button>
-          </Box>
-        </Paper>
+            
+            <div className="flex gap-3 flex-wrap">
+              <Button 
+                variant="outlined" 
+                onClick={() => router.push('/')}
+              >
+                Voltar para Home
+              </Button>
+              <Button 
+                variant="contained" 
+                onClick={handleResendVerification}
+                disabled={resendLoading || resendSuccess}
+              >
+                {resendLoading ? 'Reenviando...' : 'Reenviar Email de Verificação'}
+              </Button>
+              <Button 
+                variant="contained" 
+                color="error" 
+                onClick={handleLogout}
+              >
+                Sair
+              </Button>
+            </div>
+          </Card>
+        </div>
       </Container>
     );
   }
 
   return (
-    <Container maxWidth="md" sx={{ mt: 8, mb: 4 }}>
-      <Paper elevation={3} sx={{ p: 4 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Typography variant="h4" component="h1">
-            Minha Conta
-          </Typography>
-          <Button
-            variant="outlined"
-            color="error"
-            startIcon={<LogoutIcon />}
-            onClick={handleLogout}
-          >
-            Sair
-          </Button>
-        </Box>
-
-        <Divider sx={{ mb: 3 }} />
-
-        {/* Mensagens */}
-        <Snackbar
-          open={!!message}
-          autoHideDuration={6000}
-          onClose={clearMessage}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        >
-          <Alert onClose={clearMessage} severity="success" sx={{ width: '100%' }}>
-            {message}
-          </Alert>
-        </Snackbar>
-
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }} onClose={clearError}>
-            {error}
-          </Alert>
-        )}
-
-        {/* Dados Pessoais */}
-        <Box sx={{ mb: 4 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-            <Typography variant="h6">
-              Dados Pessoais
-            </Typography>
-            {!isEditing && (
-              <IconButton
-                color="primary"
-                onClick={() => setIsEditing(true)}
-                sx={{ ml: 1 }}
+    <Container className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-4xl mx-auto px-4">
+        <Card className="bg-white rounded-lg shadow-md">
+          <CardHeader className="p-6 border-b border-gray-200">
+            <div className="flex justify-between items-center">
+              <CardTitle className="text-2xl font-bold text-gray-900">
+                Minha Conta
+              </CardTitle>
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={handleLogout}
+                className="flex items-center gap-2"
               >
-                <EditIcon />
-              </IconButton>
+                <LogOut size={20} />
+                Sair
+              </Button>
+            </div>
+          </CardHeader>
+
+          <CardContent className="p-6">
+            {/* Status de Verificação */}
+            {!customer.verified && (
+              <Alert severity="warning" className="mb-6">
+                <div className="flex justify-between items-center">
+                  <span>
+                    <AlertCircle className="inline mr-2" size={20} />
+                    Seu email ainda não foi verificado. Verifique sua caixa de entrada.
+                  </span>
+                  <Button
+                    variant="text"
+                    color="primary"
+                    onClick={handleResendVerification}
+                    loading={resendLoading}
+                    className="ml-4"
+                  >
+                    Reenviar email
+                  </Button>
+                </div>
+              </Alert>
             )}
-          </Box>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <TextField
-                label="Email"
-                value={customer.email}
-                disabled
-                fullWidth
-                helperText="O email não pode ser alterado"
-              />
+            {resendSuccess && (
+              <Alert severity="success" className="mb-6">
+                Email de verificação reenviado com sucesso!
+              </Alert>
+            )}
 
-              <TextField
-                label="Nome"
-                {...register('name', {
-                  required: 'Nome é obrigatório',
-                  minLength: {
-                    value: 3,
-                    message: 'Nome deve ter pelo menos 3 caracteres',
-                  },
-                })}
-                error={!!errors.name}
-                helperText={errors.name?.message}
-                disabled={!isEditing}
-                fullWidth
-              />
+            {resendError && (
+              <Alert severity="error" className="mb-6">
+                {resendError}
+              </Alert>
+            )}
 
-              <Controller
-                name="phone"
-                control={control}
-                rules={{
-                  pattern: {
-                    value: /^\([0-9]{2}\) [0-9]{4,5}-[0-9]{4}$/,
-                    message: 'Telefone inválido',
-                  },
-                }}
-                render={({ field: { onChange, value, ...field } }) => (
-                  <PatternFormat
-                    {...field}
-                    format="(##) #####-####"
-                    mask=""
-                    value={value}
-                    onValueChange={(values) => {
-                      onChange(values.formattedValue);
-                    }}
-                    disabled={!isEditing}
-                    customInput={TextField}
-                    label="Telefone"
-                    error={!!errors.phone}
-                    helperText={errors.phone?.message || 'Opcional'}
-                    fullWidth
-                  />
+            {/* Dados Pessoais */}
+            <Section className="mb-8">
+              <SectionHeader className="flex justify-between items-center mb-4">
+                <SectionTitle className="text-xl font-semibold text-gray-800">
+                  Dados Pessoais
+                </SectionTitle>
+                {!editMode && (
+                  <Button
+                    variant="text"
+                    color="primary"
+                    onClick={() => setEditMode(true)}
+                    className="flex items-center gap-2"
+                  >
+                    <Pencil size={16} />
+                    Editar
+                  </Button>
                 )}
-              />
+              </SectionHeader>
 
-              {isEditing && (
-                <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    startIcon={loading ? <CircularProgress size={20} /> : <SaveIcon />}
-                    disabled={loading}
-                  >
-                    Salvar
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    startIcon={<CancelIcon />}
-                    onClick={handleCancelEdit}
-                    disabled={loading}
-                  >
-                    Cancelar
-                  </Button>
-                </Box>
-              )}
-            </Box>
-          </form>
-        </Box>
+              {editMode ? (
+                <form onSubmit={handlePersonalSubmit(onPersonalSubmit)} className="space-y-4">
+                  <Controller
+                    name="name"
+                    control={personalControl}
+                    rules={{ required: 'Nome é obrigatório' }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        label="Nome completo"
+                        fullWidth
+                        error={!!personalErrors.name}
+                        helperText={personalErrors.name?.message}
+                      />
+                    )}
+                  />
 
-        <Divider sx={{ my: 3 }} />
+                  <Controller
+                    name="phone"
+                    control={personalControl}
+                    rules={{ required: 'Telefone é obrigatório' }}
+                    render={({ field }) => (
+                      <PatternFormat
+                        {...field}
+                        format="(##) #####-####"
+                        mask="_"
+                        customInput={TextField}
+                        label="Telefone"
+                        fullWidth
+                        error={!!personalErrors.phone}
+                        helperText={personalErrors.phone?.message}
+                      />
+                    )}
+                  />
 
-        {/* Segurança */}
-        <Box sx={{ mb: 4 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-            <Typography variant="h6">
-              Segurança
-            </Typography>
-            {!isEditingPassword && (
-              <IconButton
-                color="primary"
-                onClick={() => setIsEditingPassword(true)}
-                sx={{ ml: 1 }}
-              >
-                <EditIcon />
-              </IconButton>
-            )}
-          </Box>
-
-          <form onSubmit={handleSubmitPassword(onPasswordSubmit)}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <TextField
-                label="Senha Atual"
-                type="password"
-                {...registerPassword('currentPassword', {
-                  required: isEditingPassword ? 'Senha atual é obrigatória' : false,
-                })}
-                error={!!passwordErrors.currentPassword}
-                helperText={passwordErrors.currentPassword?.message}
-                disabled={!isEditingPassword}
-                fullWidth
-              />
-
-              <TextField
-                label="Nova Senha"
-                type="password"
-                {...registerPassword('newPassword', {
-                  required: isEditingPassword ? 'Nova senha é obrigatória' : false,
-                  minLength: isEditingPassword ? {
-                    value: 6,
-                    message: 'A senha deve ter pelo menos 6 caracteres',
-                  } : undefined,
-                })}
-                error={!!passwordErrors.newPassword}
-                helperText={passwordErrors.newPassword?.message}
-                disabled={!isEditingPassword}
-                fullWidth
-              />
-
-              <TextField
-                label="Confirmar Nova Senha"
-                type="password"
-                {...registerPassword('confirmPassword', {
-                  required: isEditingPassword ? 'Confirmação de senha é obrigatória' : false,
-                  validate: isEditingPassword ? (value) =>
-                    validatePasswordMatch(newPassword || '', value || '') || 'As senhas não conferem' : undefined,
-                })}
-                error={!!passwordErrors.confirmPassword}
-                helperText={passwordErrors.confirmPassword?.message}
-                disabled={!isEditingPassword}
-                fullWidth
-              />
-
-              {isEditingPassword && (
-                <>
-                  <Alert severity="warning">
-                    Após alterar a senha, você será desconectado e precisará fazer login novamente.
-                  </Alert>
-
-                  <Box sx={{ display: 'flex', gap: 2 }}>
+                  <ButtonGroup className="flex gap-2 justify-end">
+                    <Button
+                      variant="outlined"
+                      onClick={() => {
+                        setEditMode(false);
+                        resetPersonal();
+                      }}
+                      className="flex items-center gap-2"
+                    >
+                      <X size={16} />
+                      Cancelar
+                    </Button>
                     <Button
                       type="submit"
                       variant="contained"
-                      startIcon={loading ? <CircularProgress size={20} /> : <LockIcon />}
-                      disabled={loading}
+                      loading={loading}
+                      className="flex items-center gap-2"
                     >
-                      Alterar Senha
+                      <Save size={16} />
+                      Salvar
                     </Button>
+                  </ButtonGroup>
+                </form>
+              ) : (
+                <div className="space-y-3">
+                  <InfoRow className="flex">
+                    <Label className="text-gray-600 font-medium w-32">Nome:</Label>
+                    <Value className="text-gray-900">{customer.name}</Value>
+                  </InfoRow>
+                  <InfoRow className="flex">
+                    <Label className="text-gray-600 font-medium w-32">Email:</Label>
+                    <Value className="text-gray-900 flex items-center gap-2">
+                      {customer.email}
+                      {customer.verified && (
+                        <CheckCircle className="text-green-500" size={18} />
+                      )}
+                    </Value>
+                  </InfoRow>
+                  <InfoRow className="flex">
+                    <Label className="text-gray-600 font-medium w-32">Telefone:</Label>
+                    <Value className="text-gray-900">{formatPhone(customer.phone)}</Value>
+                  </InfoRow>
+                </div>
+              )}
+            </Section>
+
+            <Divider className="my-6 border-gray-200" />
+
+            {/* Alterar Senha */}
+            <Section>
+              <SectionHeader className="flex justify-between items-center mb-4">
+                <SectionTitle className="text-xl font-semibold text-gray-800">
+                  Segurança
+                </SectionTitle>
+                {!changePasswordMode && (
+                  <Button
+                    variant="text"
+                    color="primary"
+                    onClick={() => setChangePasswordMode(true)}
+                    className="flex items-center gap-2"
+                  >
+                    <Lock size={16} />
+                    Alterar Senha
+                  </Button>
+                )}
+              </SectionHeader>
+
+              {changePasswordMode ? (
+                <form onSubmit={handlePasswordSubmit(onPasswordSubmit)} className="space-y-4">
+                  <Controller
+                    name="currentPassword"
+                    control={passwordControl}
+                    rules={{ required: 'Senha atual é obrigatória' }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        type="password"
+                        label="Senha atual"
+                        fullWidth
+                        error={!!passwordErrors.currentPassword}
+                        helperText={passwordErrors.currentPassword?.message}
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    name="newPassword"
+                    control={passwordControl}
+                    rules={{
+                      required: 'Nova senha é obrigatória',
+                      minLength: {
+                        value: 8,
+                        message: 'A senha deve ter no mínimo 8 caracteres'
+                      }
+                    }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        type="password"
+                        label="Nova senha"
+                        fullWidth
+                        error={!!passwordErrors.newPassword}
+                        helperText={passwordErrors.newPassword?.message}
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    name="confirmPassword"
+                    control={passwordControl}
+                    rules={{
+                      required: 'Confirmação de senha é obrigatória',
+                      validate: value => validatePasswordMatch(value, newPassword)
+                    }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        type="password"
+                        label="Confirmar nova senha"
+                        fullWidth
+                        error={!!passwordErrors.confirmPassword}
+                        helperText={passwordErrors.confirmPassword?.message}
+                      />
+                    )}
+                  />
+
+                  {error && (
+                    <Alert severity="error">{error}</Alert>
+                  )}
+
+                  <ButtonGroup className="flex gap-2 justify-end">
                     <Button
                       variant="outlined"
-                      startIcon={<CancelIcon />}
-                      onClick={handleCancelPasswordEdit}
-                      disabled={loading}
+                      onClick={() => {
+                        setChangePasswordMode(false);
+                        resetPassword();
+                      }}
+                      className="flex items-center gap-2"
                     >
+                      <X size={16} />
                       Cancelar
                     </Button>
-                  </Box>
-                </>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      loading={loading}
+                      className="flex items-center gap-2"
+                    >
+                      <Save size={16} />
+                      Alterar Senha
+                    </Button>
+                  </ButtonGroup>
+                </form>
+              ) : (
+                <p className="text-gray-600">
+                  Recomendamos que você altere sua senha regularmente para manter sua conta segura.
+                </p>
               )}
-            </Box>
-          </form>
-        </Box>
-
-        <Divider sx={{ my: 3 }} />
-
-        {/* Ações */}
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button variant="contained" onClick={() => router.push('/')}>
-            Continuar Comprando
-          </Button>
-          <Button variant="outlined">
-            Meus Pedidos
-          </Button>
-        </Box>
-      </Paper>
+            </Section>
+          </CardContent>
+        </Card>
+      </div>
     </Container>
   );
 }

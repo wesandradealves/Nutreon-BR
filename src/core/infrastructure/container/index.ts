@@ -82,7 +82,9 @@ const logoutCustomerUseCase = new LogoutCustomerUseCase(
 
 const verifyEmailUseCase = new VerifyEmailUseCase(
   customerRepository,
-  emailVerificationRepository
+  emailVerificationRepository,
+  sessionRepository,
+  tokenService
 );
 
 const resendVerificationEmailUseCase = new ResendVerificationEmailUseCase(

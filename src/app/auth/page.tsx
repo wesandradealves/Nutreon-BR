@@ -6,16 +6,18 @@ import { usePasswordRecovery } from '@/hooks/usePasswordRecovery';
 import { useResendVerification } from '@/hooks/useResendVerification';
 import { PatternFormat } from 'react-number-format';
 import { useState } from 'react';
+import { toast } from 'react-hot-toast';
+import { TextField } from '@/components/atoms/TextField';
+import { Button } from '@/components/atoms/Button';
+import { Alert } from '@/components/atoms/Alert';
+import { Tabs, TabPanelComponent } from '@/components/molecules/Tabs';
 import {
   Container,
-  Paper,
-  Tabs,
-  Tab,
-  Box,
-  TextField,
-  Button,
-  Alert,
-} from '@mui/material';
+  FormContainer,
+  FormTitle,
+  Form,
+  FormField
+} from './styles';
 
 export default function AuthPage() {
   const searchParams = useSearchParams();
@@ -48,276 +50,275 @@ export default function AuthPage() {
     loading: resendLoading,
     success: resendSuccess,
     error: resendError,
-    resendEmail,
-    reset: resetResend
+    resendEmail: resendVerificationEmail
   } = useResendVerification();
-  
-  const [showResendEmail, setShowResendEmail] = useState(false);
-  const [resendEmailValue, setResendEmailValue] = useState('');
 
-  const handlePasswordRecovery = async (e: React.FormEvent) => {
+  const [showResendEmail, setShowResendEmail] = useState(false);
+  const [resendEmail, setResendEmail] = useState('');
+
+  const handleRecoverySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setRecoverySuccess(false);
-    
+    console.log('🔑 [Frontend] Solicitando recuperação de senha para:', recoveryEmail);
     const success = await requestPasswordReset(recoveryEmail);
+    console.log('🔑 [Frontend] Resultado da solicitação:', success);
     if (success) {
       setRecoverySuccess(true);
       setRecoveryEmail('');
+      toast.success('Email de recuperação enviado!');
     }
   };
-  
-  const handleResendVerification = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await resendEmail(resendEmailValue);
+
+  const handleResendVerification = async () => {
+    if (!resendEmail.trim()) {
+      toast.error('Digite seu email');
+      return;
+    }
+    await resendVerificationEmail(resendEmail);
   };
 
+  const tabs = [
+    { label: 'Login', value: 0 as number },
+    { label: 'Cadastro', value: 1 as number },
+    { label: 'Recuperar Senha', value: 2 as number }
+  ];
+
   return (
-    <Container maxWidth="sm" sx={{ mt: 8 }}>
-      <Paper elevation={3}>
-        <Tabs value={tab} onChange={handleTabChange} variant="fullWidth">
-          <Tab label="Login" />
-          <Tab label="Cadastro" />
-          <Tab label="Recuperar Senha" />
-        </Tabs>
+    <Container className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <FormContainer className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
+        <FormTitle className="text-2xl font-bold text-center text-gray-900 mb-6">
+          Área do Cliente
+        </FormTitle>
 
-        {error && (
-          <Alert severity="error" sx={{ m: 2 }}>
-            {error}
-            {error.includes('Email não verificado') && !showResendEmail && (
-              <Button 
-                size="small" 
-                onClick={() => {
-                  setShowResendEmail(true);
-                  setResendEmailValue(loginData.email);
-                }}
-                sx={{ mt: 1, display: 'block' }}
-              >
-                Reenviar email de verificação
-              </Button>
-            )}
-          </Alert>
-        )}
-
-        {success && (
-          <Alert severity="success" sx={{ m: 2 }}>
-            {success}
-          </Alert>
-        )}
-        
-        {/* Formulário de Reenvio de Email */}
-        {showResendEmail && (
-          <Box component="form" onSubmit={handleResendVerification} sx={{ p: 3, bgcolor: 'grey.50' }}>
-            <Alert severity="info" sx={{ mb: 2 }}>
-              Digite seu email para receber um novo link de verificação
+        <Tabs 
+          tabs={tabs}
+          value={tab}
+          onChange={(event, value) => handleTabChange(event, value as number)}
+        >
+          {error && (
+            <Alert severity="error" className="my-4">
+              {error}
+              {error.includes('Email não verificado') && !showResendEmail && (
+                <Button 
+                  variant="text"
+                  color="primary"
+                  onClick={() => {
+                    setShowResendEmail(true);
+                    setResendEmail(loginData.email);
+                  }}
+                  className="mt-2 text-sm"
+                >
+                  Reenviar email de verificação
+                </Button>
+              )}
             </Alert>
-            
-            {resendError && (
-              <Alert severity="error" sx={{ mb: 2 }}>
-                {resendError}
-              </Alert>
-            )}
-            
-            {resendSuccess && (
-              <Alert severity="success" sx={{ mb: 2 }}>
-                Email de verificação reenviado! Verifique sua caixa de entrada.
-              </Alert>
-            )}
-            
-            <TextField
-              fullWidth
-              label="Email"
-              type="email"
-              value={resendEmailValue}
-              onChange={(e) => setResendEmailValue(e.target.value)}
-              margin="normal"
-              required
-              disabled={resendLoading || resendSuccess}
-            />
-            
-            <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+          )}
+
+          {success && (
+            <Alert severity="success" className="my-4">
+              {success}
+            </Alert>
+          )}
+
+          {resendSuccess && (
+            <Alert severity="success" className="my-4">
+              {resendSuccess}
+            </Alert>
+          )}
+
+          {resendError && (
+            <Alert severity="error" className="my-4">
+              {resendError}
+            </Alert>
+          )}
+
+          {/* Login Tab */}
+          <TabPanelComponent value={tab} index={0}>
+            <Form onSubmit={handleLogin} className="space-y-4 mt-6">
+              <FormField>
+                <TextField
+                  label="Email"
+                  type="email"
+                  fullWidth
+                  required
+                  value={loginData.email}
+                  onChange={(e) => updateLoginData('email', e.target.value)}
+                />
+              </FormField>
+
+              <FormField>
+                <TextField
+                  label="Senha"
+                  type="password"
+                  fullWidth
+                  required
+                  value={loginData.password}
+                  onChange={(e) => updateLoginData('password', e.target.value)}
+                />
+              </FormField>
+
               <Button
                 type="submit"
+                fullWidth
                 variant="contained"
-                disabled={resendLoading || resendSuccess || !resendEmailValue}
+                loading={loading}
               >
-                {resendLoading ? 'Enviando...' : 'Reenviar Email'}
+                Entrar
               </Button>
-              
+            </Form>
+          </TabPanelComponent>
+
+          {/* Register Tab */}
+          <TabPanelComponent value={tab} index={1}>
+            <Form onSubmit={handleRegister} className="space-y-4 mt-6">
+              <FormField>
+                <TextField
+                  label="Nome completo"
+                  fullWidth
+                  required
+                  value={registerData.name}
+                  onChange={(e) => updateRegisterData('name', e.target.value)}
+                />
+              </FormField>
+
+              <FormField>
+                <TextField
+                  label="Email"
+                  type="email"
+                  fullWidth
+                  required
+                  value={registerData.email}
+                  onChange={(e) => updateRegisterData('email', e.target.value)}
+                />
+              </FormField>
+
+              <FormField>
+                <PatternFormat
+                  format="(##) #####-####"
+                  mask="_"
+                  customInput={TextField}
+                  label="Telefone"
+                  fullWidth
+                  required
+                  value={registerData.phone}
+                  onValueChange={(values) => updateRegisterData('phone', values.value)}
+                />
+              </FormField>
+
+              <FormField>
+                <TextField
+                  label="Senha"
+                  type="password"
+                  fullWidth
+                  required
+                  value={registerData.password}
+                  onChange={(e) => updateRegisterData('password', e.target.value)}
+                  helperText="Mínimo 8 caracteres"
+                />
+              </FormField>
+
+              <FormField>
+                <TextField
+                  label="Confirmar senha"
+                  type="password"
+                  fullWidth
+                  required
+                  value={registerData.confirmPassword}
+                  onChange={(e) => updateRegisterData('confirmPassword', e.target.value)}
+                />
+              </FormField>
+
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                loading={loading}
+              >
+                Cadastrar
+              </Button>
+            </Form>
+          </TabPanelComponent>
+
+          {/* Password Recovery Tab */}
+          <TabPanelComponent value={tab} index={2}>
+            <Form onSubmit={handleRecoverySubmit} className="space-y-4 mt-6">
+              {recoverySuccess ? (
+                <Alert severity="success">
+                  Email de recuperação enviado! Verifique sua caixa de entrada.
+                </Alert>
+              ) : (
+                <>
+                  <p className="text-gray-600 text-sm mb-4">
+                    Digite seu email cadastrado para receber as instruções de recuperação de senha.
+                  </p>
+
+                  <FormField>
+                    <TextField
+                      label="Email"
+                      type="email"
+                      fullWidth
+                      required
+                      value={recoveryEmail}
+                      onChange={(e) => setRecoveryEmail(e.target.value)}
+                    />
+                  </FormField>
+
+                  {recoveryError && (
+                    <Alert severity="error">
+                      {recoveryError}
+                    </Alert>
+                  )}
+
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    loading={recoveryLoading}
+                  >
+                    Enviar email de recuperação
+                  </Button>
+                </>
+              )}
+            </Form>
+          </TabPanelComponent>
+        </Tabs>
+
+        {/* Resend Verification Email */}
+        {showResendEmail && (
+          <div className="mt-6 p-4 bg-gray-50 rounded-md">
+            <p className="text-sm text-gray-600 mb-3">
+              Digite seu email para reenviar a verificação:
+            </p>
+            <FormField className="mb-3">
+              <TextField
+                label="Email"
+                type="email"
+                fullWidth
+                value={resendEmail}
+                onChange={(e) => setResendEmail(e.target.value)}
+              />
+            </FormField>
+            <div className="flex gap-2">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleResendVerification}
+                loading={resendLoading}
+              >
+                Reenviar
+              </Button>
               <Button
                 variant="outlined"
                 onClick={() => {
                   setShowResendEmail(false);
-                  resetResend();
-                  setResendEmailValue('');
+                  setResendEmail('');
                 }}
-                disabled={resendLoading}
               >
                 Cancelar
               </Button>
-            </Box>
-          </Box>
+            </div>
+          </div>
         )}
-
-        {/* Formulário de Login */}
-        {tab === 0 && (
-          <Box component="form" onSubmit={handleLogin} sx={{ p: 3 }}>
-            <TextField
-              fullWidth
-              label="Email"
-              type="email"
-              value={loginData.email}
-              onChange={(e) => updateLoginData('email', e.target.value)}
-              margin="normal"
-              required
-              disabled={loading}
-            />
-            <TextField
-              fullWidth
-              label="Senha"
-              type="password"
-              value={loginData.password}
-              onChange={(e) => updateLoginData('password', e.target.value)}
-              margin="normal"
-              required
-              disabled={loading}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3 }}
-              disabled={loading}
-            >
-              {loading ? 'Entrando...' : 'Entrar'}
-            </Button>
-            <Button
-              fullWidth
-              variant="text"
-              sx={{ mt: 2 }}
-              onClick={() => handleTabChange(null as unknown as React.SyntheticEvent, 2)}
-              disabled={loading}
-            >
-              Esqueceu sua senha?
-            </Button>
-          </Box>
-        )}
-
-        {/* Formulário de Cadastro */}
-        {tab === 1 && (
-          <Box component="form" onSubmit={handleRegister} sx={{ p: 3 }}>
-            <TextField
-              fullWidth
-              label="Nome"
-              value={registerData.name}
-              onChange={(e) => updateRegisterData('name', e.target.value)}
-              margin="normal"
-              required
-              disabled={loading}
-            />
-            <TextField
-              fullWidth
-              label="Email"
-              type="email"
-              value={registerData.email}
-              onChange={(e) => updateRegisterData('email', e.target.value)}
-              margin="normal"
-              required
-              disabled={loading}
-            />
-            <PatternFormat
-              format="(##) #####-####"
-              mask=""
-              value={registerData.phone}
-              onValueChange={(values) => {
-                updateRegisterData('phone', values.formattedValue);
-              }}
-              customInput={TextField}
-              label="Telefone"
-              margin="normal"
-              fullWidth
-              disabled={loading}
-            />
-            <TextField
-              fullWidth
-              label="Senha"
-              type="password"
-              value={registerData.password}
-              onChange={(e) => updateRegisterData('password', e.target.value)}
-              margin="normal"
-              required
-              disabled={loading}
-              helperText="Mínimo 6 caracteres"
-            />
-            <TextField
-              fullWidth
-              label="Confirmar Senha"
-              type="password"
-              value={registerData.confirmPassword}
-              onChange={(e) => updateRegisterData('confirmPassword', e.target.value)}
-              margin="normal"
-              required
-              disabled={loading}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3 }}
-              disabled={loading}
-            >
-              {loading ? 'Cadastrando...' : 'Cadastrar'}
-            </Button>
-          </Box>
-        )}
-
-        {/* Formulário de Recuperação de Senha */}
-        {tab === 2 && (
-          <Box component="form" onSubmit={handlePasswordRecovery} sx={{ p: 3 }}>
-            {recoverySuccess ? (
-              <Alert severity="success">
-                Email de recuperação enviado! Verifique sua caixa de entrada.
-              </Alert>
-            ) : (
-              <>
-                {recoveryError && (
-                  <Alert severity="error" sx={{ mb: 2 }}>
-                    {recoveryError}
-                  </Alert>
-                )}
-                <TextField
-                  fullWidth
-                  label="Email"
-                  type="email"
-                  value={recoveryEmail}
-                  onChange={(e) => setRecoveryEmail(e.target.value)}
-                  margin="normal"
-                  required
-                  disabled={recoveryLoading}
-                  helperText="Digite o email cadastrado para receber as instruções de recuperação"
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3 }}
-                  disabled={recoveryLoading || !recoveryEmail}
-                >
-                  {recoveryLoading ? 'Enviando...' : 'Enviar Email de Recuperação'}
-                </Button>
-                <Button
-                  fullWidth
-                  variant="text"
-                  sx={{ mt: 2 }}
-                  onClick={() => handleTabChange(null as unknown as React.SyntheticEvent, 0)}
-                  disabled={recoveryLoading}
-                >
-                  Voltar para Login
-                </Button>
-              </>
-            )}
-          </Box>
-        )}
-      </Paper>
+      </FormContainer>
     </Container>
   );
 }

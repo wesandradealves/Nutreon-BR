@@ -50,7 +50,8 @@ export function useCustomerProfile() {
     });
 
     if (result.success && result.data) {
-      setMessage(result.data.message || 'Dados atualizados com sucesso!');
+      const message = result.data.message || 'Dados atualizados com sucesso!';
+      setMessage(message);
       
       if (result.data.customer) {
         updateCustomer({
@@ -72,8 +73,10 @@ export function useCustomerProfile() {
     });
 
     if (result.success && result.data) {
-      setMessage(result.data.message || 'Senha alterada com sucesso! Redirecionando para login...');
+      const message = result.data.message || 'Senha alterada com sucesso! Faça login novamente.';
+      setMessage(message);
       
+      // A API já remove o cookie, então só precisamos redirecionar
       setTimeout(() => {
         router.push('/auth');
       }, 2000);
