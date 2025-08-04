@@ -20,7 +20,7 @@ export function useResendVerification(): UseResendVerificationReturn {
 
     const response = await request('/api/auth/resend-verification', {
       method: 'POST',
-      body: JSON.stringify({ email })
+      data: { email }
     })
 
     if (response.success) {

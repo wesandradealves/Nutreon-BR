@@ -23,6 +23,16 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
   - Adicionada tipagem TypeScript adequada
   - Melhor tratamento de erros
   - Código mais limpo e consistente
+- **useCustomerProfile**: Refatorado para usar useApiRequest
+  - Código reduzido de 122 para 107 linhas
+  - Tratamento de erro centralizado
+  - Mantém estado de mensagem separado
+- **API Client Unificado**: Criado api-client.ts para centralizar todas chamadas
+  - Unifica APIs internas e externas em um único cliente
+  - Interceptors globais para loading/spinner automático
+  - Mantém rate limiting para API externa (Nuvemshop)
+  - Suporta flag isExternal para escolher o cliente correto
+  - Remove duplicação entre api.ts e useApiRequest
 
 ## [0.4.2] - 2025-08-03
 

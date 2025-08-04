@@ -174,7 +174,7 @@ const Header = ({}: HeaderProps) => {
                         <Link href="/" aria-label="Nutreon - Nutrindo Saúde, Transformando Vidas">
                           <LazyLoadImage 
                             className="img-responsive" 
-                            src="/logo-nutreon.png" 
+                            src="/logo.PNG" 
                             alt="Nutreon" 
                             title="Nutreon"
                             width={160}

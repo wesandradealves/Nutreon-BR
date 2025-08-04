@@ -10,7 +10,7 @@ import { AnimatePresence, motion, useScroll } from 'motion/react';
 import { Suspense, useRef, useState, useEffect } from 'react';
 import Header from '@/components/header/header';
 import Footer from '@/components/footer/footer';
-import { setupInterceptors } from '@/services/api';
+import { apiClient } from '@/services/api-client';
 
 import { useMetadata } from '@/hooks/useMetadata';
 import { theme } from '@/styles/theme';
@@ -77,7 +77,7 @@ function LoaderSetup() {
   const { setLoading } = useLoader();
 
   useEffect(() => {
-    setupInterceptors(setLoading);
+    apiClient.setLoadingCallback(setLoading);
   }, [setLoading]);
 
   return null;
