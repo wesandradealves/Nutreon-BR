@@ -28,6 +28,7 @@ export default function FavoritosPage() {
   const { request } = useApiRequest();
   const [products, setProducts] = useState<NuvemshopProduct[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
 
   const loadFavoriteProducts = useCallback(async () => {
     try {
@@ -60,6 +61,10 @@ export default function FavoritosPage() {
   }, [request, favorites]);
 
   useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
     if (!isAuthenticated) {
       router.push('/auth');
       return;
@@ -74,6 +79,10 @@ export default function FavoritosPage() {
       setLoading(false);
     }
   }, [favorites, favoritesLoading, loadFavoriteProducts]);
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <ProtectedRoute>
