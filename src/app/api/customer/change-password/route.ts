@@ -1,17 +1,8 @@
 import { NextRequest } from 'next/server';
 import { container } from '@/core/infrastructure/container';
 import { requireAuth } from '@/core/infrastructure/middleware/authMiddleware';
-import { z } from 'zod';
 import { successResponse, handleApiError } from '@/lib/api-utils';
-
-const changePasswordSchema = z.object({
-  currentPassword: z.string().min(1, 'Senha atual é obrigatória'),
-  newPassword: z.string().min(6, 'Nova senha deve ter pelo menos 6 caracteres'),
-  confirmPassword: z.string(),
-}).refine((data) => data.newPassword === data.confirmPassword, {
-  message: "As senhas não conferem",
-  path: ["confirmPassword"],
-});
+import { changePasswordSchema } from '@/core/infrastructure/validation/schemas';
 
 export async function POST(request: NextRequest) {
   try {

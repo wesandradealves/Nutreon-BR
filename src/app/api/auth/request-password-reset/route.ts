@@ -1,12 +1,8 @@
 import { NextRequest } from 'next/server';
-import { z } from 'zod';
 import { container } from '@/core/infrastructure/container';
 import { RequestPasswordResetUseCase } from '@/core/application/use-cases/customer/RequestPasswordResetUseCase';
 import { successResponse, handleApiError } from '@/lib/api-utils';
-
-const requestPasswordResetSchema = z.object({
-  email: z.string().email('Email inválido'),
-});
+import { requestPasswordResetSchema } from '@/core/infrastructure/validation/schemas';
 
 export async function POST(request: NextRequest) {
   try {

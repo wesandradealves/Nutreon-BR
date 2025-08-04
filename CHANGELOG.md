@@ -19,6 +19,14 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
   - Determinação automática de status HTTP baseada em mensagem
   - Tratamento consistente de erros Zod
   - Respostas padronizadas com timestamp
+- **Validações Centralizadas**: Consolidado schemas Zod em arquivo único
+  - Criado `passwordSchema` para validação complexa de senha
+  - Criado `simplePasswordSchema` para validação básica
+  - Movidos 5 schemas de validação para `/core/infrastructure/validation/schemas.ts`
+  - Endpoints refatorados: reset-password (31→17), change-password (42→29), verify-email (23→19), request-password-reset (25→21), update (41→37)
+  - Total: 162 linhas reduzidas para 123 (24% de redução)
+  - Elimina duplicação de regras de validação
+  - Facilita manutenção e consistência
 
 ## [0.4.3] - 2025-08-04
 

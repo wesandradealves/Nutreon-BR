@@ -1,13 +1,8 @@
 import { NextRequest } from 'next/server';
 import { container } from '@/core/infrastructure/container';
 import { requireAuth } from '@/core/infrastructure/middleware/authMiddleware';
-import { z } from 'zod';
 import { successResponse, handleApiError } from '@/lib/api-utils';
-
-const updateCustomerSchema = z.object({
-  name: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),
-  phone: z.string().optional(),
-});
+import { updateCustomerSchema } from '@/core/infrastructure/validation/schemas';
 
 export async function PUT(request: NextRequest) {
   try {

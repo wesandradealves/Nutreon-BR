@@ -1,11 +1,7 @@
 import { NextRequest } from 'next/server';
-import { z } from 'zod';
 import { container } from '@/core/infrastructure/container';
 import { successResponse, handleApiError } from '@/lib/api-utils';
-
-const verifyEmailSchema = z.object({
-  token: z.string().min(1, 'Token é obrigatório'),
-});
+import { verifyEmailSchema } from '@/core/infrastructure/validation/schemas';
 
 export async function POST(request: NextRequest) {
   try {
