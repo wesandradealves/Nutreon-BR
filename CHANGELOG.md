@@ -5,7 +5,7 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
-## [Unreleased]
+## [0.4.3] - 2025-08-04
 
 ### Adicionado
 - **Hook useApiRequest**: Centraliza lógica de chamadas API
@@ -52,6 +52,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Arquivos SCSS redundantes de cores e variáveis
 - Styled.d.ts duplicado
 - Cores hardcoded dos componentes
+- api.ts antigo (substituído por api-client.ts unificado)
 
 ## [0.4.1] - 2025-08-03
 
