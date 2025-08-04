@@ -3,6 +3,7 @@ import { PrismaCustomerRepository } from '../repositories/PrismaCustomerReposito
 import { PrismaPasswordResetRepository } from '../repositories/PrismaPasswordResetRepository';
 import { PrismaSessionRepository } from '../repositories/PrismaSessionRepository';
 import { PrismaEmailVerificationRepository } from '../repositories/PrismaEmailVerificationRepository';
+import { PrismaFavoriteRepository } from '../repositories/PrismaFavoriteRepository';
 import { BcryptPasswordHasher } from '../services/BcryptPasswordHasher';
 import { JwtTokenService } from '../services/JwtTokenService';
 import { NodemailerEmailService } from '../email/NodemailerEmailService';
@@ -15,6 +16,9 @@ import { ResetPasswordUseCase } from '@/core/application/use-cases/customer/Rese
 import { LogoutCustomerUseCase } from '@/core/application/use-cases/customer/LogoutCustomerUseCase';
 import { VerifyEmailUseCase } from '@/core/application/use-cases/customer/VerifyEmailUseCase';
 import { ResendVerificationEmailUseCase } from '@/core/application/use-cases/customer/ResendVerificationEmailUseCase';
+import { ToggleFavoriteUseCase } from '@/core/application/use-cases/favorites/ToggleFavoriteUseCase';
+import { GetFavoritesUseCase } from '@/core/application/use-cases/favorites/GetFavoritesUseCase';
+import { SyncFavoritesUseCase } from '@/core/application/use-cases/favorites/SyncFavoritesUseCase';
 
 // Singleton do Prisma
 const prisma = new PrismaClient();
@@ -24,6 +28,7 @@ const customerRepository = new PrismaCustomerRepository(prisma);
 const passwordResetRepository = new PrismaPasswordResetRepository(prisma);
 const sessionRepository = new PrismaSessionRepository(prisma);
 const emailVerificationRepository = new PrismaEmailVerificationRepository(prisma);
+const favoriteRepository = new PrismaFavoriteRepository(prisma);
 
 // Services
 const passwordHasher = new BcryptPasswordHasher();
@@ -93,6 +98,10 @@ const resendVerificationEmailUseCase = new ResendVerificationEmailUseCase(
   emailService
 );
 
+const toggleFavoriteUseCase = new ToggleFavoriteUseCase(favoriteRepository);
+const getFavoritesUseCase = new GetFavoritesUseCase(favoriteRepository);
+const syncFavoritesUseCase = new SyncFavoritesUseCase(favoriteRepository);
+
 export const container = {
   // Database
   prisma,
@@ -102,6 +111,7 @@ export const container = {
   passwordResetRepository,
   sessionRepository,
   emailVerificationRepository,
+  favoriteRepository,
   
   // Services
   passwordHasher,
@@ -118,6 +128,9 @@ export const container = {
   logoutCustomerUseCase,
   verifyEmailUseCase,
   resendVerificationEmailUseCase,
+  toggleFavoriteUseCase,
+  getFavoritesUseCase,
+  syncFavoritesUseCase,
   
   // Helper method to resolve dependencies
   resolve<T>(key: string): T {

@@ -27,3 +27,29 @@ export async function requireAuth(
     email: payload.email,
   };
 }
+
+export async function authMiddleware(
+  request: NextRequest
+): Promise<{ authenticated: boolean; customerId?: string; email?: string }> {
+  try {
+    const token = request.cookies.get('auth-token')?.value;
+    
+    if (!token) {
+      return { authenticated: false };
+    }
+
+    const payload = await container.tokenService.verifyToken(token);
+    
+    if (!payload) {
+      return { authenticated: false };
+    }
+
+    return {
+      authenticated: true,
+      customerId: payload.customerId,
+      email: payload.email,
+    };
+  } catch {
+    return { authenticated: false };
+  }
+}

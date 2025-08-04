@@ -15,6 +15,7 @@ import {
   UserDropdownLink
 } from './styles';
 import CartButton from '@/components/atoms/CartButton';
+import { FavoritesButton } from '@/components/atoms/FavoritesButton';
 
 interface UserActionsProps {
   isAuthenticated: boolean;
@@ -42,6 +43,11 @@ const UserActions = ({
   return (
     <UserActionsContainer className={`hidden md:block ${className}`}>
       <ActionsList className="flex items-center gap-4 m-0 p-0 list-none">
+        {/* Favoritos */}
+        <ActionItem className="relative">
+          <FavoritesButton />
+        </ActionItem>
+
         {/* Carrinho */}
         <ActionItem className="relative">
           <CartButton count={cartCount} onClick={onCartClick} />

@@ -13,11 +13,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         className={classNames(`
           antialiased overflow-x-hidden
           [&::-webkit-scrollbar]:w-1
-          [&::-webkit-scrollbar-track]:bg-transparent
+          [&::-webkit-scrollbar-track]:bg-black
           [&::-webkit-scrollbar-track]:ms-7
           [&::-webkit-scrollbar-track]:me-7
           [&::-webkit-scrollbar-track]:rounded-full
-          [&::-webkit-scrollbar-thumb]:bg-black
+          [&::-webkit-scrollbar-thumb]:bg-white
           [&::-webkit-scrollbar-thumb]:rounded-full
           [&::-webkit-scrollbar-thumb]:cursor-move
         `)}

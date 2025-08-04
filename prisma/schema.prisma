@@ -27,6 +27,7 @@ model Customer {
   cart            Cart?
   passwordResets  PasswordReset[]
   emailVerifications EmailVerification[]
+  favorites       Favorite[]
   
   // Auditoria
   createdAt       DateTime        @default(now()) @map("created_at")
@@ -198,6 +199,20 @@ model EmailVerification {
   createdAt       DateTime        @default(now()) @map("created_at")
   
   @@map("email_verifications")
+}
+
+// Favoritos do cliente
+model Favorite {
+  id              String          @id @default(uuid())
+  customerId      String          @map("customer_id")
+  productId       String          @map("product_id")
+  
+  customer        Customer        @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  
+  createdAt       DateTime        @default(now()) @map("created_at")
+  
+  @@unique([customerId, productId])
+  @@map("favorites")
 }
 
 // Enums

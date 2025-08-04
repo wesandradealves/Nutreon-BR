@@ -1,4 +1,4 @@
-import { Button } from './styles';
+import { Button } from '../Button';
 
 interface BuyButtonProps {
   onClick: () => void;
@@ -10,9 +10,13 @@ interface BuyButtonProps {
 export function BuyButton({ onClick, disabled, loading, children }: BuyButtonProps) {
   return (
     <Button 
-      className="w-full bg-cyan-500 text-white font-bold py-3 px-4 rounded-md transition-all duration-300 hover:bg-cyan-600 hover:shadow-lg disabled:bg-gray-300 disabled:cursor-not-allowed uppercase tracking-wider"
+      variant="contained"
+      color="primary"
+      fullWidth
       onClick={onClick}
-      disabled={disabled || loading}
+      disabled={disabled}
+      loading={loading}
+      className="font-bold py-3 uppercase tracking-wider hover:shadow-lg"
     >
       {loading ? 'Adicionando...' : children}
     </Button>

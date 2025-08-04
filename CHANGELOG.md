@@ -7,6 +7,47 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+## [0.7.0] - 2025-01-04
+
+### Adicionado
+- **Sistema de Favoritos Completo**: Funcionalidade para favoritar produtos
+  - Context `FavoritesContext` para gerenciamento de estado global
+  - Hook `useFavorites` para lógica centralizada
+  - Sincronização automática entre cookies (não autenticado) e banco de dados (autenticado)
+  - Componente `FavoritesButton` no header com badge contador
+  - Página `/conta/favoritos` para visualizar produtos favoritos
+  - APIs: `/api/favorites` (GET/POST) e `/api/favorites/sync` (POST)
+  - Migração do banco com tabela `favorites`
+  - Use cases: `ToggleFavoriteUseCase`, `GetFavoritesUseCase`, `SyncFavoritesUseCase`
+  - Repositório `PrismaFavoriteRepository`
+  - Componente `FavoritesSyncManager` para sincronização automática
+  - Ícone de coração em cada `ProductCard` para favoritar/desfavoritar
+  - Persistência de favoritos para usuários não autenticados via cookies
+
+### Melhorado
+- **ProductCard**: Adicionado botão de favoritos com feedback visual
+  - Coração vazio (cinza) quando não favoritado
+  - Coração preenchido (vermelho) quando favoritado
+  - Toast de sucesso ao adicionar/remover
+- **Header**: Integrado `FavoritesButton` ao lado do carrinho
+  - Badge mostra quantidade de favoritos
+  - Redireciona para página de favoritos ao clicar
+- **Performance**: Favoritos carregados apenas uma vez ao iniciar aplicação
+
+### Corrigido
+- **API Response Format**: Padronizado uso de `successResponse` com objetos
+  - Corrigido problema de serialização de strings como objetos indexados
+  - Mensagens agora são passadas como `{ message: "..." }` no segundo parâmetro
+- **Hook useFavorites**: Corrigido problema de estrutura de dados aninhadas
+  - Tratamento correto de `response.data.data` da API
+  - Estado inicial consistente entre cliente e servidor
+
+### Técnico
+- Migração `20250104110736_add_favorites` aplicada
+- Container DI atualizado com `FavoriteRepository` e use cases
+- Integração completa com sistema de autenticação existente
+- Padrão Styled Components + Tailwind mantido em todos os novos componentes
+
 ### Removido
 - **Arquivos de Backup Não Utilizados**: Limpeza de arquivos antigos
   - `/src/app/conta/page-material-ui.tsx`
@@ -558,6 +599,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Configuração básica do ambiente
 - Documentação inicial
 
+[0.7.0]: https://github.com/nutreon/nutreon-br/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/nutreon/nutreon-br/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/nutreon/nutreon-br/compare/v0.4.3...v0.5.0
 [0.4.3]: https://github.com/nutreon/nutreon-br/compare/v0.4.2...v0.4.3

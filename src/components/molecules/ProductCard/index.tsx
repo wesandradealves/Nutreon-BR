@@ -1,7 +1,10 @@
+'use client';
+
 import { useState } from 'react';
 import { Heart } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/hooks/useCart';
+import { useFavoritesContext } from '@/context/favorites';
 import { QuantitySelector } from '@/components/atoms/QuantitySelector';
 import { BuyButton } from '@/components/atoms/BuyButton';
 import {
@@ -33,8 +36,9 @@ const DEFAULT_IMAGE = 'https://cdn.oceanserver.com.br/lojas/gymchef/uploads_prod
 export function ProductCard({ product, categoryName }: ProductCardProps) {
   const router = useRouter();
   const { addToCart } = useCart();
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { isFavorite, toggleFavorite } = useFavoritesContext();
   const [isLoading, setIsLoading] = useState(false);
+  const [isFavoriteLoading, setIsFavoriteLoading] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
   const productName = product.name.pt || Object.values(product.name).find(Boolean) || 'Produto sem nome';
@@ -76,6 +80,15 @@ export function ProductCard({ product, categoryName }: ProductCardProps) {
     router.push(`/produto/${slug}`);
   };
 
+  const handleToggleFavorite = async () => {
+    setIsFavoriteLoading(true);
+    try {
+      await toggleFavorite(product.id.toString());
+    } finally {
+      setIsFavoriteLoading(false);
+    }
+  };
+
   return (
     <ProductCardContainer className="bg-white relative transition-all duration-300 border border-gray-200 hover:shadow-lg">
       {!inStock && (
@@ -86,13 +99,14 @@ export function ProductCard({ product, categoryName }: ProductCardProps) {
       
       <ProductImageWrapper className="relative overflow-hidden">
         <FavoriteButton
-          className="absolute top-3 right-3 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md transition-all duration-300 hover:bg-gray-50 z-10"
-          onClick={() => setIsFavorite(!isFavorite)}
-          aria-label={isFavorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
+          className={`absolute top-3 right-3 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md transition-all duration-300 hover:bg-gray-50 z-10 ${isFavoriteLoading ? 'opacity-50 cursor-wait' : ''}`}
+          onClick={handleToggleFavorite}
+          aria-label={isFavorite(product.id.toString()) ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
+          disabled={isFavoriteLoading}
         >
           <Heart 
             size={20} 
-            className={isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400'}
+            className={isFavorite(product.id.toString()) ? 'fill-red-500 text-red-500' : 'text-gray-400'}
           />
         </FavoriteButton>
 

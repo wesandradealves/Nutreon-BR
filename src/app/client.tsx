@@ -3,6 +3,7 @@
 import { ThemeProvider } from 'styled-components';
 import { LoaderProvider, useLoader } from '@/context/spinner';
 import { AuthProvider } from '@/context/auth';
+import { FavoritesProvider } from '@/context/favorites';
 import Spinner from '@/components/spinner/spinner';
 import StyledJsxRegistry from './registry';
 import { App, GlobalStyle } from '@/app/style';
@@ -12,6 +13,7 @@ import Header from '@/components/header/header';
 import Footer from '@/components/footer/footer';
 import { apiClient } from '@/services/api-client';
 import { Toaster } from 'react-hot-toast';
+import { FavoritesSyncManager } from '@/components/auth/FavoritesSyncManager';
 
 import { useMetadata } from '@/hooks/useMetadata';
 import { theme } from '@/styles/theme';
@@ -44,8 +46,9 @@ export default function ClientProviders({ children }: { children: React.ReactNod
       <LoaderProvider>
         <LoaderSetup />
         <AuthProvider>
-          <Suspense fallback={<div>Loading...</div>}>
-            <StyledJsxRegistry>
+          <FavoritesProvider>
+            <Suspense fallback={<div>Loading...</div>}>
+              <StyledJsxRegistry>
               <AnimatePresence
                 mode="wait"
                 initial={true}
@@ -64,6 +67,7 @@ export default function ClientProviders({ children }: { children: React.ReactNod
                     <Footer />
                   </motion.div>
                   <Spinner />
+                  <FavoritesSyncManager />
                   <Toaster 
                     position="top-center"
                     toastOptions={{
@@ -88,6 +92,7 @@ export default function ClientProviders({ children }: { children: React.ReactNod
               </AnimatePresence>
             </StyledJsxRegistry>
           </Suspense>
+          </FavoritesProvider>
         </AuthProvider>
       </LoaderProvider>
     </ThemeProvider>
