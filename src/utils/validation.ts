@@ -2,12 +2,13 @@
  * Funções de validação
  */
 
+import { REGEX_PATTERNS } from './regex';
+
 /**
  * Valida email
  */
 export const isValidEmail = (email: string): boolean => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
+  return REGEX_PATTERNS.EMAIL.test(email);
 };
 
 /**
@@ -47,7 +48,7 @@ export const isValidCPF = (cpf: string): boolean => {
  */
 export const isValidCEP = (cep: string): boolean => {
   const cleaned = cep.replace(/\D/g, '');
-  return cleaned.length === 8 && /^\d{8}$/.test(cleaned);
+  return REGEX_PATTERNS.CEP.test(cleaned);
 };
 
 /**
@@ -61,31 +62,31 @@ export const isStrongPassword = (password: string): {
   const feedback: string[] = [];
   let score = 0;
   
-  if (password.length >= 8) {
+  if (REGEX_PATTERNS.PASSWORD_MIN_LENGTH.test(password)) {
     score++;
   } else {
     feedback.push('Senha deve ter pelo menos 8 caracteres');
   }
   
-  if (/[A-Z]/.test(password)) {
+  if (REGEX_PATTERNS.PASSWORD_UPPERCASE.test(password)) {
     score++;
   } else {
     feedback.push('Adicione uma letra maiúscula');
   }
   
-  if (/[a-z]/.test(password)) {
+  if (REGEX_PATTERNS.PASSWORD_LOWERCASE.test(password)) {
     score++;
   } else {
     feedback.push('Adicione uma letra minúscula');
   }
   
-  if (/[0-9]/.test(password)) {
+  if (REGEX_PATTERNS.PASSWORD_NUMBER.test(password)) {
     score++;
   } else {
     feedback.push('Adicione um número');
   }
   
-  if (/[^A-Za-z0-9]/.test(password)) {
+  if (REGEX_PATTERNS.PASSWORD_SPECIAL.test(password)) {
     score++;
   } else {
     feedback.push('Adicione um caractere especial');

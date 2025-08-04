@@ -1,11 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useApiRequest } from '@/hooks/useApiRequest';
 import { ProductGrid } from '@/components/organisms/ProductGrid';
 import {
   PageContainer,
-  LoadingContainer,
   ContentSection,
   Title,
   Subtitle,
@@ -23,45 +22,43 @@ export default function HomePage() {
   const [products, setProducts] = useState<NuvemshopProduct[]>([]);
   const [categories, setCategories] = useState<NuvemshopCategory[]>([]);
   const [storeInfo, setStoreInfo] = useState<StoreInfo | null>(null);
-  const { request, loading } = useApiRequest();
+  const [isLoadingProducts, setIsLoadingProducts] = useState(true);
+  const { request: requestHealth } = useApiRequest();
+  const { request: requestStore } = useApiRequest<{ data: StoreInfo }>();
+  const { request: requestCategories } = useApiRequest<{ data: NuvemshopCategory[] }>();
+  const { request: requestProducts } = useApiRequest<{ data: NuvemshopProduct[] }>();
 
-  useEffect(() => {
-    loadData();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
+    setIsLoadingProducts(true);
     // Verificar saúde do sistema
-    await request('/api/health');
+    await requestHealth('/api/health');
     
     // Buscar informações da loja
-    const storeResponse = await request<{ data: StoreInfo }>('/api/store');
+    const storeResponse = await requestStore('/api/store');
     if (storeResponse.success && storeResponse.data?.data) {
       setStoreInfo(storeResponse.data.data);
     }
     
     // Buscar categorias primeiro
-    const categoriesResponse = await request<{ data: NuvemshopCategory[] }>('/api/categories');
+    const categoriesResponse = await requestCategories('/api/categories');
     if (categoriesResponse.success && categoriesResponse.data?.data) {
       setCategories(categoriesResponse.data.data);
     }
     
     // Buscar produtos
-    const productsResponse = await request<{ data: NuvemshopProduct[] }>('/api/products?per_page=12');
+    const productsResponse = await requestProducts('/api/products?per_page=12');
     if (productsResponse.success && productsResponse.data?.data) {
       setProducts(productsResponse.data.data);
     }
-  };
+    
+    setIsLoadingProducts(false);
+  }, [requestHealth, requestStore, requestCategories, requestProducts]);
 
-  if (loading) {
-    return (
-      <LoadingContainer className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto"></div>
-          <Text className="mt-4 text-gray-600">Carregando loja...</Text>
-        </div>
-      </LoadingContainer>
-    );
-  }
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  // Removido o loading screen para mostrar skeleton direto na grid
 
   return (
     <PageContainer className="min-h-screen p-8">
@@ -81,6 +78,7 @@ export default function HomePage() {
           <ProductGrid 
             products={products}
             categories={categories}
+            isLoading={isLoadingProducts}
           />
         </ContentSection>
       </div>

@@ -1,5 +1,8 @@
 import { ValueObject } from './ValueObject';
 import { randomUUID } from 'crypto';
+import { isValidCEP } from '@/utils/validation';
+import { formatCEP } from '@/utils/formatters';
+import { ERROR_MESSAGES } from '@/config/constants';
 
 interface AddressProps {
   id?: string;
@@ -23,7 +26,7 @@ export class Address extends ValueObject<AddressProps> {
     const zipCode = props.zipCode.replace(/\D/g, '');
     
     if (!Address.isValidZipCode(zipCode)) {
-      throw new Error('CEP inválido');
+      throw new Error(ERROR_MESSAGES.INVALID_CEP);
     }
 
     return new Address({
@@ -35,7 +38,7 @@ export class Address extends ValueObject<AddressProps> {
   }
 
   static isValidZipCode(zipCode: string): boolean {
-    return /^[0-9]{8}$/.test(zipCode);
+    return isValidCEP(zipCode);
   }
 
   get id(): string {
@@ -86,7 +89,7 @@ export class Address extends ValueObject<AddressProps> {
   }
 
   formatZipCode(): string {
-    return `${this.zipCode.slice(0, 5)}-${this.zipCode.slice(5)}`;
+    return formatCEP(this.zipCode);
   }
 
   toString(): string {

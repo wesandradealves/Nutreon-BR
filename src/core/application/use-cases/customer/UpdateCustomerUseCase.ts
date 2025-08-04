@@ -1,5 +1,6 @@
 import { ICustomerRepository } from '@/core/domain/repositories/ICustomerRepository';
 import { Phone } from '@/core/domain/value-objects/Phone';
+import { ERROR_MESSAGES } from '@/config/constants';
 
 export interface UpdateCustomerDTO {
   customerId: string;
@@ -17,7 +18,7 @@ export class UpdateCustomerUseCase {
     const customer = await this.customerRepository.findById(dto.customerId);
     
     if (!customer) {
-      throw new Error('Cliente não encontrado');
+      throw new Error(ERROR_MESSAGES.USER_NOT_FOUND);
     }
 
     // Atualizar dados (email não pode ser alterado)

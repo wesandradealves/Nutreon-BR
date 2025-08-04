@@ -6,6 +6,7 @@ import { ITokenService } from '@/core/application/interfaces/ITokenService';
 import { IEmailService } from '@/core/domain/services/IEmailService';
 import { AuthenticateCustomerDTO } from '@/core/application/dtos/customer/AuthenticateCustomerDTO';
 import { AuthResponseDTO } from '@/core/application/dtos/customer/CustomerResponseDTO';
+import { ERROR_MESSAGES } from '@/config/constants';
 
 export interface LoginContext {
   ipAddress?: string;
@@ -28,12 +29,12 @@ export class AuthenticateCustomerUseCase {
     // Buscar cliente
     const customer = await this.customerRepository.findByEmail(email);
     if (!customer) {
-      throw new Error('Email ou senha inválidos');
+      throw new Error(ERROR_MESSAGES.INVALID_CREDENTIALS);
     }
 
     // Verificar se tem senha cadastrada
     if (!customer.passwordHash) {
-      throw new Error('Cliente sem senha cadastrada. Faça login via Nuvemshop.');
+      throw new Error(`${ERROR_MESSAGES.NO_PASSWORD_SET}. Faça login via Nuvemshop.`);
     }
 
     // Verificar senha
@@ -43,7 +44,7 @@ export class AuthenticateCustomerUseCase {
     );
     
     if (!passwordValid) {
-      throw new Error('Email ou senha inválidos');
+      throw new Error(ERROR_MESSAGES.INVALID_CREDENTIALS);
     }
 
     // Gerar token JWT

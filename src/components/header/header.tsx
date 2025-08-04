@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
@@ -22,26 +22,6 @@ interface HeaderProps {
   scrollPosition?: number;
 }
 
-const navigationItems = [
-  {
-    label: 'Refeições Congeladas',
-    href: '/refeicoes',
-    children: [
-      { label: 'Todas as Refeições', href: '/refeicoes/todas' },
-      { label: 'Linha Essencial', href: '/refeicoes/essencial' },
-      { label: 'Linha Performance', href: '/refeicoes/performance' },
-      { label: 'Linha Gourmet', href: '/refeicoes/gourmet' },
-      { label: 'Linha Kids', href: '/refeicoes/kids' },
-      { label: 'Linha Personalizada', href: '/refeicoes/personalizada' }
-    ]
-  },
-  { label: 'Kit Seja Chef', href: '/kit-seja-chef' },
-  { label: 'Suplementos', href: '/suplementos' },
-  { label: 'Consultoria', href: '/consultoria' },
-  { label: 'Quem Somos', href: '/quem-somos' },
-  { label: 'Blog', href: '/blog' },
-  { label: 'Contato', href: '/contato' }
-];
 
 const Header = ({}: HeaderProps) => {
   const { isAuthenticated, customer } = useAuth();
@@ -55,17 +35,38 @@ const Header = ({}: HeaderProps) => {
     setIsClient(true);
   }, []);
 
-  const verificaEntregaCep = () => {
+  const navigationItems = useMemo(() => [
+    {
+      label: 'Refeições Congeladas',
+      href: '/refeicoes',
+      children: [
+        { label: 'Todas as Refeições', href: '/refeicoes/todas' },
+        { label: 'Linha Essencial', href: '/refeicoes/essencial' },
+        { label: 'Linha Performance', href: '/refeicoes/performance' },
+        { label: 'Linha Gourmet', href: '/refeicoes/gourmet' },
+        { label: 'Linha Kids', href: '/refeicoes/kids' },
+        { label: 'Linha Personalizada', href: '/refeicoes/personalizada' }
+      ]
+    },
+    { label: 'Kit Seja Chef', href: '/kit-seja-chef' },
+    { label: 'Suplementos', href: '/suplementos' },
+    { label: 'Consultoria', href: '/consultoria' },
+    { label: 'Quem Somos', href: '/quem-somos' },
+    { label: 'Blog', href: '/blog' },
+    { label: 'Contato', href: '/contato' }
+  ], []);
+
+  const verificaEntregaCep = useCallback(() => {
     // TODO: Implementar verificação de entrega
-  };
+  }, []);
 
-  const openCarrinhoRight = () => {
+  const openCarrinhoRight = useCallback(() => {
     // TODO: Implementar abertura do carrinho
-  };
+  }, []);
 
-  const openSearch = () => {
+  const openSearch = useCallback(() => {
     // TODO: Implementar abertura da busca
-  };
+  }, []);
 
   return (
     <>

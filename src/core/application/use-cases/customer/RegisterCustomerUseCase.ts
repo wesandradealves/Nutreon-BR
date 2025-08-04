@@ -7,6 +7,7 @@ import { Phone } from '@/core/domain/value-objects/Phone';
 import { IPasswordHasher } from '@/core/application/interfaces/IPasswordHasher';
 import { IEmailService } from '@/core/domain/services/IEmailService';
 import { RegisterCustomerDTO } from '@/core/application/dtos/customer/RegisterCustomerDTO';
+import { ERROR_MESSAGES } from '@/config/constants';
 
 export class RegisterCustomerUseCase {
   constructor(
@@ -23,7 +24,7 @@ export class RegisterCustomerUseCase {
     // Verificar se cliente já existe
     const exists = await this.customerRepository.exists(email);
     if (exists) {
-      throw new Error('Cliente já cadastrado com este email');
+      throw new Error(ERROR_MESSAGES.EMAIL_ALREADY_IN_USE);
     }
 
     // Validar telefone se fornecido

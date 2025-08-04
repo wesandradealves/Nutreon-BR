@@ -70,12 +70,62 @@ export const AUTH_CONFIG = {
  * Mensagens de erro padrão
  */
 export const ERROR_MESSAGES = {
+  // Autenticação
   UNAUTHORIZED: 'Não autenticado',
   INVALID_CREDENTIALS: 'Email ou senha inválidos',
   USER_NOT_FOUND: 'Cliente não encontrado',
   EMAIL_ALREADY_EXISTS: 'Email já cadastrado',
+  EMAIL_ALREADY_IN_USE: 'Cliente já cadastrado com este email',
   INCORRECT_PASSWORD: 'Senha incorreta',
+  NO_PASSWORD_SET: 'Cliente sem senha cadastrada',
+  INVALID_TOKEN: 'Token inválido ou expirado',
+  SESSION_EXPIRED: 'Sessão expirada',
+  
+  // Validação
+  INVALID_EMAIL: 'Email inválido',
+  INVALID_PHONE: 'Telefone inválido',
+  INVALID_CEP: 'CEP inválido',
+  INVALID_CPF: 'CPF inválido',
+  WEAK_PASSWORD: 'Senha muito fraca',
+  PASSWORD_MISMATCH: 'As senhas não coincidem',
+  REQUIRED_FIELD: 'Campo obrigatório',
+  
+  // Verificação de email
+  EMAIL_NOT_VERIFIED: 'Email não verificado',
+  VERIFICATION_EMAIL_SENT: 'Email de verificação enviado',
+  EMAIL_ALREADY_VERIFIED: 'Email já verificado',
+  
+  // Recuperação de senha
+  PASSWORD_RESET_SENT: 'Email de recuperação enviado',
+  INVALID_RESET_TOKEN: 'Token de recuperação inválido',
+  
+  // Produtos
+  PRODUCT_NOT_FOUND: 'Produto não encontrado',
+  OUT_OF_STOCK: 'Produto sem estoque',
+  INSUFFICIENT_STOCK: 'Estoque insuficiente',
+  
+  // Carrinho
+  EMPTY_CART: 'Carrinho vazio',
+  ITEM_NOT_IN_CART: 'Item não encontrado no carrinho',
+  
+  // Pedidos
+  ORDER_NOT_FOUND: 'Pedido não encontrado',
+  INVALID_ORDER_STATUS: 'Status de pedido inválido',
+  
+  // Cupons
+  COUPON_NOT_FOUND: 'Cupom não encontrado',
+  COUPON_EXPIRED: 'Cupom expirado',
+  COUPON_INVALID: 'Cupom inválido',
+  COUPON_MIN_VALUE: 'Valor mínimo não atingido',
+  
+  // Genérico
   GENERIC_ERROR: 'Erro ao processar solicitação',
+  NETWORK_ERROR: 'Erro de conexão com o servidor',
+  TIMEOUT_ERROR: 'Tempo de resposta excedido',
+  VALIDATION_ERROR: 'Erro de validação',
+  NOT_FOUND: 'Recurso não encontrado',
+  FORBIDDEN: 'Acesso negado',
+  INTERNAL_ERROR: 'Erro interno do servidor',
 } as const;
 
 /**

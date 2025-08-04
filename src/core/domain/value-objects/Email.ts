@@ -1,4 +1,6 @@
 import { ValueObject } from './ValueObject';
+import { isValidEmail } from '@/utils/validation';
+import { ERROR_MESSAGES } from '@/config/constants';
 
 interface EmailProps {
   value: string;
@@ -11,15 +13,14 @@ export class Email extends ValueObject<EmailProps> {
 
   static create(email: string): Email {
     if (!Email.isValid(email)) {
-      throw new Error('Email inválido');
+      throw new Error(ERROR_MESSAGES.INVALID_EMAIL);
     }
 
     return new Email({ value: email.toLowerCase().trim() });
   }
 
   static isValid(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    return isValidEmail(email);
   }
 
   get value(): string {

@@ -1,5 +1,6 @@
 'use client';
 
+import { useCallback } from 'react';
 import { Heart } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useFavoritesContext } from '@/context/favorites';
@@ -14,9 +15,9 @@ export function FavoritesButton({ className }: FavoritesButtonProps) {
   const { favorites } = useFavoritesContext();
   const favoritesCount = favorites.length;
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     router.push('/conta/favoritos');
-  };
+  }, [router]);
 
   return (
     <FavoritesButtonContainer

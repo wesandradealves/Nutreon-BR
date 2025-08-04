@@ -15,17 +15,19 @@ import {
   EmptyStateContainer,
   EmptyIcon,
   EmptyMessage,
-  ExploreButton,
-  LoadingContainer,
-  LoadingSpinner
+  ExploreButton
 } from './styles';
 import type { NuvemshopProduct } from '@/types';
+
+interface ProductsResponse {
+  data?: NuvemshopProduct[] | { data: NuvemshopProduct[] } | { products: NuvemshopProduct[] };
+}
 
 export default function FavoritosPage() {
   const router = useRouter();
   const { isAuthenticated } = useAuth();
   const { favorites, loading: favoritesLoading } = useFavoritesContext();
-  const { request } = useApiRequest();
+  const { request } = useApiRequest<ProductsResponse>();
   const [products, setProducts] = useState<NuvemshopProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [isMounted, setIsMounted] = useState(false);
@@ -39,13 +41,13 @@ export default function FavoritosPage() {
       
       if (response?.success && response.data) {
         // Verifica a estrutura de dados retornada
-        let productsArray = [];
+        let productsArray: NuvemshopProduct[] = [];
         if (Array.isArray(response.data)) {
           productsArray = response.data;
-        } else if (response.data.data && Array.isArray(response.data.data)) {
-          productsArray = response.data.data;
-        } else if (response.data.products && Array.isArray(response.data.products)) {
-          productsArray = response.data.products;
+        } else if ('data' in response.data && Array.isArray((response.data as { data: NuvemshopProduct[] }).data)) {
+          productsArray = (response.data as { data: NuvemshopProduct[] }).data;
+        } else if ('products' in response.data && Array.isArray((response.data as { products: NuvemshopProduct[] }).products)) {
+          productsArray = (response.data as { products: NuvemshopProduct[] }).products;
         }
         
         const favoriteProducts = productsArray.filter((product: NuvemshopProduct) => 
@@ -98,12 +100,7 @@ export default function FavoritosPage() {
             </PageDescription>
           </PageHeader>
 
-          {loading || favoritesLoading ? (
-            <LoadingContainer className="text-center py-12">
-              <LoadingSpinner className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500" />
-              <p className="mt-4 text-gray-600">Carregando favoritos...</p>
-            </LoadingContainer>
-          ) : favorites.length === 0 ? (
+          {favorites.length === 0 && !loading && !favoritesLoading ? (
             <EmptyStateContainer className="bg-white rounded-lg shadow-md p-12 text-center">
               <EmptyIcon className="text-6xl text-gray-300 mb-4">❤️</EmptyIcon>
               <h2 className="text-xl font-semibold text-gray-700 mb-2">
@@ -120,7 +117,11 @@ export default function FavoritosPage() {
               </ExploreButton>
             </EmptyStateContainer>
           ) : (
-            <ProductGrid products={products} />
+            <ProductGrid 
+              products={products} 
+              emptyMessage="Nenhum produto favorito encontrado."
+              isLoading={loading || favoritesLoading}
+            />
           )}
         </div>
       </Container>

@@ -1,3 +1,5 @@
+import { REGEX_PATTERNS } from './regex';
+
 /**
  * Formata valor monetário para Real brasileiro
  */
@@ -35,7 +37,7 @@ export function removePhoneMask(phone: string): string {
  */
 export function isValidPhone(phone: string): boolean {
   const cleaned = removePhoneMask(phone);
-  return cleaned.length === 10 || cleaned.length === 11;
+  return REGEX_PATTERNS.PHONE.test(cleaned);
 }
 
 /**

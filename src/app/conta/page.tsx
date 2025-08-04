@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/auth';
 import { useCustomerProfile } from '@/hooks/useCustomerProfile';
@@ -141,10 +141,18 @@ export default function AccountPage() {
 
 
   const onPersonalSubmit = async (data: PersonalDataForm) => {
-    const success = await updateProfile(data);
-    if (success) {
+    const result = await updateProfile(data);
+    if (result && result.success) {
       setEditMode(false);
-      // O contexto será atualizado automaticamente
+      // Força uma atualização do contexto de auth
+      await checkAuth();
+      // Atualiza o formulário com os novos dados
+      if (result.data) {
+        resetPersonal({
+          name: result.data.name || '',
+          phone: result.data.phone || ''
+        });
+      }
     }
   };
 
@@ -156,11 +164,11 @@ export default function AccountPage() {
     }
   };
 
-  const handleResendVerification = async () => {
+  const handleResendVerification = useCallback(async () => {
     if (customer?.email) {
       await resendEmail(customer.email);
     }
-  };
+  }, [customer?.email, resendEmail]);
 
   if (!isInitialized || !customer) {
     return (

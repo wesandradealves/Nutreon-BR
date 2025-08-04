@@ -1,4 +1,6 @@
 import { ValueObject } from './ValueObject';
+import { formatPhone, isValidPhone, removePhoneMask } from '@/utils/formatters';
+import { ERROR_MESSAGES } from '@/config/constants';
 
 interface PhoneProps {
   value: string;
@@ -10,18 +12,17 @@ export class Phone extends ValueObject<PhoneProps> {
   }
 
   static create(phone: string): Phone {
-    const cleaned = phone.replace(/\D/g, '');
+    const cleaned = removePhoneMask(phone);
     
     if (!Phone.isValid(cleaned)) {
-      throw new Error('Telefone inválido');
+      throw new Error(ERROR_MESSAGES.INVALID_PHONE);
     }
 
     return new Phone({ value: cleaned });
   }
 
   static isValid(phone: string): boolean {
-    // Valida telefones brasileiros (fixo ou celular)
-    return /^[1-9]{2}[2-9]?[0-9]{8}$/.test(phone);
+    return isValidPhone(phone);
   }
 
   get value(): string {
@@ -29,11 +30,7 @@ export class Phone extends ValueObject<PhoneProps> {
   }
 
   format(): string {
-    const phone = this.value;
-    if (phone.length === 11) {
-      return `(${phone.slice(0, 2)}) ${phone.slice(2, 7)}-${phone.slice(7)}`;
-    }
-    return `(${phone.slice(0, 2)}) ${phone.slice(2, 6)}-${phone.slice(6)}`;
+    return formatPhone(this.value);
   }
 
   toString(): string {

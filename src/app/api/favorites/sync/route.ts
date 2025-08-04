@@ -1,9 +1,9 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { container } from '@/core/infrastructure/container';
 import { authMiddleware } from '@/core/infrastructure/middleware/authMiddleware';
 import { handleApiError, successResponse } from '@/lib/api-utils';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const authResult = await authMiddleware(request);
     if (!authResult.authenticated || !authResult.customerId) {
@@ -29,6 +29,6 @@ export async function POST(request: Request) {
     
     return successResponse(updatedFavorites, { message: 'Favoritos sincronizados com sucesso' });
   } catch (error) {
-    return handleApiError(error);
+    return handleApiError(error, 'ao sincronizar favoritos');
   }
 }

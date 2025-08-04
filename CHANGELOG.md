@@ -7,6 +7,39 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+## [0.8.0] - 2025-01-04
+
+### Adicionado
+- **Skeleton Loading para ProductGrid**: Componente de carregamento visual durante fetch de produtos
+  - `ProductCardSkeleton` com animação shimmer suave
+  - Prop `isLoading` no ProductGrid para controlar estado
+  - Melhora significativa na experiência do usuário durante carregamento
+  - Elimina mensagem "Nenhum produto disponível" durante loading
+
+### Melhorado
+- **Performance com React Hooks**: Otimização completa com useCallback e useMemo
+  - ProductCard: Funções memoizadas para evitar re-renders desnecessários
+  - UserActions & FavoritesButton: Handlers otimizados
+  - Páginas Auth & Conta: Formulários e tabs otimizados
+  - Header: Navigation items e handlers memoizados
+  - HomePage: Função loadData otimizada
+  - AuthContext: Todas as funções do contexto otimizadas
+  - Redução significativa de re-renders em componentes filhos
+  - Performance melhorada especialmente em listas de produtos
+
+- **Atualização em Tempo Real na Página de Conta**: Dados atualizados sem reload
+  - Após salvar alterações, executa checkAuth() para sincronizar
+  - Formulário atualizado automaticamente com novos dados
+  - Elimina necessidade de refresh manual da página
+
+### Corrigido
+- **Build do Next.js**: Múltiplos erros de TypeScript resolvidos
+  - Tipos NextRequest/Request padronizados nas rotas API
+  - Função handleApiError ajustada para receber contexto obrigatório
+  - Hooks tipados corretamente para useApiRequest
+  - Variáveis não utilizadas removidas
+  - Todos os erros de compilação eliminados
+
 ## [0.7.0] - 2025-01-04
 
 ### Adicionado

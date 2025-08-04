@@ -5,7 +5,7 @@ import { useAuthForm } from '@/hooks/useAuthForm';
 import { usePasswordRecovery } from '@/hooks/usePasswordRecovery';
 import { useResendVerification } from '@/hooks/useResendVerification';
 import { PatternFormat } from 'react-number-format';
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import { TextField } from '@/components/atoms/TextField';
 import { Button } from '@/components/atoms/Button';
@@ -56,31 +56,29 @@ export default function AuthPage() {
   const [showResendEmail, setShowResendEmail] = useState(false);
   const [resendEmail, setResendEmail] = useState('');
 
-  const handleRecoverySubmit = async (e: React.FormEvent) => {
+  const handleRecoverySubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('🔑 [Frontend] Solicitando recuperação de senha para:', recoveryEmail);
     const success = await requestPasswordReset(recoveryEmail);
-    console.log('🔑 [Frontend] Resultado da solicitação:', success);
     if (success) {
       setRecoverySuccess(true);
       setRecoveryEmail('');
       toast.success('Email de recuperação enviado!');
     }
-  };
+  }, [recoveryEmail, requestPasswordReset]);
 
-  const handleResendVerification = async () => {
+  const handleResendVerification = useCallback(async () => {
     if (!resendEmail.trim()) {
       toast.error('Digite seu email');
       return;
     }
     await resendVerificationEmail(resendEmail);
-  };
+  }, [resendEmail, resendVerificationEmail]);
 
-  const tabs = [
+  const tabs = useMemo(() => [
     { label: 'Login', value: 0 as number },
     { label: 'Cadastro', value: 1 as number },
     { label: 'Recuperar Senha', value: 2 as number }
-  ];
+  ], []);
 
   return (
     <Container className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

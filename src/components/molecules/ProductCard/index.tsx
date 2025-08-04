@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { Heart } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/hooks/useCart';
 import { useFavoritesContext } from '@/context/favorites';
 import { QuantitySelector } from '@/components/atoms/QuantitySelector';
 import { BuyButton } from '@/components/atoms/BuyButton';
+import { formatCurrency } from '@/utils/formatters';
 import {
   ProductCardContainer,
   ProductImageWrapper,
@@ -41,24 +42,27 @@ export function ProductCard({ product, categoryName }: ProductCardProps) {
   const [isFavoriteLoading, setIsFavoriteLoading] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
-  const productName = product.name.pt || Object.values(product.name).find(Boolean) || 'Produto sem nome';
+  const productName = useMemo(() => 
+    product.name.pt || Object.values(product.name).find(Boolean) || 'Produto sem nome',
+    [product.name]
+  );
+  
   const imageUrl = product.images?.[0]?.src || DEFAULT_IMAGE;
   const variant = product.variants?.[0];
-  const price = parseFloat(variant?.price || '0');
-  const promotionalPrice = variant?.promotional_price ? parseFloat(variant.promotional_price) : null;
-  const currentPrice = promotionalPrice || price;
-  const hasDiscount = promotionalPrice && promotionalPrice < price;
-  const discountPercentage = hasDiscount ? Math.round(((price - promotionalPrice!) / price) * 100) : 0;
-  const inStock = !variant?.stock || (typeof variant.stock === 'number' ? variant.stock > 0 : variant.stock !== '0');
+  
+  const { price, currentPrice, hasDiscount, discountPercentage, inStock } = useMemo(() => {
+    const price = parseFloat(variant?.price || '0');
+    const promotionalPrice = variant?.promotional_price ? parseFloat(variant.promotional_price) : null;
+    const currentPrice = promotionalPrice || price;
+    const hasDiscount = promotionalPrice && promotionalPrice < price;
+    const discountPercentage = hasDiscount ? Math.round(((price - promotionalPrice!) / price) * 100) : 0;
+    const inStock = !variant?.stock || (typeof variant.stock === 'number' ? variant.stock > 0 : variant.stock !== '0');
+    
+    return { price, promotionalPrice, currentPrice, hasDiscount, discountPercentage, inStock };
+  }, [variant]);
 
-  const formatPrice = (value: number) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }).format(value);
-  };
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = useCallback(async () => {
     if (!inStock) return;
     
     setIsLoading(true);
@@ -68,9 +72,9 @@ export function ProductCard({ product, categoryName }: ProductCardProps) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [inStock, addToCart, product.id, quantity]);
 
-  const handleViewDetails = () => {
+  const handleViewDetails = useCallback(() => {
     let slug = `produto-${product.id}`;
     if (product.handle) {
       slug = typeof product.handle === 'string' 
@@ -78,16 +82,16 @@ export function ProductCard({ product, categoryName }: ProductCardProps) {
         : product.handle.pt || slug;
     }
     router.push(`/produto/${slug}`);
-  };
+  }, [product.id, product.handle, router]);
 
-  const handleToggleFavorite = async () => {
+  const handleToggleFavorite = useCallback(async () => {
     setIsFavoriteLoading(true);
     try {
       await toggleFavorite(product.id.toString());
     } finally {
       setIsFavoriteLoading(false);
     }
-  };
+  }, [toggleFavorite, product.id]);
 
   return (
     <ProductCardContainer className="bg-white relative transition-all duration-300 border border-gray-200 hover:shadow-lg">
@@ -157,12 +161,12 @@ export function ProductCard({ product, categoryName }: ProductCardProps) {
                   {discountPercentage}% OFF
                 </DiscountBadge>
                 <OldPrice className="text-gray-500 text-sm line-through">
-                  de {formatPrice(price)}
+                  de {formatCurrency(price)}
                 </OldPrice>
               </>
             )}
             <CurrentPrice className="text-gray-800 font-bold text-xl">
-              por {formatPrice(currentPrice)}
+              por {formatCurrency(currentPrice)}
             </CurrentPrice>
           </PriceContainer>
         </QuantityRow>

@@ -1,4 +1,5 @@
 import { ProductCard } from '@/components/molecules/ProductCard';
+import { ProductCardSkeleton } from '@/components/molecules/ProductCard/ProductCardSkeleton';
 import { GridContainer, EmptyStateContainer } from './styles';
 import type { NuvemshopProduct, NuvemshopCategory } from '@/types';
 
@@ -6,12 +7,16 @@ interface ProductGridProps {
   products: NuvemshopProduct[];
   categories?: NuvemshopCategory[];
   emptyMessage?: string;
+  skeletonCount?: number;
+  isLoading?: boolean;
 }
 
 export function ProductGrid({ 
   products, 
   categories = [], 
-  emptyMessage = 'Nenhum produto disponível no momento.'
+  emptyMessage = 'Nenhum produto disponível no momento.',
+  skeletonCount = 6,
+  isLoading = false
 }: ProductGridProps) {
   const getGridClasses = () => {
     return `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6`;
@@ -27,6 +32,17 @@ export function ProductGrid({
       ? category.name 
       : category.name.pt || '';
   };
+
+  // Mostra skeleton quando está carregando
+  if (isLoading) {
+    return (
+      <GridContainer className={getGridClasses()}>
+        {Array.from({ length: skeletonCount }).map((_, index) => (
+          <ProductCardSkeleton key={`skeleton-${index}`} />
+        ))}
+      </GridContainer>
+    );
+  }
 
   if (products.length === 0) {
     return (

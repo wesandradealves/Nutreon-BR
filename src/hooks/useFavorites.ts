@@ -9,10 +9,20 @@ import Cookies from 'js-cookie';
 const FAVORITES_COOKIE_KEY = 'nutreon_favorites';
 const COOKIE_EXPIRY_DAYS = 30;
 
+interface FavoritesResponse {
+  data?: string[] | { data: string[] };
+}
+
+interface ToggleFavoriteResponse {
+  data?: { added: boolean } | { data: { added: boolean } };
+}
+
 export function useFavorites() {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-  const { request } = useApiRequest();
+  const { request: requestFavorites } = useApiRequest<FavoritesResponse>();
+  const { request: requestToggle } = useApiRequest<ToggleFavoriteResponse>();
+  const { request: requestSync } = useApiRequest<FavoritesResponse>();
   const { isAuthenticated } = useAuth();
 
   const loadFavorites = useCallback(async () => {
@@ -21,15 +31,15 @@ export function useFavorites() {
       
       if (isAuthenticated) {
         // Usuário logado: busca do banco
-        const response = await request('/api/favorites', { method: 'GET' });
+        const response = await requestFavorites('/api/favorites', { method: 'GET' });
         
         if (response?.success && response.data) {
           // Verifica se os dados estão aninhados
-          let favoritesArray = [];
+          let favoritesArray: string[] = [];
           if (Array.isArray(response.data)) {
             favoritesArray = response.data;
-          } else if (response.data.data && Array.isArray(response.data.data)) {
-            favoritesArray = response.data.data;
+          } else if ('data' in response.data && Array.isArray((response.data as { data: string[] }).data)) {
+            favoritesArray = (response.data as { data: string[] }).data;
           }
           setFavorites(favoritesArray);
           // Limpa cookies após sincronizar
@@ -56,7 +66,7 @@ export function useFavorites() {
     } finally {
       setLoading(false);
     }
-  }, [isAuthenticated, request]);
+  }, [isAuthenticated, requestFavorites]);
 
   // Carrega favoritos ao montar ou quando autenticação mudar
   useEffect(() => {
@@ -67,16 +77,22 @@ export function useFavorites() {
     try {
       if (isAuthenticated) {
         // Usuário logado: salva no banco
-        const response = await request('/api/favorites', {
+        const response = await requestToggle('/api/favorites', {
           method: 'POST',
           data: { productId }
         });
 
         if (response?.success && response.data) {
           // Verifica se os dados estão aninhados
-          const toggleResult = response.data.data || response.data;
+          let added = false;
           
-          if (toggleResult.added) {
+          if ('data' in response.data && typeof response.data.data === 'object' && response.data.data !== null && 'added' in response.data.data) {
+            added = (response.data.data as { added: boolean }).added;
+          } else if ('added' in response.data) {
+            added = (response.data as { added: boolean }).added;
+          }
+          
+          if (added) {
             setFavorites(prev => [...prev, productId]);
             toast.success('Produto adicionado aos favoritos!');
           } else {
@@ -107,7 +123,7 @@ export function useFavorites() {
       toast.error('Erro ao atualizar favoritos');
       console.error('Erro ao toggle favorito:', error);
     }
-  }, [isAuthenticated, favorites, request]);
+  }, [isAuthenticated, favorites, requestToggle]);
 
   const isFavorite = useCallback((productId: string) => {
     return Array.isArray(favorites) && favorites.includes(productId);
@@ -123,7 +139,7 @@ export function useFavorites() {
       if (!Array.isArray(parsed) || parsed.length === 0) return;
 
       // Sincroniza com o banco
-      await request('/api/favorites/sync', {
+      await requestSync('/api/favorites/sync', {
         method: 'POST',
         data: { favorites: parsed }
       });
@@ -136,7 +152,7 @@ export function useFavorites() {
     } catch (error) {
       console.error('Erro ao sincronizar favoritos:', error);
     }
-  }, [request, loadFavorites]);
+  }, [requestSync, loadFavorites]);
 
   return {
     favorites,

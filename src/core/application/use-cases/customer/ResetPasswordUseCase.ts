@@ -1,6 +1,7 @@
 import { ICustomerRepository } from '@/core/domain/repositories/ICustomerRepository';
 import { IPasswordResetRepository } from '@/core/domain/repositories/IPasswordResetRepository';
 import { IPasswordHasher } from '@/core/application/interfaces/IPasswordHasher';
+import { ERROR_MESSAGES } from '@/config/constants';
 
 export class ResetPasswordUseCase {
   constructor(
@@ -14,24 +15,24 @@ export class ResetPasswordUseCase {
     const passwordReset = await this.passwordResetRepository.findByToken(token);
     
     if (!passwordReset) {
-      throw new Error('Token inválido');
+      throw new Error(ERROR_MESSAGES.INVALID_TOKEN);
     }
 
     // Verificar se já foi usado
     if (passwordReset.usedAt) {
-      throw new Error('Token já utilizado');
+      throw new Error(ERROR_MESSAGES.INVALID_TOKEN);
     }
 
     // Verificar se expirou
     if (passwordReset.expiresAt < new Date()) {
-      throw new Error('Token expirado');
+      throw new Error(ERROR_MESSAGES.INVALID_TOKEN);
     }
 
     // Buscar cliente
     const customer = await this.customerRepository.findById(passwordReset.customerId);
     
     if (!customer) {
-      throw new Error('Cliente não encontrado');
+      throw new Error(ERROR_MESSAGES.USER_NOT_FOUND);
     }
 
     // Hash da nova senha

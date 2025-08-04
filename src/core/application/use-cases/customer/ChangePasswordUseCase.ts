@@ -1,5 +1,6 @@
 import { ICustomerRepository } from '@/core/domain/repositories/ICustomerRepository';
 import { IPasswordHasher } from '@/core/application/interfaces/IPasswordHasher';
+import { ERROR_MESSAGES } from '@/config/constants';
 
 export interface ChangePasswordDTO {
   customerId: string;
@@ -18,12 +19,12 @@ export class ChangePasswordUseCase {
     const customer = await this.customerRepository.findById(dto.customerId);
     
     if (!customer) {
-      throw new Error('Cliente não encontrado');
+      throw new Error(ERROR_MESSAGES.USER_NOT_FOUND);
     }
 
     // Verificar se tem senha cadastrada
     if (!customer.passwordHash) {
-      throw new Error('Cliente sem senha cadastrada');
+      throw new Error(ERROR_MESSAGES.NO_PASSWORD_SET);
     }
 
     // Verificar senha atual
@@ -33,7 +34,7 @@ export class ChangePasswordUseCase {
     );
 
     if (!isValidPassword) {
-      throw new Error('Senha atual incorreta');
+      throw new Error(ERROR_MESSAGES.INCORRECT_PASSWORD);
     }
 
     // Hash da nova senha

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { toast } from 'react-hot-toast';
 
 interface Customer {
@@ -39,12 +39,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Verificar se há dados salvos localmente (sem fazer chamada à API)
-  useEffect(() => {
-    checkLocalAuth();
-  }, []);
-
-  const checkLocalAuth = () => {
+  const checkLocalAuth = useCallback(() => {
     // Verificar se estamos no cliente antes de acessar localStorage
     if (typeof window === 'undefined') return;
     
@@ -59,9 +54,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         localStorage.removeItem('customer_data');
       }
     }
-  };
+  }, []);
 
-  const checkAuth = async () => {
+  // Verificar se há dados salvos localmente (sem fazer chamada à API)
+  useEffect(() => {
+    checkLocalAuth();
+  }, [checkLocalAuth]);
+
+  const checkAuth = useCallback(async () => {
     try {
       const response = await fetch('/api/customer/me');
       const data = await response.json();
@@ -83,9 +83,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch {
       // Em caso de erro, manter estado atual
     }
-  };
+  }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = useCallback(async (email: string, password: string) => {
     setIsLoading(true);
     try {
       const response = await fetch('/api/customer/login', {
@@ -112,9 +112,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       await fetch('/api/customer/logout', { method: 'POST' });
     } catch (error) {
@@ -127,9 +127,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     setCustomer(null);
     setIsAuthenticated(false);
-  };
+  }, []);
 
-  const register = async (data: { name: string; email: string; phone?: string; password?: string }) => {
+  const register = useCallback(async (data: { name: string; email: string; phone?: string; password?: string }) => {
     setIsLoading(true);
     try {
       const response = await fetch('/api/customer/register', {
@@ -152,9 +152,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const updateCustomer = (data: Partial<Customer>) => {
+  const updateCustomer = useCallback((data: Partial<Customer>) => {
     if (customer) {
       const updatedCustomer = { ...customer, ...data };
       setCustomer(updatedCustomer);
@@ -162,7 +162,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         localStorage.setItem('customer_data', JSON.stringify(updatedCustomer));
       }
     }
-  };
+  }, [customer]);
 
   return (
     <AuthContext.Provider value={{ 

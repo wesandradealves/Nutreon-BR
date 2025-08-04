@@ -1,5 +1,6 @@
 'use client';
 
+import { useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/auth';
@@ -35,10 +36,10 @@ const UserActions = ({
   const router = useRouter();
   const { logout } = useAuth();
 
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     await logout();
     router.push('/');
-  };
+  }, [logout, router]);
 
   return (
     <UserActionsContainer className={`hidden md:block ${className}`}>

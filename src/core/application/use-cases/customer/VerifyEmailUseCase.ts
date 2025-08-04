@@ -3,6 +3,7 @@ import { IEmailVerificationRepository } from '@/core/domain/repositories/IEmailV
 import { ISessionRepository } from '@/core/domain/repositories/ISessionRepository';
 import { ITokenService } from '@/core/application/interfaces/ITokenService';
 import { AuthResponseDTO } from '@/core/application/dtos/customer/CustomerResponseDTO';
+import { ERROR_MESSAGES } from '@/config/constants';
 
 export class VerifyEmailUseCase {
   constructor(
@@ -17,24 +18,24 @@ export class VerifyEmailUseCase {
     const verification = await this.emailVerificationRepository.findByToken(token);
     
     if (!verification) {
-      throw new Error('Token de verificação inválido');
+      throw new Error(ERROR_MESSAGES.INVALID_TOKEN);
     }
 
     // Verificar se já foi usado
     if (verification.verifiedAt) {
-      throw new Error('Este email já foi verificado');
+      throw new Error(ERROR_MESSAGES.EMAIL_ALREADY_VERIFIED);
     }
 
     // Verificar se expirou
     if (verification.expiresAt < new Date()) {
-      throw new Error('Token de verificação expirado');
+      throw new Error(ERROR_MESSAGES.INVALID_TOKEN);
     }
 
     // Buscar cliente
     const customer = await this.customerRepository.findById(verification.customerId);
     
     if (!customer) {
-      throw new Error('Cliente não encontrado');
+      throw new Error(ERROR_MESSAGES.USER_NOT_FOUND);
     }
 
     // Marcar cliente como verificado
