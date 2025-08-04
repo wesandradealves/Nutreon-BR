@@ -1,7 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { container } from '@/core/infrastructure/container';
 import { ResetPasswordUseCase } from '@/core/application/use-cases/customer/ResetPasswordUseCase';
+import { successResponse, handleApiError } from '@/lib/api-utils';
 
 const resetPasswordSchema = z.object({
   token: z.string().min(1, 'Token é obrigatório'),
@@ -21,41 +22,10 @@ export async function POST(request: NextRequest) {
     const useCase = container.resolve('resetPasswordUseCase') as ResetPasswordUseCase;
     await useCase.execute(token, password);
 
-    return NextResponse.json({
-      success: true,
+    return successResponse({
       message: 'Senha redefinida com sucesso',
     });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { 
-          success: false,
-          error: 'Dados inválidos',
-          errors: error.issues,
-        },
-        { status: 400 }
-      );
-    }
-
-    if (error instanceof Error) {
-      if (error.message.includes('expirado') || error.message.includes('inválido')) {
-        return NextResponse.json(
-          { 
-            success: false,
-            error: error.message 
-          },
-          { status: 400 }
-        );
-      }
-    }
-
-    console.error('Erro ao redefinir senha:', error);
-    return NextResponse.json(
-      { 
-        success: false,
-        error: 'Erro ao redefinir senha' 
-      },
-      { status: 500 }
-    );
+    return handleApiError(error, 'ao redefinir senha', 'Erro ao redefinir senha');
   }
 }

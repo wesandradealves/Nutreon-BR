@@ -5,6 +5,21 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [Unreleased]
+
+### Melhorado
+- **Tratamento de Erros Padronizado**: Refatorado 6 endpoints para usar funções utilitárias
+  - `/api/health` - Usa `successResponse` e `errorResponse`
+  - `/api/customer/update` - Usa `handleApiError` (57 → 41 linhas)
+  - `/api/customer/change-password` - Tratamento centralizado (59 → 43 linhas)
+  - `/api/auth/verify-email` - Simplificado (57 → 23 linhas)
+  - `/api/auth/reset-password` - Código reduzido (61 → 31 linhas)
+  - `/api/auth/request-password-reset` - Mais conciso (42 → 25 linhas)
+  - Total: 335 linhas reduzidas para 212 (37% de redução)
+  - Determinação automática de status HTTP baseada em mensagem
+  - Tratamento consistente de erros Zod
+  - Respostas padronizadas com timestamp
+
 ## [0.4.3] - 2025-08-04
 
 ### Adicionado

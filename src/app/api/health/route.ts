@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
 import { tokenManager } from '@/lib/nuvemshop-token-manager';
+import { successResponse, errorResponse } from '@/lib/api-utils';
 
 export async function GET() {
   console.log('\n🏥 [BFF] ==> GET /api/health');
@@ -30,30 +30,19 @@ export async function GET() {
     
     console.log(`\n${statusEmoji} [BFF] Status final: ${status.toUpperCase()}`);
     
-    return NextResponse.json({
-      success: true,
-      data: {
-        status,
-        checks: {
-          token: hasToken,
-          userId: hasUserId,
-          tokenValid,
-          environment: process.env.NODE_ENV,
-        },
+    return successResponse({
+      status,
+      checks: {
+        token: hasToken,
+        userId: hasUserId,
+        tokenValid,
+        environment: process.env.NODE_ENV,
       },
-      timestamp: new Date().toISOString(),
     });
     
   } catch (error) {
     console.error('❌ [BFF] Erro ao verificar saúde:', error);
-    return NextResponse.json(
-      { 
-        success: false,
-        data: { status: 'error' },
-        error: error instanceof Error ? error.message : 'Erro desconhecido',
-        timestamp: new Date().toISOString(),
-      },
-      { status: 500 }
-    );
+    const message = error instanceof Error ? error.message : 'Erro desconhecido';
+    return errorResponse(message, 500, { data: { status: 'error' } });
   }
 }

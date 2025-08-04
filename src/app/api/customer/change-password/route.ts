@@ -1,7 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { container } from '@/core/infrastructure/container';
 import { requireAuth } from '@/core/infrastructure/middleware/authMiddleware';
 import { z } from 'zod';
+import { successResponse, handleApiError } from '@/lib/api-utils';
 
 const changePasswordSchema = z.object({
   currentPassword: z.string().min(1, 'Senha atual é obrigatória'),
@@ -27,8 +28,7 @@ export async function POST(request: NextRequest) {
     });
     
     // Criar resposta que remove o cookie (forçar logout)
-    const response = NextResponse.json({
-      success: true,
+    const response = successResponse({
       message: 'Senha alterada com sucesso. Faça login novamente.',
     });
     
@@ -37,23 +37,6 @@ export async function POST(request: NextRequest) {
     
     return response;
   } catch (error) {
-    console.error('Erro ao alterar senha:', error);
-    
-    if (error instanceof z.ZodError) {
-      return NextResponse.json({
-        success: false,
-        error: error.issues[0].message,
-      }, { status: 400 });
-    }
-    
-    const message = error instanceof Error ? error.message : 'Erro ao alterar senha';
-    const status = message.includes('incorreta') ? 401 : 
-                   message.includes('não encontrado') ? 404 : 
-                   message.includes('Não autenticado') ? 401 : 400;
-    
-    return NextResponse.json({
-      success: false,
-      error: message,
-    }, { status });
+    return handleApiError(error, 'ao alterar senha', 'Erro ao alterar senha');
   }
 }
