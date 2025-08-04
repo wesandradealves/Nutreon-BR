@@ -7,6 +7,26 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Removido
+- **Arquivos de Backup Não Utilizados**: Limpeza de arquivos antigos
+  - `/src/app/conta/page-material-ui.tsx`
+  - `/src/app/auth/page-material-ui.tsx` 
+  - `/src/app/auth/page-original.tsx`
+- **Console.logs em Produção**: Removidos de 5 arquivos
+  - verify-email, auth context, home page, header, unauthorized
+- **Hook Duplicado**: Removido `useBFF` em favor de `useApiRequest`
+
+### Melhorado
+- **Centralização de Requisições HTTP**: Todos os componentes agora usam `useApiRequest`
+  - Migrado home page e verify-email page
+  - Padronização do tratamento de erros e loading
+  - Eliminada duplicação de lógica de requisições
+
+### Corrigido
+- **Erro de Runtime**: Ajustado acesso a dados aninhados da API
+  - ProductGrid agora recebe arrays corretamente
+  - Corrigido formato de resposta (data.data)
+
 ## [0.6.0] - 2025-08-04
 
 ### Adicionado

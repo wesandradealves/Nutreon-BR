@@ -2,7 +2,7 @@
 
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { useBFF } from '@/hooks/useBFF';
+import { useApiRequest } from '@/hooks/useApiRequest';
 import { Button } from '@/components/atoms/Button';
 import { Alert } from '@/components/atoms/Alert';
 import { Container, Card, IconWrapper, Title, Message, ButtonGroup } from './styles';
@@ -10,7 +10,7 @@ import { Container, Card, IconWrapper, Title, Message, ButtonGroup } from './sty
 export default function VerifyEmailPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { request } = useBFF();
+  const { request } = useApiRequest();
   const token = searchParams?.get('token');
   
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
@@ -24,27 +24,21 @@ export default function VerifyEmailPage() {
     }
 
     const verify = async () => {
-      try {
-        const response = await request('/auth/verify-email', {
-          method: 'POST',
-          body: JSON.stringify({ token }),
-        });
+      const response = await request('/api/auth/verify-email', {
+        method: 'POST',
+        data: { token },
+      });
 
-        if (response && response.success) {
-          setStatus('success');
-          setMessage('Email verificado com sucesso! Você foi conectado automaticamente.');
-          
-          setTimeout(() => {
-            router.push('/conta');
-          }, 2000);
-        } else {
-          setStatus('error');
-          setMessage('Erro ao verificar email');
-        }
-      } catch (error) {
-        console.error('Erro na verificação:', error);
+      if (response.success) {
+        setStatus('success');
+        setMessage('Email verificado com sucesso! Você foi conectado automaticamente.');
+        
+        setTimeout(() => {
+          router.push('/conta');
+        }, 2000);
+      } else {
         setStatus('error');
-        setMessage('Token inválido ou expirado');
+        setMessage(response.error || 'Erro ao verificar email');
       }
     };
 

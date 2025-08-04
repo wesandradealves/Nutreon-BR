@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useBFF } from '@/hooks/useBFF';
+import { useApiRequest } from '@/hooks/useApiRequest';
 import { ProductGrid } from '@/components/organisms/ProductGrid';
 import {
   PageContainer,
@@ -23,35 +23,32 @@ export default function HomePage() {
   const [products, setProducts] = useState<NuvemshopProduct[]>([]);
   const [categories, setCategories] = useState<NuvemshopCategory[]>([]);
   const [storeInfo, setStoreInfo] = useState<StoreInfo | null>(null);
-  const { request, loading } = useBFF();
+  const { request, loading } = useApiRequest();
 
   useEffect(() => {
     loadData();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadData = async () => {
-    console.log('🏠 [HomePage] Carregando dados...');
-    
     // Verificar saúde do sistema
-    const health = await request('/health');
-    console.log('🏥 [HomePage] Status do sistema:', health?.data);
+    await request('/api/health');
     
     // Buscar informações da loja
-    const storeResponse = await request<StoreInfo>('/store');
-    if (storeResponse?.data) {
-      setStoreInfo(storeResponse.data);
+    const storeResponse = await request<{ data: StoreInfo }>('/api/store');
+    if (storeResponse.success && storeResponse.data?.data) {
+      setStoreInfo(storeResponse.data.data);
     }
     
     // Buscar categorias primeiro
-    const categoriesResponse = await request<NuvemshopCategory[]>('/categories');
-    if (categoriesResponse?.data) {
-      setCategories(categoriesResponse.data);
+    const categoriesResponse = await request<{ data: NuvemshopCategory[] }>('/api/categories');
+    if (categoriesResponse.success && categoriesResponse.data?.data) {
+      setCategories(categoriesResponse.data.data);
     }
     
     // Buscar produtos
-    const productsResponse = await request<NuvemshopProduct[]>('/products?per_page=12');
-    if (productsResponse?.data) {
-      setProducts(productsResponse.data);
+    const productsResponse = await request<{ data: NuvemshopProduct[] }>('/api/products?per_page=12');
+    if (productsResponse.success && productsResponse.data?.data) {
+      setProducts(productsResponse.data.data);
     }
   };
 

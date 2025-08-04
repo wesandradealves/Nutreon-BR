@@ -80,8 +80,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setCustomer(null);
         setIsAuthenticated(false);
       }
-    } catch (error) {
-      console.error('Erro ao verificar autenticação:', error);
+    } catch {
       // Em caso de erro, manter estado atual
     }
   };

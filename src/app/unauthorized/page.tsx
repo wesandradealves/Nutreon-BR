@@ -14,7 +14,6 @@ export default function UnauthorizedPage() {
     // URL correta de autorização conforme documentação
     const authUrl = `https://www.tiendanube.com/apps/${clientId}/authorize?state=${state}`;
     
-    console.log('Redirecting to:', authUrl);
     window.location.href = authUrl;
   };
 

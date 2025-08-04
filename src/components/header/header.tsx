@@ -56,15 +56,15 @@ const Header = ({}: HeaderProps) => {
   }, []);
 
   const verificaEntregaCep = () => {
-    console.log('Verificar entrega');
+    // TODO: Implementar verificação de entrega
   };
 
   const openCarrinhoRight = () => {
-    console.log('Abrir carrinho');
+    // TODO: Implementar abertura do carrinho
   };
 
   const openSearch = () => {
-    console.log('Abrir busca');
+    // TODO: Implementar abertura da busca
   };
 
   return (
