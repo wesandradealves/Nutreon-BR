@@ -2,6 +2,7 @@
 
 import { createContext, useContext, ReactNode, useState, useEffect, useCallback } from 'react';
 import { useAuth } from './auth';
+import { useCartDrawer } from './cartDrawer';
 import { apiClient } from '@/services/api-client';
 import { toast } from 'react-hot-toast';
 import type { Cart } from '@/types/cart.types';
@@ -29,6 +30,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [shipping, setShipping] = useState(0);
   const [mounted, setMounted] = useState(false);
   const { isAuthenticated } = useAuth();
+  const { openDrawer } = useCartDrawer();
 
   // Calcula totais
   const itemCount = cart?.items?.reduce((acc, item) => acc + item.quantity, 0) || 0;
@@ -68,12 +70,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
       if (response.success) {
         toast.success('Produto adicionado ao carrinho!');
         await loadCart(); // Recarrega carrinho
+        openDrawer(); // Abre o drawer do carrinho
       }
     } catch (error) {
       toast.error('Erro ao adicionar produto ao carrinho');
       throw error;
     }
-  }, [loadCart]);
+  }, [loadCart, openDrawer]);
 
   // Atualiza quantidade
   const updateQuantity = useCallback(async (itemId: string, quantity: number) => {

@@ -1,9 +1,10 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/auth';
+import { useCartDrawer } from '@/context/cartDrawer';
 import { 
   UserActionsContainer, 
   ActionsList, 
@@ -32,20 +33,12 @@ const UserActions = ({
 }: UserActionsProps) => {
   const router = useRouter();
   const { logout } = useAuth();
-  const [isCartOpen, setIsCartOpen] = useState(false);
+  const { isOpen: isCartOpen, openDrawer, closeDrawer } = useCartDrawer();
 
   const handleLogout = useCallback(async () => {
     await logout();
     router.push('/');
   }, [logout, router]);
-
-  const handleCartClick = useCallback(() => {
-    setIsCartOpen(true);
-  }, []);
-
-  const handleCartClose = useCallback(() => {
-    setIsCartOpen(false);
-  }, []);
 
   return (
     <UserActionsContainer className={`hidden md:block ${className}`}>
@@ -57,7 +50,7 @@ const UserActions = ({
 
         {/* Carrinho */}
         <ActionItem className="relative">
-          <CartButton onClick={handleCartClick} />
+          <CartButton onClick={openDrawer} />
         </ActionItem>
 
         {/* Login/Cadastro */}
@@ -119,7 +112,7 @@ const UserActions = ({
       </ActionsList>
       
       {/* Cart Drawer */}
-      <CartDrawer isOpen={isCartOpen} onClose={handleCartClose} />
+      <CartDrawer isOpen={isCartOpen} onClose={closeDrawer} />
     </UserActionsContainer>
   );
 };

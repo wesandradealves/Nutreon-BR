@@ -5,6 +5,7 @@ import { LoaderProvider, useLoader } from '@/context/spinner';
 import { AuthProvider } from '@/context/auth';
 import { FavoritesProvider } from '@/context/favorites';
 import { CartProvider } from '@/context/cart';
+import { CartDrawerProvider } from '@/context/cartDrawer';
 import Spinner from '@/components/spinner/spinner';
 import StyledJsxRegistry from './registry';
 import { App, GlobalStyle } from '@/app/style';
@@ -48,9 +49,10 @@ export default function ClientProviders({ children }: { children: React.ReactNod
         <LoaderSetup />
         <AuthProvider>
           <FavoritesProvider>
-            <CartProvider>
-              <Suspense fallback={<div>Loading...</div>}>
-              <StyledJsxRegistry>
+            <CartDrawerProvider>
+              <CartProvider>
+                <Suspense fallback={<div>Loading...</div>}>
+                <StyledJsxRegistry>
               <AnimatePresence
                 mode="wait"
                 initial={true}
@@ -94,7 +96,8 @@ export default function ClientProviders({ children }: { children: React.ReactNod
               </AnimatePresence>
             </StyledJsxRegistry>
           </Suspense>
-            </CartProvider>
+              </CartProvider>
+            </CartDrawerProvider>
           </FavoritesProvider>
         </AuthProvider>
       </LoaderProvider>

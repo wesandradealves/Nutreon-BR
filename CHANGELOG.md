@@ -60,6 +60,8 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Padrão Styled Components aplicado consistentemente
 - Types TypeScript atualizados para novos campos
 - Instruções adicionadas para executar migrações Prisma corretamente
+- Criado CartDrawerContext para controle global do drawer
+- CartDrawer abre automaticamente ao adicionar produtos ao carrinho
 
 ## [0.9.0] - 2025-01-05
 

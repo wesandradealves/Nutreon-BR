@@ -10,7 +10,8 @@
       "Bash(grep:*)",
       "WebFetch(domain:tiendanube.github.io)",
       "Bash(mkdir:*)",
-      "Bash(mv:*)"
+      "Bash(mv:*)",
+      "Bash(npx tsc:*)"
     ],
     "deny": []
   }
