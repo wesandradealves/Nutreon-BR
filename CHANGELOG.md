@@ -7,6 +7,102 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+## [0.9.1] - 2025-01-05
+
+### Adicionado
+- **CartDrawer Completo**: Drawer lateral do carrinho com todas as funcionalidades
+  - Lista visual de produtos com imagens, nomes e preços
+  - Controles de quantidade (+/-) funcionais
+  - Botão de remover item individual
+  - Cálculo de subtotal, frete e total em tempo real
+  - Botões "Finalizar Compra" e "Ver Carrinho Completo"
+  - Animações suaves com Headless UI Transition
+  - Estado vazio quando não há itens
+  - Loading state durante operações
+  
+- **Página de Carrinho Completa** (`/carrinho`): Redesign total com todas as funcionalidades
+  - Layout responsivo com grid de 2 colunas (produtos + resumo)
+  - Lista detalhada de produtos com imagens grandes
+  - Controles de quantidade e remoção por item
+  - Botão "Limpar Carrinho" com confirmação
+  - Resumo fixo do pedido (sticky)
+  - Indicador de frete grátis com progresso
+  - Botões de ação proeminentes
+  - Estados visuais para carrinho vazio e carregando
+  - Totalmente implementado com Styled Components
+  
+### Melhorado
+- **Integração Nuvemshop**: Enriquecimento de dados do carrinho
+  - API GET /api/cart agora busca dados completos dos produtos
+  - API POST /api/cart salva nome, imagem e preço ao adicionar
+  - Imagens reais dos produtos da Nuvemshop
+  - Fallback para imagem placeholder quando necessário
+  
+- **Performance**: Otimizações no CartDrawer
+  - useCallback para todos os handlers
+  - useMemo para cálculos derivados
+  - Previne re-renders desnecessários
+  
+### Corrigido
+- **Erros de Atualização/Remoção**: Correção de tipos no CartDrawer
+  - IDs do carrinho agora tratados corretamente como strings
+  - Removida conversão desnecessária com parseInt()
+  - Logs adicionados para debug nas APIs
+  
+- **Migração Prisma**: Adicionados campos no CartItem
+  - name, image e price agora persistidos no banco
+  - Migração com valores default para dados existentes
+  - Correção do erro "Unknown argument" do Prisma
+  
+### Técnico
+- Constantes centralizadas para imagens e cookies
+- CartDrawer integrado no header (desktop e mobile)
+- Padrão Styled Components aplicado consistentemente
+- Types TypeScript atualizados para novos campos
+- Instruções adicionadas para executar migrações Prisma corretamente
+
+## [0.9.0] - 2025-01-05
+
+### Adicionado
+- **Sistema de Carrinho Completo**: Implementação full-stack com arquitetura DDD
+  - **Backend DDD**:
+    - Repository `PrismaCartRepository` com métodos CRUD completos
+    - Use Cases: `GetOrCreateCart`, `AddToCart`, `UpdateCartItem`, `RemoveFromCart`, `ClearCart`, `GetCart`, `SyncCart`
+    - Container DI atualizado com todas as dependências do carrinho
+    - Entidades Cart e CartItem já existentes no Prisma
+  - **API Routes** (`/api/cart/*`):
+    - `GET /api/cart` - Busca carrinho (cria automaticamente se não existir)
+    - `POST /api/cart` - Adiciona item ao carrinho
+    - `PATCH /api/cart/:id` - Atualiza quantidade do item
+    - `DELETE /api/cart/:id` - Remove item específico
+    - `DELETE /api/cart` - Limpa carrinho completo
+    - `POST /api/cart/sync` - Sincroniza carrinho ao fazer login
+    - `POST /api/cart/shipping` - Calcula frete com regras de negócio
+  - **Frontend**:
+    - Context `CartContext` para gerenciamento de estado global
+    - Hook `useCart` com interface simplificada para operações
+    - Componente `CartButton` no header com badge contador
+    - Página `/carrinho` com template básico funcional
+  - **Funcionalidades**:
+    - Persistência em cookies de sessão (30 dias) para usuários não autenticados
+    - Persistência no banco de dados para usuários autenticados
+    - Sincronização automática ao fazer login (merge de carrinhos)
+    - Cálculo de frete integrado: Grátis (>R$200), R$15 (R$52-166,59), R$20 (outros)
+    - Toast notifications para feedback de ações
+    - Loading states durante operações
+    - Integração completa com `ProductCard` (botão adicionar ao carrinho)
+
+### Melhorado
+- **Arquitetura DDD**: Sistema de carrinho seguindo todos os padrões estabelecidos
+- **Experiência do Usuário**: Carrinho persistente mesmo sem login
+- **Performance**: Estados otimizados e operações assíncronas
+
+### Técnico
+- Use Cases implementados com injeção de dependências
+- Tratamento de erros padronizado em todas as camadas
+- Respostas API seguindo formato padrão com `successResponse`
+- Types TypeScript completos para Cart e CartItem
+
 ## [0.8.0] - 2025-01-04
 
 ### Adicionado

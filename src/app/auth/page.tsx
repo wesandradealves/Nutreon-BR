@@ -18,10 +18,16 @@ import {
   Form,
   FormField
 } from './styles';
+import { useMetadata } from '@/hooks/useMetadata';
 
 export default function AuthPage() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams?.get('redirect') || '/conta';
+
+  useMetadata({
+    title: `Nutreon BR - Login`,
+    ogTitle: `Nutreon BR - Login`
+  });
   
   const {
     tab,
@@ -320,3 +326,4 @@ export default function AuthPage() {
     </Container>
   );
 }
+

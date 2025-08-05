@@ -67,12 +67,16 @@ export function ProductCard({ product, categoryName }: ProductCardProps) {
     
     setIsLoading(true);
     try {
-      await addToCart(product.id, quantity);
+      // Converte ID para string e usa o primeiro variant disponível
+      const productIdStr = product.id.toString();
+      const variantId = product.variants?.[0]?.id?.toString();
+      
+      await addToCart(productIdStr, variantId, quantity);
       setQuantity(1); // Reset após adicionar
     } finally {
       setIsLoading(false);
     }
-  }, [inStock, addToCart, product.id, quantity]);
+  }, [inStock, addToCart, product.id, product.variants, quantity]);
 
   const handleViewDetails = useCallback(() => {
     let slug = `produto-${product.id}`;

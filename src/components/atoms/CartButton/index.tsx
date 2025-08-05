@@ -1,31 +1,39 @@
 'use client';
 
-import IconButton from '../IconButton';
-import { CartButtonContainer, CartButtonWrapper } from './styles';
+import { useCallback } from 'react';
+import { ShoppingCart } from 'lucide-react';
+import { useCart } from '@/hooks/useCart';
+import { CartButtonContainer, IconWrapper, Badge } from './styles';
 
 interface CartButtonProps {
-  count?: number;
-  onClick: () => void;
   className?: string;
+  onClick: () => void;
 }
 
-const CartButton = ({ 
-  count = 0, 
-  onClick,
-  className = ''
-}: CartButtonProps) => {
+export function CartButton({ className, onClick }: CartButtonProps) {
+  const { itemCount } = useCart();
+
+  const handleClick = useCallback(() => {
+    onClick();
+  }, [onClick]);
+
   return (
-    <CartButtonContainer className={className}>
-      <CartButtonWrapper className="flex items-center justify-center w-10 h-10 rounded-full bg-dark-800 hover:bg-dark-700 transition-all duration-300 border border-dark-700">
-        <IconButton
-          onClick={onClick}
-          icon={<i className="fa-solid fa-cart-shopping text-gray-300" />}
-          badge={count}
-          ariaLabel="Carrinho"
+    <CartButtonContainer
+      onClick={handleClick}
+      className={`relative flex items-center justify-center p-2 rounded-lg hover:bg-dark-800 transition-colors ${className}`}
+      aria-label={`Carrinho com ${itemCount} ${itemCount === 1 ? 'item' : 'itens'}`}
+    >
+      <IconWrapper className="relative">
+        <ShoppingCart 
+          size={20} 
+          className="text-gray-300 hover:text-primary-500 transition-colors"
         />
-      </CartButtonWrapper>
+        {itemCount > 0 && (
+          <Badge className="absolute -top-[12px] -right-[12px] bg-primary-500 text-white text-xs font-semibold rounded-full h-5 w-5 flex items-center justify-center">
+            {itemCount > 99 ? '99+' : itemCount}
+          </Badge>
+        )}
+      </IconWrapper>
     </CartButtonContainer>
   );
-};
-
-export default CartButton;
+}

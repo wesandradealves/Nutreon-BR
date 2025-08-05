@@ -1,29 +1,37 @@
 'use client';
 
+import { useState, useCallback } from 'react';
 import Link from 'next/link';
 import { MobileMenuContainer, MobileButton, IconBar, MobileIcon } from './styles';
 import DeliveryCheck from '@/components/atoms/DeliveryCheck';
-import CartButton from '@/components/atoms/CartButton';
+import { CartButton } from '@/components/atoms/CartButton';
+import CartDrawer from '@/components/organisms/CartDrawer';
 
 interface MobileMenuProps {
   isDelivering: boolean;
   deliveryAddress: string;
-  cartCount: number;
   onDeliveryCheck: () => void;
   onSearchClick: () => void;
-  onCartClick: () => void;
   onMenuToggle: () => void;
 }
 
 const MobileMenu = ({
   isDelivering,
   deliveryAddress,
-  cartCount,
   onDeliveryCheck,
   onSearchClick,
-  onCartClick,
   onMenuToggle
 }: MobileMenuProps) => {
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const handleCartClick = useCallback(() => {
+    setIsCartOpen(true);
+  }, []);
+
+  const handleCartClose = useCallback(() => {
+    setIsCartOpen(false);
+  }, []);
+
   return (
     <MobileMenuContainer className="flex items-center gap-2 lg:hidden">
       <DeliveryCheck
@@ -50,11 +58,7 @@ const MobileMenu = ({
           <MobileIcon className="fa fa-user text-gray-300 text-sm" />
         </Link>
         
-        <CartButton 
-          count={cartCount} 
-          onClick={onCartClick}
-          className="w-8 h-8 text-sm"
-        />
+        <CartButton className="w-8 h-8 text-sm" onClick={handleCartClick} />
         
         <MobileButton 
           type="button" 
@@ -67,6 +71,9 @@ const MobileMenu = ({
           <IconBar className="block w-6 h-0.5 bg-gray-300" />
         </MobileButton>
       </div>
+      
+      {/* Cart Drawer */}
+      <CartDrawer isOpen={isCartOpen} onClose={handleCartClose} />
     </MobileMenuContainer>
   );
 };

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/auth';
@@ -15,31 +15,37 @@ import {
   UserDropdownItem,
   UserDropdownLink
 } from './styles';
-import CartButton from '@/components/atoms/CartButton';
+import { CartButton } from '@/components/atoms/CartButton';
 import { FavoritesButton } from '@/components/atoms/FavoritesButton';
+import CartDrawer from '@/components/organisms/CartDrawer';
 
 interface UserActionsProps {
   isAuthenticated: boolean;
   userName?: string;
-  cartCount?: number;
-  onCartClick: () => void;
   className?: string;
 }
 
 const UserActions = ({ 
   isAuthenticated, 
   userName,
-  cartCount = 0,
-  onCartClick,
   className = ''
 }: UserActionsProps) => {
   const router = useRouter();
   const { logout } = useAuth();
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   const handleLogout = useCallback(async () => {
     await logout();
     router.push('/');
   }, [logout, router]);
+
+  const handleCartClick = useCallback(() => {
+    setIsCartOpen(true);
+  }, []);
+
+  const handleCartClose = useCallback(() => {
+    setIsCartOpen(false);
+  }, []);
 
   return (
     <UserActionsContainer className={`hidden md:block ${className}`}>
@@ -51,7 +57,7 @@ const UserActions = ({
 
         {/* Carrinho */}
         <ActionItem className="relative">
-          <CartButton count={cartCount} onClick={onCartClick} />
+          <CartButton onClick={handleCartClick} />
         </ActionItem>
 
         {/* Login/Cadastro */}
@@ -111,6 +117,9 @@ const UserActions = ({
           </>
         )}
       </ActionsList>
+      
+      {/* Cart Drawer */}
+      <CartDrawer isOpen={isCartOpen} onClose={handleCartClose} />
     </UserActionsContainer>
   );
 };

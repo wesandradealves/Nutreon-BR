@@ -4,6 +4,7 @@ import { PrismaPasswordResetRepository } from '../repositories/PrismaPasswordRes
 import { PrismaSessionRepository } from '../repositories/PrismaSessionRepository';
 import { PrismaEmailVerificationRepository } from '../repositories/PrismaEmailVerificationRepository';
 import { PrismaFavoriteRepository } from '../repositories/PrismaFavoriteRepository';
+import { PrismaCartRepository } from '../repositories/cart.repository';
 import { BcryptPasswordHasher } from '../services/BcryptPasswordHasher';
 import { JwtTokenService } from '../services/JwtTokenService';
 import { NodemailerEmailService } from '../email/NodemailerEmailService';
@@ -19,6 +20,13 @@ import { ResendVerificationEmailUseCase } from '@/core/application/use-cases/cus
 import { ToggleFavoriteUseCase } from '@/core/application/use-cases/favorites/ToggleFavoriteUseCase';
 import { GetFavoritesUseCase } from '@/core/application/use-cases/favorites/GetFavoritesUseCase';
 import { SyncFavoritesUseCase } from '@/core/application/use-cases/favorites/SyncFavoritesUseCase';
+import { GetOrCreateCartUseCase } from '@/core/application/use-cases/cart/GetOrCreateCartUseCase';
+import { AddToCartUseCase } from '@/core/application/use-cases/cart/AddToCartUseCase';
+import { UpdateCartItemUseCase } from '@/core/application/use-cases/cart/UpdateCartItemUseCase';
+import { RemoveFromCartUseCase } from '@/core/application/use-cases/cart/RemoveFromCartUseCase';
+import { ClearCartUseCase } from '@/core/application/use-cases/cart/ClearCartUseCase';
+import { GetCartUseCase } from '@/core/application/use-cases/cart/GetCartUseCase';
+import { SyncCartUseCase } from '@/core/application/use-cases/cart/SyncCartUseCase';
 
 // Singleton do Prisma
 const prisma = new PrismaClient();
@@ -29,6 +37,7 @@ const passwordResetRepository = new PrismaPasswordResetRepository(prisma);
 const sessionRepository = new PrismaSessionRepository(prisma);
 const emailVerificationRepository = new PrismaEmailVerificationRepository(prisma);
 const favoriteRepository = new PrismaFavoriteRepository(prisma);
+const cartRepository = new PrismaCartRepository(prisma);
 
 // Services
 const passwordHasher = new BcryptPasswordHasher();
@@ -102,6 +111,14 @@ const toggleFavoriteUseCase = new ToggleFavoriteUseCase(favoriteRepository);
 const getFavoritesUseCase = new GetFavoritesUseCase(favoriteRepository);
 const syncFavoritesUseCase = new SyncFavoritesUseCase(favoriteRepository);
 
+const getOrCreateCartUseCase = new GetOrCreateCartUseCase(cartRepository);
+const addToCartUseCase = new AddToCartUseCase(cartRepository);
+const updateCartItemUseCase = new UpdateCartItemUseCase(cartRepository);
+const removeFromCartUseCase = new RemoveFromCartUseCase(cartRepository);
+const clearCartUseCase = new ClearCartUseCase(cartRepository);
+const getCartUseCase = new GetCartUseCase(cartRepository);
+const syncCartUseCase = new SyncCartUseCase(cartRepository);
+
 export const container = {
   // Database
   prisma,
@@ -112,6 +129,7 @@ export const container = {
   sessionRepository,
   emailVerificationRepository,
   favoriteRepository,
+  cartRepository,
   
   // Services
   passwordHasher,
@@ -131,6 +149,13 @@ export const container = {
   toggleFavoriteUseCase,
   getFavoritesUseCase,
   syncFavoritesUseCase,
+  getOrCreateCartUseCase,
+  addToCartUseCase,
+  updateCartItemUseCase,
+  removeFromCartUseCase,
+  clearCartUseCase,
+  getCartUseCase,
+  syncCartUseCase,
   
   // Helper method to resolve dependencies
   resolve<T>(key: string): T {

@@ -29,6 +29,7 @@ import {
   ButtonGroup,
   Divider
 } from './styles';
+import { useMetadata } from '@/hooks/useMetadata';
 
 interface PersonalDataForm {
   name: string;
@@ -59,6 +60,11 @@ export default function AccountPage() {
   const [editMode, setEditMode] = useState(false);
   const [changePasswordMode, setChangePasswordMode] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
+
+  useMetadata({
+    title: `Nutreon BR - Conta`,
+    ogTitle: `Nutreon BR - Conta`
+  });
 
   // Form para dados pessoais
   const {

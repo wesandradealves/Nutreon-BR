@@ -6,9 +6,7 @@ import { ProductGrid } from '@/components/organisms/ProductGrid';
 import {
   PageContainer,
   ContentSection,
-  Title,
   Subtitle,
-  Text
 } from './styles';
 import type { NuvemshopProduct, NuvemshopCategory } from '@/types';
 
@@ -21,7 +19,7 @@ interface StoreInfo {
 export default function HomePage() {
   const [products, setProducts] = useState<NuvemshopProduct[]>([]);
   const [categories, setCategories] = useState<NuvemshopCategory[]>([]);
-  const [storeInfo, setStoreInfo] = useState<StoreInfo | null>(null);
+  const [, setStoreInfo] = useState<StoreInfo | null>(null);
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
   const { request: requestHealth } = useApiRequest();
   const { request: requestStore } = useApiRequest<{ data: StoreInfo }>();
@@ -62,16 +60,7 @@ export default function HomePage() {
 
   return (
     <PageContainer className="min-h-screen p-8">
-      <div className="max-w-7xl mx-auto">
-        <ContentSection className="text-center mb-12">
-          <Title className="text-4xl font-bold mb-4">
-            {storeInfo?.name?.pt || 'Nutreon E-commerce'}
-          </Title>
-          <Text className="text-gray-600">
-            Bem-vindo à nossa loja! Confira nossos produtos abaixo.
-          </Text>
-        </ContentSection>
-        
+      <div className="container mx-auto">
         <ContentSection className="mb-8">
           <Subtitle className="text-2xl font-semibold mb-6">Produtos em Destaque</Subtitle>
           

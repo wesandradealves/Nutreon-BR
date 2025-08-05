@@ -18,6 +18,7 @@ import {
   ExploreButton
 } from './styles';
 import type { NuvemshopProduct } from '@/types';
+import { useMetadata } from '@/hooks/useMetadata';
 
 interface ProductsResponse {
   data?: NuvemshopProduct[] | { data: NuvemshopProduct[] } | { products: NuvemshopProduct[] };
@@ -31,6 +32,11 @@ export default function FavoritosPage() {
   const [products, setProducts] = useState<NuvemshopProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [isMounted, setIsMounted] = useState(false);
+
+  useMetadata({
+    title: `Nutreon BR - Favoritos`,
+    ogTitle: `Nutreon BR - Favoritos`
+  });
 
   const loadFavoriteProducts = useCallback(async () => {
     try {

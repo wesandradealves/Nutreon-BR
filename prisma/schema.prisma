@@ -142,6 +142,9 @@ model CartItem {
   cartId          String          @map("cart_id")
   productId       String          @map("product_id")
   variantId       String?         @map("variant_id")
+  name            String
+  image           String
+  price           Decimal         @db.Decimal(10, 2)
   quantity        Int
   
   cart            Cart            @relation(fields: [cartId], references: [id], onDelete: Cascade)

@@ -1,0 +1,28 @@
+import styled from 'styled-components';
+import Link from 'next/link';
+
+export const DrawerOverlay = styled.div``;
+export const DrawerContainer = styled.div``;
+export const DrawerHeader = styled.div``;
+export const DrawerTitle = styled.h2``;
+export const CloseButton = styled.button``;
+export const DrawerContent = styled.div``;
+export const EmptyCart = styled.div``;
+export const EmptyIcon = styled.div``;
+export const EmptyText = styled.p``;
+export const CartList = styled.ul``;
+export const CartItem = styled.li``;
+export const ItemImage = styled.div``;
+export const ItemInfo = styled.div``;
+export const ItemName = styled.h3``;
+export const ItemPrice = styled.p``;
+export const QuantityControls = styled.div``;
+export const QuantityButton = styled.button``;
+export const QuantityValue = styled.span``;
+export const RemoveButton = styled.button``;
+export const CartFooter = styled.div``;
+export const SubtotalRow = styled.div``;
+export const ShippingRow = styled.div``;
+export const TotalRow = styled.div``;
+export const CheckoutButton = styled(Link)``;
+export const CartPageLink = styled(Link)``;

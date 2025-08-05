@@ -10,23 +10,19 @@ import { ContactText } from '@/components/atoms/Typography';
 interface TopBarProps {
   isDelivering: boolean;
   deliveryAddress: string;
-  cartCount: number;
   isAuthenticated: boolean;
   customerName?: string;
   onDeliveryCheck: () => void;
   onSearchClick: () => void;
-  onCartClick: () => void;
 }
 
 const TopBar = ({
   isDelivering,
   deliveryAddress,
-  cartCount,
   isAuthenticated,
   customerName,
   onDeliveryCheck,
-  onSearchClick,
-  onCartClick
+  onSearchClick
 }: TopBarProps) => {
   return (
     <TopBarContainer className="hidden lg:block border-b border-dark-800">
@@ -53,8 +49,6 @@ const TopBar = ({
             <UserActions
               isAuthenticated={isAuthenticated}
               userName={customerName}
-              cartCount={cartCount}
-              onCartClick={onCartClick}
             />
           </ActionsSection>
         </div>

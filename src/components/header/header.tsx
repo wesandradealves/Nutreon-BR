@@ -27,7 +27,6 @@ const Header = ({}: HeaderProps) => {
   const { isAuthenticated, customer } = useAuth();
   const [isClient, setIsClient] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [cartCount] = useState(0);
   const [isDelivering] = useState(false);
   const [deliveryAddress] = useState('');
 
@@ -60,9 +59,6 @@ const Header = ({}: HeaderProps) => {
     // TODO: Implementar verificação de entrega
   }, []);
 
-  const openCarrinhoRight = useCallback(() => {
-    // TODO: Implementar abertura do carrinho
-  }, []);
 
   const openSearch = useCallback(() => {
     // TODO: Implementar abertura da busca
@@ -83,12 +79,10 @@ const Header = ({}: HeaderProps) => {
         <TopBar
           isDelivering={isDelivering}
           deliveryAddress={deliveryAddress}
-          cartCount={cartCount}
           isAuthenticated={isClient && isAuthenticated}
           customerName={customer?.name?.split(' ')[0]}
           onDeliveryCheck={verificaEntregaCep}
           onSearchClick={openSearch}
-          onCartClick={openCarrinhoRight}
         />
         
         <NavBar>
@@ -116,10 +110,8 @@ const Header = ({}: HeaderProps) => {
               <MobileMenu
                 isDelivering={isDelivering}
                 deliveryAddress={deliveryAddress}
-                cartCount={cartCount}
                 onDeliveryCheck={verificaEntregaCep}
                 onSearchClick={openSearch}
-                onCartClick={openCarrinhoRight}
                 onMenuToggle={() => setShowMobileMenu(!showMobileMenu)}
               />
             </div>

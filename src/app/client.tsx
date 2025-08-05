@@ -4,6 +4,7 @@ import { ThemeProvider } from 'styled-components';
 import { LoaderProvider, useLoader } from '@/context/spinner';
 import { AuthProvider } from '@/context/auth';
 import { FavoritesProvider } from '@/context/favorites';
+import { CartProvider } from '@/context/cart';
 import Spinner from '@/components/spinner/spinner';
 import StyledJsxRegistry from './registry';
 import { App, GlobalStyle } from '@/app/style';
@@ -47,7 +48,8 @@ export default function ClientProviders({ children }: { children: React.ReactNod
         <LoaderSetup />
         <AuthProvider>
           <FavoritesProvider>
-            <Suspense fallback={<div>Loading...</div>}>
+            <CartProvider>
+              <Suspense fallback={<div>Loading...</div>}>
               <StyledJsxRegistry>
               <AnimatePresence
                 mode="wait"
@@ -92,6 +94,7 @@ export default function ClientProviders({ children }: { children: React.ReactNod
               </AnimatePresence>
             </StyledJsxRegistry>
           </Suspense>
+            </CartProvider>
           </FavoritesProvider>
         </AuthProvider>
       </LoaderProvider>
