@@ -49,15 +49,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const loadCart = useCallback(async () => {
     try {
       setLoading(true);
+      console.log('[CartContext] Carregando carrinho...');
       const response = await apiClient.request<{ success: boolean; data: Cart }>('/api/cart', {
         method: 'GET'
       });
       
       if (response.success && response.data) {
+        console.log('[CartContext] Carrinho carregado:', response.data);
         setCart(response.data);
       }
     } catch (error) {
-      console.error('Erro ao carregar carrinho:', error);
+      console.error('[CartContext] Erro ao carregar carrinho:', error);
     } finally {
       setLoading(false);
     }
@@ -115,31 +117,45 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
       if (response.success) {
         toast.success('Produto removido do carrinho');
-        await loadCart();
+        
+        // Se o carrinho tinha apenas 1 item, limpa o estado local
+        if (cart && cart.items.length === 1) {
+          console.log('[CartContext] Último item removido, limpando estado local');
+          setCart(null);
+          // NÃO recarrega o carrinho
+        } else {
+          // Senão, recarrega o carrinho
+          await loadCart();
+        }
       }
     } catch (error) {
       toast.error('Erro ao remover produto');
       throw error;
     }
-  }, [loadCart]);
+  }, [cart, loadCart]);
 
   // Limpa carrinho
   const clearCart = useCallback(async () => {
     try {
+      console.log('[CartContext] Limpando carrinho...');
       const response = await apiClient.request<{ success: boolean; data: unknown }>('/api/cart', {
         method: 'DELETE'
       });
 
       if (response.success) {
+        console.log('[CartContext] Carrinho limpo com sucesso');
         toast.success('Carrinho limpo com sucesso');
+        // Apenas limpa o estado local, não recarrega
         setCart(null);
-        await loadCart();
+        console.log('[CartContext] Estado local limpo');
+        // NÃO chama loadCart() aqui para evitar criar novo carrinho
       }
     } catch (error) {
+      console.error('[CartContext] Erro ao limpar carrinho:', error);
       toast.error('Erro ao limpar carrinho');
       throw error;
     }
-  }, [loadCart]);
+  }, []);
 
   // Calcula frete
   const calculateShipping = useCallback(async (zipCode: string) => {
@@ -185,12 +201,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setMounted(true);
   }, []);
 
-  // Carrega carrinho ao montar no cliente
+  // Carrega carrinho ao montar no cliente (apenas uma vez)
   useEffect(() => {
     if (mounted) {
       loadCart();
     }
-  }, [loadCart, mounted]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Executar apenas uma vez ao montar
 
   // Sincroniza ao fazer login
   useEffect(() => {

@@ -44,12 +44,20 @@ export class PrismaSessionRepository implements ISessionRepository {
   }
 
   async deactivate(token: string): Promise<void> {
+    // Mantém compatibilidade - apenas desativa
     await this.prisma.session.update({
       where: { token },
       data: {
         isActive: false,
         loggedOutAt: new Date(),
       },
+    });
+  }
+
+  async delete(token: string): Promise<void> {
+    // Deleta a sessão completamente
+    await this.prisma.session.delete({
+      where: { token }
     });
   }
 

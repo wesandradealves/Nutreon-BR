@@ -1,15 +1,14 @@
 import { container } from '@/core/infrastructure/container';
 import { successResponse, errorResponse, handleApiError } from '@/lib/api-utils';
 import { cookies } from 'next/headers';
-
-const CART_SESSION_COOKIE = 'nutreon_cart_session';
+import { COOKIES } from '@/utils/constants';
 
 // POST /api/cart/sync - Sincronizar carrinho ao fazer login
 export async function POST() {
   try {
     // Verifica se está autenticado
     const cookieStore = await cookies();
-    const token = cookieStore.get('nutreon-auth-token')?.value;
+    const token = cookieStore.get(COOKIES.AUTH_TOKEN)?.value;
     
     if (!token) {
       return errorResponse('Não autorizado', 401);
@@ -28,7 +27,7 @@ export async function POST() {
     }
 
     // Obtém sessionId do cookie
-    const sessionId = cookieStore.get(CART_SESSION_COOKIE)?.value;
+    const sessionId = cookieStore.get(COOKIES.CART_SESSION)?.value;
     
     if (!sessionId) {
       // Não há carrinho de sessão para sincronizar
@@ -42,7 +41,7 @@ export async function POST() {
     });
 
     // Remove cookie de sessão após sincronizar
-    cookieStore.delete(CART_SESSION_COOKIE);
+    cookieStore.delete(COOKIES.CART_SESSION);
 
     return successResponse({ message: 'Carrinho sincronizado com sucesso' });
   } catch (error) {

@@ -25,21 +25,26 @@ export async function GET() {
       }
     }
 
-    // Obtém ou cria sessionId
-    let sessionId = cookieStore.get(COOKIES.CART_SESSION)?.value;
-    if (!sessionId && !customerId) {
-      // Cria novo sessionId se não estiver logado
-      sessionId = crypto.randomUUID();
+    // Obtém sessionId apenas se não estiver autenticado
+    let sessionId: string | undefined;
+    if (!customerId) {
+      sessionId = cookieStore.get(COOKIES.CART_SESSION)?.value;
+      if (!sessionId) {
+        // Cria novo sessionId apenas se não estiver logado
+        sessionId = crypto.randomUUID();
+      }
     }
 
     // Busca ou cria carrinho
+    console.log('[GET /api/cart] Buscando carrinho para:', { customerId, sessionId });
     const cart = await container.getOrCreateCartUseCase.execute({
       customerId,
       sessionId,
     });
+    console.log('[GET /api/cart] Carrinho encontrado/criado:', cart.id, 'customerId:', cart.customerId);
 
-    // Se criou novo sessionId, salva no cookie
-    if (sessionId && !cookieStore.get(COOKIES.CART_SESSION)?.value) {
+    // Se criou novo sessionId E não está autenticado, salva no cookie
+    if (sessionId && !customerId && !cookieStore.get(COOKIES.CART_SESSION)?.value) {
       cookieStore.set(COOKIES.CART_SESSION, sessionId, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
@@ -239,8 +244,16 @@ export async function DELETE() {
       return errorResponse('Carrinho não encontrado', 404);
     }
 
-    // Limpa itens
+    // Limpa itens e deleta carrinho
     await container.clearCartUseCase.execute(cart.id);
+    
+    // Remove cookie de sessão se não estiver autenticado
+    if (!customerId && sessionId) {
+      console.log('[DELETE /api/cart] Removendo cookie de sessão');
+      const response = successResponse({ message: 'Carrinho limpo com sucesso' });
+      response.cookies.delete(COOKIES.CART_SESSION);
+      return response;
+    }
 
     return successResponse({ message: 'Carrinho limpo com sucesso' });
   } catch (error) {

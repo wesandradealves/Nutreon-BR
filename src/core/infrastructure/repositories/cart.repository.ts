@@ -40,9 +40,16 @@ export class PrismaCartRepository implements ICartRepository {
   }
 
   async delete(id: string): Promise<void> {
-    await this.prisma.cart.delete({
-      where: { id },
-    });
+    console.log('[CartRepository] Deletando carrinho:', id);
+    try {
+      await this.prisma.cart.delete({
+        where: { id },
+      });
+      console.log('[CartRepository] Carrinho deletado com sucesso:', id);
+    } catch (error) {
+      console.error('[CartRepository] Erro ao deletar carrinho:', error);
+      throw error;
+    }
   }
 
   async deleteExpired(): Promise<number> {
@@ -111,9 +118,11 @@ export class PrismaCartRepository implements ICartRepository {
   }
 
   async clearItems(cartId: string): Promise<void> {
-    await this.prisma.cartItem.deleteMany({
+    console.log('[CartRepository] Limpando itens do carrinho:', cartId);
+    const result = await this.prisma.cartItem.deleteMany({
       where: { cartId },
     });
+    console.log('[CartRepository] Itens removidos:', result.count);
   }
 
   async getCartWithItems(cartId: string): Promise<(Cart & { items: CartItem[] }) | null> {

@@ -6,19 +6,19 @@ export class LogoutCustomerUseCase {
   ) {}
 
   async execute(token: string): Promise<void> {
-    // Buscar sessão para validar se existe e está ativa
+    // Buscar sessão para validar se existe
     const session = await this.sessionRepository.findByToken(token);
     
     if (!session) {
       throw new Error('Sessão não encontrada');
     }
 
-    if (!session.isActive) {
-      // Sessão já está inativa, não precisa fazer nada
-      return;
+    // Deletar sessão completamente
+    if ('delete' in this.sessionRepository) {
+      await this.sessionRepository.delete(token);
+    } else {
+      // Fallback para desativar se delete não existir
+      await this.sessionRepository.deactivate(token);
     }
-
-    // Desativar sessão
-    await this.sessionRepository.deactivate(token);
   }
 }

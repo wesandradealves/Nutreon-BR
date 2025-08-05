@@ -13,6 +13,15 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
   - Atualiza automaticamente ao adicionar/remover itens
   - Ajuda usuário a acompanhar carrinho mesmo em outras abas
 
+### Corrigido
+- **Sistema de Autenticação e Carrinho**:
+  - Padronizado nome do cookie de autenticação (`auth-token`) em todo o sistema
+  - Logout agora deleta completamente a sessão do banco de dados (não apenas desativa)
+  - Cookie `cart_session` só é criado para usuários não autenticados
+  - Cookie `cart_session` é removido ao limpar carrinho (usuários não autenticados)
+  - Carrinho é corretamente deletado do banco quando todos os itens são removidos
+  - Prevenida criação automática de novo carrinho após limpeza/remoção de todos itens
+
 ### Melhorado
 - **UX do CartDrawer**: Múltiplas melhorias de usabilidade
   - Fecha ao clicar no overlay (fundo escuro) - já estava implementado

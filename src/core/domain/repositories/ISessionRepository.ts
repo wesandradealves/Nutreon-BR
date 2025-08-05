@@ -16,5 +16,7 @@ export interface ISessionRepository {
   
   deactivate(token: string): Promise<void>;
   
+  delete(token: string): Promise<void>;
+  
   deactivateAllByCustomer(customerId: string): Promise<void>;
 }

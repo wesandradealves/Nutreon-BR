@@ -1,13 +1,14 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { container } from '@/core/infrastructure/container';
 import { LogoutCustomerUseCase } from '@/core/application/use-cases/customer/LogoutCustomerUseCase';
 import { cookies } from 'next/headers';
-import { successResponse, handleApiError } from '@/lib/api-utils';
+import { handleApiError } from '@/lib/api-utils';
+import { COOKIES } from '@/utils/constants';
 
 export async function POST(request: NextRequest) {
   try {
     const cookieStore = await cookies();
-    const tokenFromCookie = cookieStore.get('auth-token')?.value;
+    const tokenFromCookie = cookieStore.get(COOKIES.AUTH_TOKEN)?.value;
     
     const authHeader = request.headers.get('Authorization');
     const tokenFromHeader = authHeader?.startsWith('Bearer ') 
@@ -17,16 +18,38 @@ export async function POST(request: NextRequest) {
     const token = tokenFromCookie || tokenFromHeader;
     
     if (token) {
+      console.log('[Logout] Token encontrado:', token.substring(0, 20) + '...');
       try {
+        // Usar o use case mas garantir que delete
         const useCase = container.resolve('logoutCustomerUseCase') as LogoutCustomerUseCase;
         await useCase.execute(token);
+        console.log('[Logout] UseCase executado');
+        
+        // Forçar deleção completa (não apenas desativar)
+        const result = await container.prisma.session.deleteMany({
+          where: { token }
+        });
+        console.log('[Logout] Sessões deletadas:', result.count);
       } catch (error) {
-        console.error('Erro ao desativar sessão:', error);
+        console.error('[Logout] Erro ao processar logout:', error);
       }
+    } else {
+      console.log('[Logout] Nenhum token encontrado');
     }
 
-    const response = successResponse({ message: 'Logout realizado com sucesso' });
-    response.cookies.delete('auth-token');
+    // Criar resposta com cookies deletados
+    const response = NextResponse.json({
+      success: true,
+      data: { message: 'Logout realizado com sucesso' },
+      timestamp: new Date().toISOString()
+    });
+    
+    // Deletar o cookie corretamente
+    console.log('[Logout] Deletando cookie:', COOKIES.AUTH_TOKEN);
+    response.cookies.set(COOKIES.AUTH_TOKEN, '', {
+      expires: new Date(0),
+      path: '/'
+    });
 
     return response;
   } catch (error) {
