@@ -41,7 +41,7 @@ export class SyncCartUseCase {
         quantity: item.quantity,
         name: ('name' in item ? item.name : null) || 'Produto',
         image: ('image' in item ? item.image : null) || '',
-        price: ('price' in item ? item.price : null) || 0,
+        price: ('price' in item && item.price ? Number(item.price) : 0),
       });
     }
 

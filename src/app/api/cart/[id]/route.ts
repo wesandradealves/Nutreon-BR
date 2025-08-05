@@ -27,7 +27,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       return errorResponse('Quantidade inválida', 400);
     }
 
-    // Se quantidade for 0, remove o item
+    // Se quantidade for 0, remove o item (que também deletará o carrinho se ficar vazio)
     if (quantity === 0) {
       await container.removeFromCartUseCase.execute(id);
       return successResponse({ message: 'Item removido do carrinho' });

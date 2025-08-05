@@ -33,6 +33,8 @@ export interface ICartRepository {
   
   removeItem(id: string): Promise<void>;
   
+  getCartItem(id: string): Promise<CartItem | null>;
+  
   clearItems(cartId: string): Promise<void>;
   
   getCartWithItems(cartId: string): Promise<(Cart & { items: CartItem[] }) | null>;

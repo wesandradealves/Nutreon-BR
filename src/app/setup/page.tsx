@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Container } from './styles';
 
 export default function SetupPage() {
   const [testResult, setTestResult] = useState<string>('');
   const [loading, setLoading] = useState(false);
 
-  const testToken = async () => {
+  const testToken = useCallback(async () => {
     setLoading(true);
     setTestResult('Testando...');
     
@@ -25,7 +25,7 @@ export default function SetupPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   return (
     <Container className="min-h-screen p-8">

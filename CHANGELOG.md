@@ -27,6 +27,18 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
   - QuantitySelector: useCallback para todos os handlers
   - Tabs: useCallback para handler de seleção
   - ProductGrid: useMemo para classes e useCallback para getCategoryName
+  - Páginas: Setup e Reset Password otimizadas
+  - Hooks: useCustomerProfile, useMetadata e usePasswordValidation otimizados
+  - CartContext: useMemo para cálculos de itemCount, subtotal e total
+
+### Corrigido
+- **Sistema de Carrinho**: Correções importantes na lógica do carrinho
+  - Carrinho agora é deletado automaticamente quando todos os itens são removidos
+  - Implementada verificação e deleção do carrinho vazio no RemoveFromCartUseCase
+  - ClearCartUseCase agora deleta o carrinho após limpar os itens
+  - Corrigido erro de tipo Decimal no SyncCartUseCase
+  - Corrigido uso incorreto de useMemo na página de reset password
+  - CustomerId já estava sendo salvo corretamente (não era um bug)
 
 ## [0.9.1] - 2025-01-05
 

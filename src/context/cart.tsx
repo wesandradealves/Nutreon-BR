@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, ReactNode, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, ReactNode, useState, useEffect, useCallback, useMemo } from 'react';
 import { useAuth } from './auth';
 import { useCartDrawer } from './cartDrawer';
 import { apiClient } from '@/services/api-client';
@@ -32,10 +32,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const { isAuthenticated } = useAuth();
   const { openDrawer } = useCartDrawer();
 
-  // Calcula totais
-  const itemCount = cart?.items?.reduce((acc, item) => acc + item.quantity, 0) || 0;
-  const subtotal = cart?.subtotal || 0;
-  const total = subtotal + shipping - (cart?.discount || 0);
+  // Calcula totais com memoização
+  const itemCount = useMemo(() => 
+    cart?.items?.reduce((acc, item) => acc + item.quantity, 0) || 0, 
+    [cart?.items]
+  );
+  
+  const subtotal = useMemo(() => cart?.subtotal || 0, [cart?.subtotal]);
+  
+  const total = useMemo(() => 
+    subtotal + shipping - (cart?.discount || 0), 
+    [subtotal, shipping, cart?.discount]
+  );
 
   // Carrega carrinho
   const loadCart = useCallback(async () => {

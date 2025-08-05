@@ -16,7 +16,7 @@ export function usePasswordValidation() {
     feedback: ''
   });
 
-  const validatePassword = (password: string): { isValid: boolean; errors: string[] } => {
+  const validatePassword = useCallback((password: string): { isValid: boolean; errors: string[] } => {
     const errors: string[] = [];
 
     if (password.length < 8) {
@@ -39,13 +39,13 @@ export function usePasswordValidation() {
       isValid: errors.length === 0,
       errors,
     };
-  };
+  }, []);
 
-  const validatePasswordMatch = (password: string, confirmPassword: string): boolean => {
+  const validatePasswordMatch = useCallback((password: string, confirmPassword: string): boolean => {
     return password === confirmPassword;
-  };
+  }, []);
 
-  const getPasswordStrength = (password: string): PasswordStrength => {
+  const getPasswordStrength = useCallback((password: string): PasswordStrength => {
     if (!password) return { score: 0, feedback: '' };
     
     let score = 0;
@@ -73,7 +73,7 @@ export function usePasswordValidation() {
     else feedback = 'Muito forte';
     
     return { score: Math.min(score, 4), feedback };
-  };
+  }, []);
 
   const validatePasswords = useCallback(() => {
     const validation = validatePassword(password);
@@ -89,7 +89,7 @@ export function usePasswordValidation() {
     
     setPasswordError('');
     return true;
-  }, [password, confirmPassword]);
+  }, [password, confirmPassword, validatePassword]);
 
   useEffect(() => {
     if (password) {
@@ -106,7 +106,7 @@ export function usePasswordValidation() {
       setPasswordStrength({ score: 0, feedback: '' });
       setPasswordError('');
     }
-  }, [password]);
+  }, [password, getPasswordStrength, validatePassword]);
 
   return {
     password,

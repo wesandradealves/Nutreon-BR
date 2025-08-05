@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/auth';
 import { usePhoneFormat } from './usePhoneFormat';
@@ -38,7 +38,7 @@ export function useCustomerProfile() {
   
   const [message, setMessage] = useState('');
 
-  const updateProfile = async (data: UpdateProfileData) => {
+  const updateProfile = useCallback(async (data: UpdateProfileData) => {
     const cleanPhone = removePhoneMask(data.phone);
     
     const result = await updateProfileApi.request('/api/customer/update', {
@@ -64,9 +64,9 @@ export function useCustomerProfile() {
     }
 
     return { success: false, error: result.error };
-  };
+  }, [removePhoneMask, updateProfileApi, updateCustomer]);
 
-  const changePassword = async (data: ChangePasswordData) => {
+  const changePassword = useCallback(async (data: ChangePasswordData) => {
     const result = await changePasswordApi.request('/api/customer/change-password', {
       method: 'POST',
       data,
@@ -85,18 +85,18 @@ export function useCustomerProfile() {
     }
 
     return { success: false, error: result.error };
-  };
+  }, [changePasswordApi, router]);
 
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     await logout();
     router.push('/');
-  };
+  }, [logout, router]);
 
-  const clearMessage = () => setMessage('');
-  const clearError = () => {
+  const clearMessage = useCallback(() => setMessage(''), []);
+  const clearError = useCallback(() => {
     updateProfileApi.clearError();
     changePasswordApi.clearError();
-  };
+  }, [updateProfileApi, changePasswordApi]);
 
   const loading = updateProfileApi.loading || changePasswordApi.loading;
   const error = updateProfileApi.error || changePasswordApi.error;

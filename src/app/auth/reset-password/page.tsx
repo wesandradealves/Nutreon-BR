@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { usePasswordRecovery } from '@/hooks/usePasswordRecovery';
 import { usePasswordValidation } from '@/hooks/usePasswordValidation';
 import { TextField } from '@/components/atoms/TextField';
@@ -34,7 +34,7 @@ export default function ResetPasswordPage() {
     }
   }, [token]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -54,18 +54,18 @@ export default function ResetPasswordPage() {
         router.push('/auth?tab=0');
       }, 3000);
     }
-  };
+  }, [validatePasswords, token, resetPassword, password, router]);
 
-  const getPasswordStrengthColor = () => {
+  const getPasswordStrengthColor = useMemo(() => {
     if (passwordStrength.score <= 1) return 'bg-red-500';
     if (passwordStrength.score <= 2) return 'bg-yellow-500';
     if (passwordStrength.score <= 3) return 'bg-blue-500';
     return 'bg-green-500';
-  };
+  }, [passwordStrength.score]);
 
-  const getPasswordStrengthValue = () => {
+  const getPasswordStrengthValue = useMemo(() => {
     return (passwordStrength.score / 4) * 100;
-  };
+  }, [passwordStrength.score]);
 
   if (success) {
     return (
@@ -121,8 +121,8 @@ export default function ResetPasswordPage() {
                   </span>
                   <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
                     <PasswordStrengthBar 
-                      className={`h-2 rounded-full transition-all duration-300 ${getPasswordStrengthColor()}`}
-                      style={{ width: `${getPasswordStrengthValue()}%` }}
+                      className={`h-2 rounded-full transition-all duration-300 ${getPasswordStrengthColor}`}
+                      style={{ width: `${getPasswordStrengthValue}%` }}
                     />
                   </div>
                 </div>

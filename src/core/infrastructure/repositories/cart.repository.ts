@@ -104,6 +104,12 @@ export class PrismaCartRepository implements ICartRepository {
     });
   }
 
+  async getCartItem(id: string): Promise<CartItem | null> {
+    return this.prisma.cartItem.findUnique({
+      where: { id },
+    });
+  }
+
   async clearItems(cartId: string): Promise<void> {
     await this.prisma.cartItem.deleteMany({
       where: { cartId },
