@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, useCallback } from 'react';
 import { StyledButton, Badge } from './styles';
 
 interface IconButtonProps {
@@ -20,10 +20,10 @@ const IconButton = ({
   className = '',
   children
 }: IconButtonProps) => {
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     onClick();
-  };
+  }, [onClick]);
 
   return (
     <StyledButton 

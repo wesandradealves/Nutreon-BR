@@ -1,3 +1,4 @@
+import { useMemo, useCallback } from 'react';
 import { ProductCard } from '@/components/molecules/ProductCard';
 import { ProductCardSkeleton } from '@/components/molecules/ProductCard/ProductCardSkeleton';
 import { GridContainer, EmptyStateContainer } from './styles';
@@ -18,11 +19,11 @@ export function ProductGrid({
   skeletonCount = 6,
   isLoading = false
 }: ProductGridProps) {
-  const getGridClasses = () => {
+  const gridClasses = useMemo(() => {
     return `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6`;
-  };
+  }, []);
 
-  const getCategoryName = (product: NuvemshopProduct): string => {
+  const getCategoryName = useCallback((product: NuvemshopProduct): string => {
     if (!product.categories?.[0]) return '';
     
     const category = categories.find(cat => cat.id === product.categories![0]);
@@ -31,12 +32,12 @@ export function ProductGrid({
     return typeof category.name === 'string' 
       ? category.name 
       : category.name.pt || '';
-  };
+  }, [categories]);
 
   // Mostra skeleton quando está carregando
   if (isLoading) {
     return (
-      <GridContainer className={getGridClasses()}>
+      <GridContainer className={gridClasses}>
         {Array.from({ length: skeletonCount }).map((_, index) => (
           <ProductCardSkeleton key={`skeleton-${index}`} />
         ))}
@@ -53,7 +54,7 @@ export function ProductGrid({
   }
 
   return (
-    <GridContainer className={getGridClasses()}>
+    <GridContainer className={gridClasses}>
       {products.map((product) => (
         <ProductCard 
           key={product.id} 

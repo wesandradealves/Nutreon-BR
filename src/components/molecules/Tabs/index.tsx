@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { TabsContainer, TabsList, Tab, TabPanel } from './styles';
 
 interface TabItem {
@@ -17,13 +17,13 @@ export function Tabs({ tabs, value, onChange, children }: TabsProps) {
   const [internalValue, setInternalValue] = useState(value || tabs[0]?.value);
   const activeValue = value !== undefined ? value : internalValue;
 
-  const handleTabClick = (event: React.MouseEvent, tabValue: string | number) => {
+  const handleTabClick = useCallback((event: React.MouseEvent, tabValue: string | number) => {
     if (onChange) {
       onChange(event as React.SyntheticEvent, tabValue);
     } else {
       setInternalValue(tabValue);
     }
-  };
+  }, [onChange]);
 
   return (
     <TabsContainer>

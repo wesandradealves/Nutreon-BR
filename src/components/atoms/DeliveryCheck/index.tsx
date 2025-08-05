@@ -1,5 +1,6 @@
 'use client';
 
+import { useCallback } from 'react';
 import { 
   DeliveryCheckContainer,
   DeliveryContent,
@@ -24,13 +25,15 @@ const DeliveryCheck = ({
   onClick,
   className = ''
 }: DeliveryCheckProps) => {
+  const handleClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    onClick();
+  }, [onClick]);
+
   return (
     <DeliveryCheckContainer 
       href="#" 
-      onClick={(e) => {
-        e.preventDefault();
-        onClick();
-      }}
+      onClick={handleClick}
       className={`flex items-center gap-2 px-4 py-1.5 border border-dark-700 rounded text-gray-300 hover:border-primary-500 hover:text-primary-500 transition-all ${className}`}
     >
       <DeliveryContent className="flex items-center gap-2">

@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { Minus, Plus } from 'lucide-react';
 import { QuantityContainer, QuantityButton, QuantityInput } from './styles';
 
@@ -14,24 +15,24 @@ export function QuantitySelector({
   min = 1, 
   max = 99 
 }: QuantitySelectorProps) {
-  const handleDecrease = () => {
+  const handleDecrease = useCallback(() => {
     if (value > min) {
       onChange(value - 1);
     }
-  };
+  }, [value, min, onChange]);
 
-  const handleIncrease = () => {
+  const handleIncrease = useCallback(() => {
     if (value < max) {
       onChange(value + 1);
     }
-  };
+  }, [value, max, onChange]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = parseInt(e.target.value) || min;
     if (newValue >= min && newValue <= max) {
       onChange(newValue);
     }
-  };
+  }, [min, max, onChange]);
 
   return (
     <QuantityContainer className="flex items-center">

@@ -20,6 +20,13 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
   - Fecha ao pressionar a tecla ESC
   - Previne scroll do body quando o drawer está aberto
   - Adicionado aria-label no overlay para acessibilidade
+- **Performance**: Otimização de componentes com useCallback e useMemo
+  - Button: useMemo para classes de variantes
+  - DeliveryCheck: useCallback para handler de clique
+  - IconButton: useCallback para handler de clique
+  - QuantitySelector: useCallback para todos os handlers
+  - Tabs: useCallback para handler de seleção
+  - ProductGrid: useMemo para classes e useCallback para getCategoryName
 
 ## [0.9.1] - 2025-01-05
 
