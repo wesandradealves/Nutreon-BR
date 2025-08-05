@@ -13,6 +13,14 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
   - Atualiza automaticamente ao adicionar/remover itens
   - Ajuda usuário a acompanhar carrinho mesmo em outras abas
 
+### Melhorado
+- **UX do CartDrawer**: Múltiplas melhorias de usabilidade
+  - Fecha ao clicar no overlay (fundo escuro) - já estava implementado
+  - Adicionado cursor pointer no overlay para indicar que é clicável
+  - Fecha ao pressionar a tecla ESC
+  - Previne scroll do body quando o drawer está aberto
+  - Adicionado aria-label no overlay para acessibilidade
+
 ## [0.9.1] - 2025-01-05
 
 ### Adicionado

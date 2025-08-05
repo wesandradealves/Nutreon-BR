@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, useCallback, useMemo } from 'react';
+import { Fragment, useCallback, useMemo, useEffect } from 'react';
 import { Transition } from '@headlessui/react';
 import { X, ShoppingCart, Plus, Minus, Trash2 } from 'lucide-react';
 import Image from 'next/image';
@@ -53,9 +53,37 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
   const hasItems = useMemo(() => cart?.items && cart.items.length > 0, [cart]);
 
+  // Fechar com ESC
+  useEffect(() => {
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleEsc);
+    return () => {
+      document.removeEventListener('keydown', handleEsc);
+    };
+  }, [isOpen, onClose]);
+
+  // Prevenir scroll do body quando o drawer estiver aberto
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   return (
     <Transition.Root show={isOpen} as={Fragment}>
       <div className="relative z-50">
+        {/* Overlay - Movido para fora do container que tem pointer-events-none */}
         <Transition.Child
           as={Fragment}
           enter="ease-in-out duration-300"
@@ -65,12 +93,16 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <DrawerOverlay className="fixed inset-0 bg-black/50" onClick={onClose} />
+          <DrawerOverlay 
+            className="fixed inset-0 bg-black/50 cursor-pointer" 
+            onClick={onClose}
+            aria-label="Fechar carrinho"
+          />
         </Transition.Child>
 
-        <div className="fixed inset-0 overflow-hidden">
+        <div className="fixed inset-0 overflow-hidden pointer-events-none">
           <div className="absolute inset-0 overflow-hidden">
-            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+            <div className="fixed inset-y-0 right-0 flex max-w-full pl-10">
               <Transition.Child
                 as={Fragment}
                 enter="transform transition ease-in-out duration-300"
