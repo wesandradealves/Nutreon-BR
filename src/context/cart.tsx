@@ -191,6 +191,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [isAuthenticated, syncCartOnLogin, mounted]);
 
+  // Atualiza o título da página com a quantidade de itens
+  useEffect(() => {
+    if (mounted) {
+      const baseTitle = 'Nutreon BR';
+      if (itemCount > 0) {
+        document.title = `(${itemCount}) ${baseTitle}`;
+      } else {
+        document.title = baseTitle;
+      }
+    }
+  }, [itemCount, mounted]);
+
   return (
     <CartContext.Provider
       value={{

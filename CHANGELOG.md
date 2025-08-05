@@ -7,6 +7,12 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado
+- **Contador de itens no título da página**: Mostra quantidade de itens do carrinho no título da aba
+  - Formato: "(2) Nutreon BR" quando há itens no carrinho
+  - Atualiza automaticamente ao adicionar/remover itens
+  - Ajuda usuário a acompanhar carrinho mesmo em outras abas
+
 ## [0.9.1] - 2025-01-05
 
 ### Adicionado
