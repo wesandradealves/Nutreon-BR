@@ -8,6 +8,7 @@ import { useAuth } from '@/context/auth';
 import Navigation from '@/components/molecules/Navigation';
 import TopBar from '@/components/organisms/TopBar';
 import MobileMenu from '@/components/molecules/MobileMenu';
+import MobileNavigation from '@/components/molecules/MobileMenu/MobileNavigation';
 import {
   Container,
   IndiqueAmigoHeader,
@@ -118,6 +119,13 @@ const Header = ({}: HeaderProps) => {
           </Container>
         </NavBar>
       </HeaderContainer>
+      
+      {/* Mobile Navigation Overlay */}
+      <MobileNavigation 
+        isOpen={showMobileMenu}
+        onClose={() => setShowMobileMenu(false)}
+        items={navigationItems}
+      />
     </>
   );
 };

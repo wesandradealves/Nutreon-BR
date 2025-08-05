@@ -11,7 +11,7 @@ import StyledJsxRegistry from './registry';
 import { App, GlobalStyle } from '@/app/style';
 import { AnimatePresence, motion, useScroll } from 'motion/react';
 import { Suspense, useRef, useState, useEffect } from 'react';
-import Header from '@/components/header/header';
+import Header from '@/components/organisms/header/header';
 import Footer from '@/components/organisms/Footer';
 import { apiClient } from '@/services/api-client';
 import { Toaster } from 'react-hot-toast';

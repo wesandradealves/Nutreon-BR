@@ -7,6 +7,32 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+## [0.10.3] - 2025-01-05
+
+### Adicionado
+- **Menu Mobile Completo**: Implementação de navegação mobile com animações
+  - Overlay com animação fade e backdrop blur
+  - Menu lateral deslizante com transição suave
+  - Animações de entrada escalonada para itens do menu
+  - Submenus com animação accordion (expand/collapse)
+  - Efeitos visuais no hover (barra lateral, bullets animados)
+  - Integração com sistema de autenticação
+  - Suporte a submenus expansíveis
+  - Fechamento por ESC ou clique no overlay
+  - Prevenção de scroll do body quando aberto
+
+### Melhorado
+- **Arquitetura e Padrões**: Atualização da documentação
+  - Adicionada regra obrigatória de usar styled components para todos elementos
+  - Proibição explícita de tags HTML diretas
+  - Regra de performance: sempre usar useCallback e useMemo
+  - Exemplos atualizados no ARCHITECTURE.md
+
+### Corrigido
+- **Import do Header**: Corrigido caminho para `/components/organisms/header`
+- **Footer**: Removida variável não utilizada `setCurrentYear`
+- **Ícones do Footer**: Atualizados para Font Awesome 6 (fa-brands, fa-regular)
+
 ## [0.10.2] - 2025-01-05
 
 ### Adicionado
@@ -785,6 +811,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Configuração básica do ambiente
 - Documentação inicial
 
+[0.10.3]: https://github.com/nutreon/nutreon-br/compare/v0.10.2...v0.10.3
 [0.10.2]: https://github.com/nutreon/nutreon-br/compare/v0.10.1...v0.10.2
 [0.7.0]: https://github.com/nutreon/nutreon-br/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/nutreon/nutreon-br/compare/v0.5.0...v0.6.0
