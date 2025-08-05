@@ -116,7 +116,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = useCallback(async () => {
     try {
-      await fetch('/api/auth/logout', { method: 'POST' });
+      await fetch('/api/customer/logout', { method: 'POST' });
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
     }
@@ -127,6 +127,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     setCustomer(null);
     setIsAuthenticated(false);
+    
+    // Força reload para garantir que cookies sejam limpos
+    if (typeof window !== 'undefined') {
+      window.location.href = '/';
+    }
   }, []);
 
   const register = useCallback(async (data: { name: string; email: string; phone?: string; password?: string }) => {

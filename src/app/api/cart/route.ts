@@ -12,6 +12,8 @@ export async function GET() {
     // Tenta obter customerId do token JWT
     const cookieStore = await cookies();
     const token = cookieStore.get(COOKIES.AUTH_TOKEN)?.value;
+    console.log('[GET /api/cart] Cookie auth-token:', token ? 'PRESENTE' : 'AUSENTE');
+    
     let customerId: string | null = null;
 
     if (token) {
@@ -19,8 +21,10 @@ export async function GET() {
         const payload = await container.tokenService.verifyToken(token);
         if (payload) {
           customerId = payload.customerId;
+          console.log('[GET /api/cart] Token válido, customerId:', customerId);
         }
       } catch {
+        console.log('[GET /api/cart] Token inválido ou expirado');
         // Token inválido, continua sem customerId
       }
     }
