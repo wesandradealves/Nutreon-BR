@@ -12,7 +12,7 @@ import { App, GlobalStyle } from '@/app/style';
 import { AnimatePresence, motion, useScroll } from 'motion/react';
 import { Suspense, useRef, useState, useEffect } from 'react';
 import Header from '@/components/header/header';
-import Footer from '@/components/footer/footer';
+import Footer from '@/components/organisms/Footer';
 import { apiClient } from '@/services/api-client';
 import { Toaster } from 'react-hot-toast';
 import { FavoritesSyncManager } from '@/components/auth/FavoritesSyncManager';

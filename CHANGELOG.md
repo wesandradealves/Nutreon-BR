@@ -7,11 +7,24 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+## [0.10.2] - 2025-01-05
+
 ### Adicionado
 - **Contador de itens no título da página**: Mostra quantidade de itens do carrinho no título da aba
   - Formato: "(2) Nutreon BR" quando há itens no carrinho
   - Atualiza automaticamente ao adicionar/remover itens
   - Ajuda usuário a acompanhar carrinho mesmo em outras abas
+- **Footer Completo**: Novo componente de rodapé com design moderno
+  - Logo da empresa
+  - Seção de formas de pagamento com ícones
+  - Menu institucional com links para páginas principais
+  - Informações de contato (telefone e email)
+  - Integração com componente SocialLinks existente
+  - Seção de site seguro com ícones
+  - Copyright com ano dinâmico
+  - Banner de cookies LGPD funcional
+  - Design responsivo para todos dispositivos
+  - Segue padrão Styled Components + Tailwind CSS
 
 ### Corrigido
 - **Sistema de Autenticação e Carrinho**:
@@ -772,6 +785,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Configuração básica do ambiente
 - Documentação inicial
 
+[0.10.2]: https://github.com/nutreon/nutreon-br/compare/v0.10.1...v0.10.2
 [0.7.0]: https://github.com/nutreon/nutreon-br/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/nutreon/nutreon-br/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/nutreon/nutreon-br/compare/v0.4.3...v0.5.0
