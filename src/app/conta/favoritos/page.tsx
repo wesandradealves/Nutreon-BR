@@ -76,7 +76,7 @@ export default function FavoritosPage() {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      router.push('/auth');
+      router.push('/login');
       return;
     }
   }, [isAuthenticated, router]);

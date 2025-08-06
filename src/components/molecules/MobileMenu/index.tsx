@@ -42,7 +42,7 @@ const MobileMenu = ({
         </SearchButton>
         
         <LoginLink 
-          href="/auth" 
+          href="/login" 
           className="w-8 h-8 bg-dark-800 border border-dark-700 rounded-full flex items-center justify-center"
           aria-label="Login"
         >

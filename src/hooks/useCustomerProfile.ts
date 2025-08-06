@@ -78,7 +78,7 @@ export function useCustomerProfile() {
       
       // A API já remove o cookie, então só precisamos redirecionar
       setTimeout(() => {
-        router.push('/auth');
+        router.push('/login');
       }, 2000);
       
       return { success: true };

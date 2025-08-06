@@ -11,7 +11,7 @@ export function middleware(request: NextRequest) {
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
 
   // Rotas apenas para visitantes (não autenticados)
-  const guestOnlyRoutes = ['/auth', '/login', '/cadastro', '/recuperar-senha'];
+  const guestOnlyRoutes = ['/login', '/cadastro', '/recuperar-senha'];
   const isGuestOnlyRoute = guestOnlyRoutes.some(route => pathname.startsWith(route));
   
   // Exceções - rotas que devem funcionar independente do status de autenticação
@@ -25,7 +25,7 @@ export function middleware(request: NextRequest) {
 
   // Redirecionar usuários não autenticados tentando acessar rotas protegidas
   if (isProtectedRoute && !isAuthenticated) {
-    const url = new URL('/auth', request.url);
+    const url = new URL('/login', request.url);
     url.searchParams.set('redirect', pathname);
     return NextResponse.redirect(url);
   }

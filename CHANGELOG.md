@@ -7,6 +7,22 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+## [0.12.1] - 2025-01-06
+
+### Melhorado
+- **Página de Redefinição de Senha**: Refatorada para seguir o padrão visual das outras páginas de autenticação
+  - Adicionado background com imagem e overlay primário
+  - Card branco com bordas arredondadas e sombra
+  - Cores de texto e elementos ajustados para o padrão
+  - Botão com efeito de sombra 3D
+  - Seção informativa lateral com dicas de segurança
+  - Adicionado hook useMetadata para SEO
+
+### Corrigido
+- **Erro de Hydration do Styled Components**: Resolvido problema de classes CSS diferentes entre servidor e cliente
+  - Adicionada configuração `compiler.styledComponents: true` no next.config.js
+  - Garante geração consistente de classes CSS em SSR e cliente
+
 ## [0.12.0] - 2025-01-06
 
 ### Adicionado

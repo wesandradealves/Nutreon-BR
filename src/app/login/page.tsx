@@ -75,7 +75,7 @@ export default function LoginPage() {
       <BackgroundOverlay className="absolute inset-0 bg-primary-500 opacity-90 mix-blend-multiply" />
       
       {/* Content */}
-      <ContentWrapper className="relative z-10 max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 p-4 sm:p-6 lg:p-8">
+      <ContentWrapper className="relative z-10 max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 p-4 sm:p-6 lg:p-8  items-center">
         {/* Login Form */}
         <LoginCard className="bg-white rounded-2xl shadow-xl p-8 lg:p-10 order-2 lg:order-1">
           <FormHeader className="mb-10 text-center">

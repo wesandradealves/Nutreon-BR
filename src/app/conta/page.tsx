@@ -118,7 +118,7 @@ export default function AccountPage() {
       // Sempre atualizar dados ao montar a página
       checkAuth().then(() => {
         if (!isAuthenticated) {
-          router.push('/auth?redirect=/conta');
+          router.push('/login?redirect=/conta');
         }
       });
     }

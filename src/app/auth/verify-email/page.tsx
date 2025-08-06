@@ -97,7 +97,7 @@ export default function VerifyEmailPage() {
       <BackgroundOverlay className="absolute inset-0 bg-primary-500 opacity-90 mix-blend-multiply" />
       
       {/* Content */}
-      <ContentWrapper className="relative z-10 max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 p-4 sm:p-6 lg:p-8">
+      <ContentWrapper className="relative z-10 max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 p-4 sm:p-6 lg:p-8  items-center">
         {/* Verify Card */}
         <VerifyCard className="bg-white rounded-2xl shadow-xl p-8 lg:p-10">
           <CardContent>
@@ -120,7 +120,7 @@ export default function VerifyEmailPage() {
                 <IconWrapper className="flex justify-center mb-6">
                   <SuccessIcon className="fa fa-check-circle text-7xl text-green-500" />
                 </IconWrapper>
-                <Title className="text-3xl font-bold text-gray-900 mb-4">
+                <Title className="text-3xl text-center font-bold text-gray-900 mb-4">
                   Email Verificado!
                 </Title>
                 <Alert severity="success" className="mb-8">

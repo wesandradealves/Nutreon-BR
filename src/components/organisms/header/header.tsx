@@ -70,7 +70,7 @@ const Header = ({}: HeaderProps) => {
       <IndiqueAmigoHeader className="bg-primary-500 text-white py-2">
         <Container className="container mx-auto px-4 flex items-center justify-center">
           <IconText className="fa fa-thumbs-o-up mr-2" />
-          <SocialLink href="#" className="text-white hover:underline">
+          <SocialLink href="#" className="text-white hover:underline text-center">
             Convide um amigo para experimentar e ganhe R$ 20,00
           </SocialLink>
         </Container>
