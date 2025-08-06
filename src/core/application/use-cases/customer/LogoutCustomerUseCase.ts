@@ -14,10 +14,10 @@ export class LogoutCustomerUseCase {
     }
 
     // Deletar sessão completamente
-    if ('delete' in this.sessionRepository) {
+    try {
       await this.sessionRepository.delete(token);
-    } else {
-      // Fallback para desativar se delete não existir
+    } catch {
+      // Fallback para desativar se delete falhar
       await this.sessionRepository.deactivate(token);
     }
   }

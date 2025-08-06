@@ -15,7 +15,9 @@ import {
   EmptyStateContainer,
   EmptyIcon,
   EmptyMessage,
-  ExploreButton
+  ExploreButton,
+  ContentWrapper,
+  EmptyTitle
 } from './styles';
 import type { NuvemshopProduct } from '@/types';
 import { useMetadata } from '@/hooks/useMetadata';
@@ -95,7 +97,7 @@ export default function FavoritosPage() {
   return (
     <ProtectedRoute>
       <Container className="min-h-screen bg-gray-50 py-8">
-        <div className="container mx-auto px-4">
+        <ContentWrapper className="container mx-auto px-4">
           <PageHeader className="bg-white rounded-lg shadow-md p-6 mb-8">
             <PageTitle className="text-2xl font-bold text-gray-800 mb-2">Meus Favoritos</PageTitle>
             <PageDescription className="text-gray-600">
@@ -109,9 +111,9 @@ export default function FavoritosPage() {
           {favorites.length === 0 && !loading && !favoritesLoading ? (
             <EmptyStateContainer className="bg-white rounded-lg shadow-md p-12 text-center">
               <EmptyIcon className="text-6xl text-gray-300 mb-4">❤️</EmptyIcon>
-              <h2 className="text-xl font-semibold text-gray-700 mb-2">
+              <EmptyTitle className="text-xl font-semibold text-gray-700 mb-2">
                 Nenhum favorito ainda
-              </h2>
+              </EmptyTitle>
               <EmptyMessage className="text-gray-600 mb-6">
                 Explore nossos produtos e adicione seus favoritos para acessá-los facilmente!
               </EmptyMessage>
@@ -129,7 +131,7 @@ export default function FavoritosPage() {
               isLoading={loading || favoritesLoading}
             />
           )}
-        </div>
+        </ContentWrapper>
       </Container>
     </ProtectedRoute>
   );

@@ -7,6 +7,40 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+## [0.12.0] - 2025-01-06
+
+### Adicionado
+- **Template de Verificação de Conta**: Novo template de e-mail específico para ativação de conta
+  - Design consistente com identidade visual dark da Nutreon
+  - Ícones visuais e seção destacada para o botão de verificação
+  - Explicação dos benefícios da verificação
+
+### Melhorado
+- **Página de Verificação de E-mail**: Refatorada seguindo padrão visual das páginas de autenticação
+  - Background com imagem em grayscale e overlay primário
+  - Layout em duas colunas com card de verificação e seção informativa
+  - Preservados todos os redirects e funcionalidades críticas
+  - Ícones maiores e mais visíveis para os estados de loading, sucesso e erro
+
+- **Templates de E-mail**: Todos os templates atualizados com nova identidade visual
+  - **Design Dark Mode**: Fundo escuro (#171717 e #262626) para todos os templates
+  - **Logo Nutreon**: Adicionado no header de todos os e-mails
+  - **Cores Consistentes**: Primary (#00e8d4) e paleta de cinzas
+  - **Template de Boas-vindas**: Visual moderno com seção de benefícios destacada
+  - **Template de Recuperação de Senha**: Incluídas dicas de segurança e visual aprimorado
+  - **Template de Notificação de Login**: Alerta de segurança detalhado com informações do dispositivo
+  - **Footer Padronizado**: Links para redes sociais e políticas em todos os templates
+
+### Técnico
+- **Styled Components**: Removidas todas as tags HTML diretas do projeto
+  - Criados styled components para todas as tags HTML em páginas e componentes
+  - Exceções mantidas: templates de e-mail e páginas em /auth (conforme solicitado)
+  - Melhoria na manutenibilidade e consistência do código
+
+- **Correções de Lint**: Resolvidos todos os erros de variáveis não utilizadas
+  - Removidos imports e variáveis desnecessárias
+  - Código mais limpo e sem warnings
+
 ## [0.11.1] - 2025-01-06
 
 ### Melhorado

@@ -36,7 +36,11 @@ import {
   StepText,
   SecurityNote,
   SecurityIcon,
-  SecurityText
+  SecurityText,
+  FieldWrapper,
+  EmailHighlight,
+  SecurityContent,
+  SecurityTitle
 } from './styles';
 
 export default function RecuperarSenhaPage() {
@@ -112,7 +116,7 @@ export default function RecuperarSenhaPage() {
           {!successSent ? (
             <RecoveryForm onSubmit={handleSubmit}>
               <FormContent className="space-y-6">
-                <div>
+                <FieldWrapper>
                   <TextField
                     label="E-mail cadastrado"
                     type="email"
@@ -123,7 +127,7 @@ export default function RecuperarSenhaPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     helperText="Digite o e-mail usado no cadastro da sua conta"
                   />
-                </div>
+                </FieldWrapper>
               </FormContent>
 
               <FormActions className="mt-8 space-y-4">
@@ -155,7 +159,7 @@ export default function RecuperarSenhaPage() {
                 E-mail enviado com sucesso!
               </SuccessTitle>
               <SuccessText className="text-gray-600 mb-8">
-                Enviamos as instruções de recuperação para <strong>{email}</strong>
+                Enviamos as instruções de recuperação para <EmailHighlight>{email}</EmailHighlight>
               </SuccessText>
               
               <Button
@@ -221,13 +225,13 @@ export default function RecuperarSenhaPage() {
 
           <SecurityNote className="bg-white/10 backdrop-blur-sm rounded-lg p-6 flex items-start">
             <SecurityIcon className="fa fa-shield-alt text-white text-xl mr-3 mt-0.5" />
-            <div>
-              <h3 className="font-semibold text-white mb-2">Dica de segurança</h3>
+            <SecurityContent>
+              <SecurityTitle className="font-semibold text-white mb-2">Dica de segurança</SecurityTitle>
               <SecurityText className="text-gray-100 text-sm">
                 Por segurança, não compartilhe o link de recuperação com ninguém. 
                 Se você não solicitou a recuperação de senha, ignore o e-mail.
               </SecurityText>
-            </div>
+            </SecurityContent>
           </SecurityNote>
         </InfoSection>
       </ContentWrapper>

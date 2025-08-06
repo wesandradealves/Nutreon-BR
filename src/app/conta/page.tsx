@@ -27,7 +27,15 @@ import {
   Label,
   Value,
   ButtonGroup,
-  Divider
+  Divider,
+  LoadingWrapper,
+  LoadingSpinner,
+  LoadingText,
+  AlertWrapper,
+  AlertText,
+  Form,
+  FormSection,
+  SecurityText
 } from './styles';
 import { useMetadata } from '@/hooks/useMetadata';
 
@@ -179,10 +187,10 @@ export default function AccountPage() {
   if (!isInitialized || !customer) {
     return (
       <Container className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Carregando...</p>
-        </div>
+        <LoadingWrapper className="text-center">
+          <LoadingSpinner className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500 mx-auto"></LoadingSpinner>
+          <LoadingText className="mt-4 text-gray-600">Carregando...</LoadingText>
+        </LoadingWrapper>
       </Container>
     );
   }
@@ -191,13 +199,13 @@ export default function AccountPage() {
   if (!customer.verified) {
     return (
       <Container className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-2xl mx-auto px-4">
+        <AlertWrapper className="max-w-2xl mx-auto px-4">
           <Card className="bg-white rounded-lg shadow-md p-6">
             <Alert severity="warning" className="mb-6">
               Seu email ainda não foi verificado. Por favor, verifique sua caixa de entrada e clique no link de verificação.
             </Alert>
             
-            <div className="flex gap-3 flex-wrap">
+            <ButtonGroup className="flex gap-3 flex-wrap">
               <Button 
                 variant="outlined" 
                 onClick={() => router.push('/')}
@@ -218,16 +226,16 @@ export default function AccountPage() {
               >
                 Sair
               </Button>
-            </div>
+            </ButtonGroup>
           </Card>
-        </div>
+        </AlertWrapper>
       </Container>
     );
   }
 
   return (
     <Container className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
+      <AlertWrapper className="max-w-4xl mx-auto px-4">
         <Card className="bg-white rounded-lg shadow-md">
           <CardHeader className="p-6 border-b border-gray-200">
             <div className="flex justify-between items-center">
@@ -251,10 +259,10 @@ export default function AccountPage() {
             {!customer.verified && (
               <Alert severity="warning" className="mb-6">
                 <div className="flex justify-between items-center">
-                  <span>
+                  <AlertText>
                     <AlertCircle className="inline mr-2" size={20} />
                     Seu email ainda não foi verificado. Verifique sua caixa de entrada.
-                  </span>
+                  </AlertText>
                   <Button
                     variant="text"
                     color="primary"
@@ -300,7 +308,7 @@ export default function AccountPage() {
               </SectionHeader>
 
               {editMode ? (
-                <form onSubmit={handlePersonalSubmit(onPersonalSubmit)} className="space-y-4">
+                <Form onSubmit={handlePersonalSubmit(onPersonalSubmit)} className="space-y-4">
                   <Controller
                     name="name"
                     control={personalControl}
@@ -356,9 +364,9 @@ export default function AccountPage() {
                       Salvar
                     </Button>
                   </ButtonGroup>
-                </form>
+                </Form>
               ) : (
-                <div className="space-y-3">
+                <FormSection className="space-y-3">
                   <InfoRow className="flex">
                     <Label className="text-gray-600 font-medium w-32">Nome:</Label>
                     <Value className="text-gray-900">{customer.name}</Value>
@@ -376,7 +384,7 @@ export default function AccountPage() {
                     <Label className="text-gray-600 font-medium w-32">Telefone:</Label>
                     <Value className="text-gray-900">{formatPhone(customer.phone)}</Value>
                   </InfoRow>
-                </div>
+                </FormSection>
               )}
             </Section>
 
@@ -402,7 +410,7 @@ export default function AccountPage() {
               </SectionHeader>
 
               {changePasswordMode ? (
-                <form onSubmit={handlePasswordSubmit(onPasswordSubmit)} className="space-y-4">
+                <Form onSubmit={handlePasswordSubmit(onPasswordSubmit)} className="space-y-4">
                   <Controller
                     name="currentPassword"
                     control={passwordControl}
@@ -486,16 +494,16 @@ export default function AccountPage() {
                       Alterar Senha
                     </Button>
                   </ButtonGroup>
-                </form>
+                </Form>
               ) : (
-                <p className="text-gray-600">
+                <SecurityText className="text-gray-600">
                   Recomendamos que você altere sua senha regularmente para manter sua conta segura.
-                </p>
+                </SecurityText>
               )}
             </Section>
           </CardContent>
         </Card>
-      </div>
+      </AlertWrapper>
     </Container>
   );
 }

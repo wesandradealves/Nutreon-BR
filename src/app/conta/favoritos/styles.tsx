@@ -19,3 +19,7 @@ export const ExploreButton = styled.button``;
 export const LoadingContainer = styled.div``;
 
 export const LoadingSpinner = styled.div``;
+
+// Additional styled components
+export const ContentWrapper = styled.div``;
+export const EmptyTitle = styled.h2``;

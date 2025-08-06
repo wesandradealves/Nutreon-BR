@@ -52,6 +52,10 @@ import {
   ShippingTitle,
   ShippingText,
   EmptyContainer,
+  FreeShippingLabel,
+  TotalLabel,
+  TotalValue,
+  ShippingHighlight,
   EmptyIcon,
   EmptyTitle,
   EmptyText,
@@ -261,7 +265,7 @@ export default function CartPage() {
                   <SummaryLabel>Frete</SummaryLabel>
                   <SummaryValue>
                     {shipping === 0 ? (
-                      <span className="text-green-600 font-medium">Grátis</span>
+                      <FreeShippingLabel className="text-green-600 font-medium">Grátis</FreeShippingLabel>
                     ) : (
                       formatPrice(shipping)
                     )}
@@ -276,8 +280,8 @@ export default function CartPage() {
                 
                 <SummaryDivider className="pt-3 border-t">
                   <SummaryTotal className="flex justify-between text-lg font-bold text-gray-900">
-                    <span>Total</span>
-                    <span>{formatPrice(total)}</span>
+                    <TotalLabel>Total</TotalLabel>
+                    <TotalValue>{formatPrice(total)}</TotalValue>
                   </SummaryTotal>
                 </SummaryDivider>
               </SummaryContent>
@@ -302,7 +306,7 @@ export default function CartPage() {
               {subtotal < 200 && (
                 <ShippingInfo className="mt-6 p-4 bg-blue-50 rounded-lg">
                   <ShippingTitle className="text-sm text-blue-800">
-                    <strong>Frete Grátis</strong> para compras acima de {formatPrice(200)}
+                    <ShippingHighlight>Frete Grátis</ShippingHighlight> para compras acima de {formatPrice(200)}
                   </ShippingTitle>
                   <ShippingText className="text-xs text-blue-700 mt-1">
                     Faltam {formatPrice(200 - subtotal)} para você ganhar frete grátis!

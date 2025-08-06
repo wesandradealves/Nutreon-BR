@@ -26,3 +26,24 @@ export const ShippingRow = styled.div``;
 export const TotalRow = styled.div``;
 export const CheckoutButton = styled(Link)``;
 export const CartPageLink = styled(Link)``;
+
+// Additional styled components
+export const RootWrapper = styled.div``;
+export const OverflowWrapper = styled.div``;
+export const AbsoluteWrapper = styled.div``;
+export const FlexWrapper = styled.div``;
+export const InnerContainer = styled.div``;
+export const ScreenReaderText = styled.span``;
+export const LoadingWrapper = styled.div``;
+export const LoadingText = styled.p``;
+export const ItemDetailsWrapper = styled.div``;
+export const ItemHeader = styled.div``;
+export const ItemSubPrice = styled.p``;
+export const ItemFooter = styled.div``;
+export const SubtotalLabel = styled.p``;
+export const SubtotalValue = styled.p``;
+export const ShippingLabel = styled.p``;
+export const ShippingValue = styled.p``;
+export const TotalLabel = styled.p``;
+export const TotalValue = styled.p``;
+export const ActionsWrapper = styled.div``;

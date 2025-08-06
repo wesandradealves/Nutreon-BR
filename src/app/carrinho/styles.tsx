@@ -63,3 +63,9 @@ export const LoadingContainer = styled.div``;
 export const LoadingContent = styled.div``;
 export const LoadingSpinner = styled.div``;
 export const LoadingText = styled.p``;
+
+// Additional styled components
+export const FreeShippingLabel = styled.span``;
+export const TotalLabel = styled.span``;
+export const TotalValue = styled.span``;
+export const ShippingHighlight = styled.strong``;

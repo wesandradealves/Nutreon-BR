@@ -27,6 +27,12 @@ const LoginButton = styled(Link)``;
 const FooterSection = styled.div``;
 const FooterLinksGrid = styled.div``;
 const FooterLink = styled(Link)``;
+const RootWrapper = styled.div``;
+const OverflowWrapper = styled.div``;
+const AbsoluteWrapper = styled.div``;
+const FlexWrapper = styled.div``;
+const NavItemWrapper = styled.div``;
+const SubMenuIndicator = styled.span``;
 
 interface MobileNavigationProps {
   isOpen: boolean;
@@ -89,7 +95,7 @@ const MobileNavigation = ({ isOpen, onClose, items }: MobileNavigationProps) => 
 
   return (
     <Transition.Root show={isOpen} as={Fragment}>
-      <div className="relative z-50 lg:hidden">
+      <RootWrapper className="relative z-50 lg:hidden">
         {/* Overlay com animação */}
         <Transition.Child
           as={Fragment}
@@ -108,9 +114,9 @@ const MobileNavigation = ({ isOpen, onClose, items }: MobileNavigationProps) => 
         </Transition.Child>
         
         {/* Menu Container com animação de slide */}
-        <div className="fixed inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full">
+        <OverflowWrapper className="fixed inset-0 overflow-hidden pointer-events-none">
+          <AbsoluteWrapper className="absolute inset-0 overflow-hidden">
+            <FlexWrapper className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full">
               <Transition.Child
                 as={Fragment}
                 enter="transform transition ease-in-out duration-300"
@@ -169,7 +175,7 @@ const MobileNavigation = ({ isOpen, onClose, items }: MobileNavigationProps) => 
                 transform: isOpen ? 'translateX(0)' : 'translateX(20px)'
               }}
             >
-              <div className="flex items-center justify-between">
+              <NavItemWrapper className="flex items-center justify-between">
                 <MobileNavLink
                   href={item.href}
                   className="flex-1 px-4 py-3 text-gray-300 hover:text-white hover:bg-dark-800 transition-colors"
@@ -190,7 +196,7 @@ const MobileNavigation = ({ isOpen, onClose, items }: MobileNavigationProps) => 
                     )}
                   </ExpandButton>
                 )}
-              </div>
+              </NavItemWrapper>
               
               {item.children && (
                 <Transition
@@ -210,7 +216,7 @@ const MobileNavigation = ({ isOpen, onClose, items }: MobileNavigationProps) => 
                         className="block px-8 py-2 text-sm text-gray-400 hover:text-white hover:bg-dark-700 transition-all hover:pl-10 relative group"
                         onClick={handleClose}
                       >
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 w-1 h-1 bg-primary-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <SubMenuIndicator className="absolute left-4 top-1/2 -translate-y-1/2 w-1 h-1 bg-primary-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                         {child.label}
                       </MobileSubMenuLink>
                     </MobileSubMenuItem>
@@ -243,10 +249,10 @@ const MobileNavigation = ({ isOpen, onClose, items }: MobileNavigationProps) => 
         </FooterSection>
                 </MobileNavContainer>
               </Transition.Child>
-            </div>
-          </div>
-        </div>
-      </div>
+            </FlexWrapper>
+          </AbsoluteWrapper>
+        </OverflowWrapper>
+      </RootWrapper>
     </Transition.Root>
   );
 };

@@ -1,11 +1,13 @@
 'use client';
+import { Main } from './styles';
+
 export default function Template({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <main className='flex-1'>
+      <Main className='flex-1'>
         {children}
-      </main>
+      </Main>
     </>
   );
 }

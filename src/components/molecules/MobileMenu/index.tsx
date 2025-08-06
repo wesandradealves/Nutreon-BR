@@ -1,7 +1,6 @@
 'use client';
 
-import Link from 'next/link';
-import { MobileMenuContainer, MobileButton, IconBar, MobileIcon } from './styles';
+import { MobileMenuContainer, MobileButton, IconBar, MobileIcon, ButtonsWrapper, SearchButton, LoginLink } from './styles';
 import DeliveryCheck from '@/components/atoms/DeliveryCheck';
 import { CartButton } from '@/components/atoms/CartButton';
 import CartDrawer from '@/components/organisms/CartDrawer';
@@ -33,22 +32,22 @@ const MobileMenu = ({
         className="text-xs"
       />
       
-      <div className="flex items-center gap-2">
-        <button 
+      <ButtonsWrapper className="flex items-center gap-2">
+        <SearchButton 
           onClick={onSearchClick}
           className="w-8 h-8 bg-dark-800 border border-dark-700 rounded-full flex items-center justify-center"
           aria-label="Buscar"
         >
           <MobileIcon className="fa fa-search text-gray-300 text-sm" />
-        </button>
+        </SearchButton>
         
-        <Link 
+        <LoginLink 
           href="/auth" 
           className="w-8 h-8 bg-dark-800 border border-dark-700 rounded-full flex items-center justify-center"
           aria-label="Login"
         >
           <MobileIcon className="fa fa-user text-gray-300 text-sm" />
-        </Link>
+        </LoginLink>
         
         <CartButton className="w-8 h-8 text-sm" onClick={openDrawer} />
         
@@ -62,7 +61,7 @@ const MobileMenu = ({
           <IconBar className="block w-6 h-0.5 bg-gray-300 mb-1" />
           <IconBar className="block w-6 h-0.5 bg-gray-300" />
         </MobileButton>
-      </div>
+      </ButtonsWrapper>
       
       {/* Cart Drawer */}
       <CartDrawer isOpen={isCartOpen} onClose={closeDrawer} />

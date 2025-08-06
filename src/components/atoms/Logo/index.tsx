@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
-import { LogoContainer } from './styles';
+import { LogoContainer, LogoText } from './styles';
 
 interface LogoProps {
   href?: string;
@@ -26,10 +26,10 @@ const Logo = ({
             src={imageUrl}
             alt={altText}
             effect="blur"
-            className="img-responsive"
+            className="max-h-[60px] w-auto"
           />
         ) : (
-          <h1>Nutreon</h1>
+          <LogoText className="m-0 text-[32px] font-bold text-primary-500">Nutreon</LogoText>
         )}
       </Link>
     </LogoContainer>

@@ -1,6 +1,6 @@
 'use client';
 
-import { SocialLinksContainer, SocialLink, SocialIcon } from './styles';
+import { SocialLinksContainer, SocialLink, SocialIcon, ScreenReaderText } from './styles';
 
 interface SocialLinksProps {
   facebook?: string;
@@ -26,7 +26,7 @@ const SocialLinks = ({
         className="inline-flex items-center justify-center w-6 h-6 text-gray-300 hover:text-primary-500 transition-colors"
       >
         <SocialIcon className="fa-brands fa-facebook-f text-base" />
-        <span className="sr-only">Facebook</span>
+        <ScreenReaderText className="sr-only">Facebook</ScreenReaderText>
       </SocialLink>
       <SocialLink 
         href={youtube} 
@@ -35,7 +35,7 @@ const SocialLinks = ({
         className="inline-flex items-center justify-center w-6 h-6 text-gray-300 hover:text-primary-500 transition-colors"
       >
         <SocialIcon className="fa-brands fa-youtube text-base" />
-        <span className="sr-only">YouTube</span>
+        <ScreenReaderText className="sr-only">YouTube</ScreenReaderText>
       </SocialLink>
       <SocialLink 
         href={instagram} 
@@ -44,7 +44,7 @@ const SocialLinks = ({
         className="inline-flex items-center justify-center w-6 h-6 text-gray-300 hover:text-primary-500 transition-colors"
       >
         <SocialIcon className="fa-brands fa-instagram text-base" />
-        <span className="sr-only">Instagram</span>
+        <ScreenReaderText className="sr-only">Instagram</ScreenReaderText>
       </SocialLink>
       <SocialLink 
         href={whatsapp} 
@@ -53,7 +53,7 @@ const SocialLinks = ({
         className="inline-flex items-center justify-center w-6 h-6 text-gray-300 hover:text-primary-500 transition-colors hidden lg:inline-flex"
       >
         <SocialIcon className="fa-brands fa-whatsapp text-base" />
-        <span className="sr-only">WhatsApp</span>
+        <ScreenReaderText className="sr-only">WhatsApp</ScreenReaderText>
       </SocialLink>
     </SocialLinksContainer>
   );

@@ -61,3 +61,9 @@ export const SecurityNote = styled.div``;
 export const SecurityIcon = styled.i``;
 
 export const SecurityText = styled.p``;
+
+// Additional styled components
+export const FieldWrapper = styled.div``;
+export const EmailHighlight = styled.strong``;
+export const SecurityContent = styled.div``;
+export const SecurityTitle = styled.h3``;

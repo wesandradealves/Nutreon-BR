@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Link from 'next/link';
 
 export const FooterContainer = styled.footer``;
 export const FooterContent = styled.div``;
@@ -28,3 +29,21 @@ export const CookiesSection = styled.div``;
 export const CookiesContent = styled.div``;
 export const CookiesText = styled.p``;
 export const CookiesButtonGroup = styled.div``;
+
+// Additional styled components
+export const LogoLink = styled(Link)``;
+export const PaymentIcon = styled.i``;
+export const MenuLink = styled(Link)``;
+export const ContactIcon = styled.i``;
+export const ContactStrong = styled.strong``;
+export const ContactLink = styled.a``;
+export const SecurityWrapper = styled.div``;
+export const SecurityCard = styled.div``;
+export const SecurityIcon = styled.i``;
+export const SecurityLabel = styled.span``;
+export const CopyrightWrapper = styled.div``;
+export const CopyrightSpan = styled.span``;
+export const CopyrightIcon = styled.i``;
+export const CookiesWrapper = styled.div``;
+export const CookiesLink = styled(Link)``;
+export const CookiesButton = styled.button``;

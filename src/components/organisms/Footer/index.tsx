@@ -2,7 +2,6 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import SocialLinks from '@/components/molecules/SocialLinks';
 import { 
   FooterContainer, 
@@ -31,7 +30,23 @@ import {
   CookiesSection,
   CookiesContent,
   CookiesText,
-  CookiesButtonGroup
+  CookiesButtonGroup,
+  LogoLink,
+  PaymentIcon,
+  MenuLink,
+  ContactIcon,
+  ContactStrong,
+  ContactLink,
+  SecurityWrapper,
+  SecurityCard,
+  SecurityIcon,
+  SecurityLabel,
+  CopyrightWrapper,
+  CopyrightSpan,
+  CopyrightIcon,
+  CookiesWrapper,
+  CookiesLink,
+  CookiesButton
 } from './styles';
 
 const paymentMethods = [
@@ -84,7 +99,7 @@ export default function Footer() {
           {/* Logo */}
           <FooterColumn className="lg:col-span-1 hidden md:block">
             <LogoSection className="flex h-full">
-              <Link href="/" className="block">
+              <LogoLink href="/" className="block">
                 <Image 
                   src="/img/logo.png" 
                   alt="Nutreon" 
@@ -92,7 +107,7 @@ export default function Footer() {
                   height={160}
                   className="h-20 w-auto"
                 />
-              </Link>
+              </LogoLink>
             </LogoSection>
           </FooterColumn>
 
@@ -104,7 +119,7 @@ export default function Footer() {
               </PaymentTitle>
               <PaymentIcons className="grid grid-cols-3 gap-2">
                 {paymentMethods.map((method) => (
-                  <i 
+                  <PaymentIcon 
                     key={method.name} 
                     className={`${method.icon} text-2xl text-gray-400 hover:text-primary-500 transition-colors`}
                     title={method.name}
@@ -123,12 +138,12 @@ export default function Footer() {
               <MenuList className="space-y-2">
                 {institutionalLinks.map((link) => (
                   <MenuItem key={link.href}>
-                    <Link 
+                    <MenuLink 
                       href={link.href}
                       className="text-gray-400 hover:text-primary-500 transition-colors text-sm"
                     >
                       {link.label}
-                    </Link>
+                    </MenuLink>
                   </MenuItem>
                 ))}
               </MenuList>
@@ -143,17 +158,17 @@ export default function Footer() {
               </ContactTitle>
               <ContactList className="space-y-3 mb-6">
                 <ContactItem className="flex items-center gap-2">
-                  <i className="fa-brands fa-whatsapp text-primary-500 text-lg" />
-                  <strong className="text-white">11 99999-9999</strong>
+                  <ContactIcon className="fa-brands fa-whatsapp text-primary-500 text-lg" />
+                  <ContactStrong className="text-white">11 99999-9999</ContactStrong>
                 </ContactItem>
                 <ContactItem className="flex items-center gap-2">
-                  <i className="fa-regular fa-envelope text-primary-500" />
-                  <a 
+                  <ContactIcon className="fa-regular fa-envelope text-primary-500" />
+                  <ContactLink 
                     href="mailto:contato@nutreon.com.br"
                     className="text-gray-400 hover:text-primary-500 transition-colors text-sm"
                   >
                     contato@nutreon.com.br
-                  </a>
+                  </ContactLink>
                 </ContactItem>
               </ContactList>
               
@@ -173,16 +188,16 @@ export default function Footer() {
               <SecurityTitle className="text-lg font-semibold mb-4 text-white">
                 Site seguro
               </SecurityTitle>
-              <div className="space-y-4">
-                <div className="bg-dark-800 p-4 rounded-lg text-center flex flex-col">
-                  <i className="fa fa-lock text-3xl text-primary-500 mb-2 block" />
-                  <span className="text-xs text-gray-400">Site Seguro</span>
-                </div>
-                <div className="bg-dark-800 p-4 rounded-lg text-center mt-3  flex flex-col">
-                  <i className="fa-solid fa-shield-halved text-3xl text-primary-500 mb-2 block" />
-                  <span className="text-xs text-gray-400">SSL Certificate</span>
-                </div>
-              </div>
+              <SecurityWrapper className="space-y-4">
+                <SecurityCard className="bg-dark-800 p-4 rounded-lg text-center flex flex-col">
+                  <SecurityIcon className="fa fa-lock text-3xl text-primary-500 mb-2 block" />
+                  <SecurityLabel className="text-xs text-gray-400">Site Seguro</SecurityLabel>
+                </SecurityCard>
+                <SecurityCard className="bg-dark-800 p-4 rounded-lg text-center mt-3  flex flex-col">
+                  <SecurityIcon className="fa-solid fa-shield-halved text-3xl text-primary-500 mb-2 block" />
+                  <SecurityLabel className="text-xs text-gray-400">SSL Certificate</SecurityLabel>
+                </SecurityCard>
+              </SecurityWrapper>
             </SecuritySection>
           </FooterColumn>
         </FooterRow>
@@ -196,11 +211,11 @@ export default function Footer() {
               <CopyrightText className="text-sm text-gray-400 text-center md:text-left">
                 ® {currentYear} Nutreon - Todos os direitos reservados
               </CopyrightText>
-              <div className="flex items-center gap-4">
-                <span className="text-xs text-gray-500">
-                  <i className="fa fa-lock mr-1" /> Navegação Segura
-                </span>
-              </div>
+              <CopyrightWrapper className="flex items-center gap-4">
+                <CopyrightSpan className="text-xs text-gray-500">
+                  <CopyrightIcon className="fa fa-lock mr-1" /> Navegação Segura
+                </CopyrightSpan>
+              </CopyrightWrapper>
             </CopyrightContent>
           </CopyrightRow>
         </CopyrightContainer>
@@ -210,27 +225,27 @@ export default function Footer() {
       {showCookies && (
         <CookiesSection className="fixed bottom-0 left-0 right-0 bg-dark-800 border-t border-dark-700 p-4 md:p-6 z-50 shadow-2xl">
           <CookiesContent className="container mx-auto">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <CookiesWrapper className="flex flex-col md:flex-row items-center justify-between gap-4">
               <CookiesText className="text-sm text-gray-300 text-center md:text-left flex-1">
                 Nós usamos cookies e outras tecnologias semelhantes para melhorar a sua experiência em nossos serviços. 
                 Ao utilizar nossos serviços, você concorda com nossas{' '}
-                <Link href="/politica-de-privacidade" className="text-primary-500 hover:text-primary-400 underline">
+                <CookiesLink href="/politica-de-privacidade" className="text-primary-500 hover:text-primary-400 underline">
                   Políticas de Privacidade
-                </Link>{' '}
+                </CookiesLink>{' '}
                 e{' '}
-                <Link href="/politica-de-cookies" className="text-primary-500 hover:text-primary-400 underline">
+                <CookiesLink href="/politica-de-cookies" className="text-primary-500 hover:text-primary-400 underline">
                   Cookies
-                </Link>.
+                </CookiesLink>.
               </CookiesText>
               <CookiesButtonGroup>
-                <button
+                <CookiesButton
                   onClick={handleAcceptCookies}
                   className="bg-primary-500 hover:bg-primary-600 text-white px-8 py-2 rounded-full font-medium transition-colors whitespace-nowrap"
                 >
                   Aceito
-                </button>
+                </CookiesButton>
               </CookiesButtonGroup>
-            </div>
+            </CookiesWrapper>
           </CookiesContent>
         </CookiesSection>
       )}
