@@ -7,6 +7,42 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+## [0.12.3] - 2025-01-06
+
+### Adicionado
+- **Sistema de Templates Next.js**: Implementação de templates para páginas de autenticação
+  - Template para login/cadastro/recuperar-senha com layout compartilhado
+  - Template para verify-email/reset-password com layout compartilhado
+  - Eliminação de código duplicado entre páginas
+
+### Melhorado
+- **Layout de Páginas de Autenticação**: Ajustes visuais e estruturais
+  - Largura máxima definida (max-w-6xl) para evitar conteúdo esticado
+  - Templates unificados com mesmo padrão visual
+  - Estado de sucesso em reset-password mantém layout de duas colunas
+  - Ícone de sucesso e botão de ação no estado de confirmação
+
+- **Proteção de Rotas de Token**: Páginas reset-password e verify-email agora redirecionam se não houver token
+  - reset-password redireciona para /recuperar-senha
+  - verify-email redireciona para /login
+  - Mensagens de erro específicas para tokens expirados/inválidos
+  - Botões de ação contextuais para solicitar novos tokens
+
+### Reestruturado
+- **Organização de Rotas**: Páginas movidas para grupos de rotas
+  - Páginas de formulários movidas para `(auth-forms)/`
+  - URLs permanecem inalteradas devido ao uso de grupos de rotas
+  - Código de layout centralizado em templates
+  
+### Segurança
+- **Validação de Tokens**: Sistema completo de validação no backend
+  - Verifica se token existe no banco de dados
+  - Verifica se token já foi utilizado
+  - Verifica se token expirou (1 hora para reset de senha)
+  - Mensagens de erro padronizadas e seguras
+
+## [0.12.2] - 2025-01-06
+
 ### Melhorado
 - **Proteção de Rotas de Token**: Páginas reset-password e verify-email agora redirecionam se não houver token
   - reset-password redireciona para /recuperar-senha

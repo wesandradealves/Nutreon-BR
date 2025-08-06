@@ -10,12 +10,7 @@ import { Checkbox } from '@/components/atoms/Checkbox';
 import { Link } from '@/components/atoms/Link';
 import { Divider } from '@/components/atoms/Divider';
 import { Alert } from '@/components/atoms/Alert';
-import { IMAGES } from '@/utils/constants';
 import {
-  Container,
-  BackgroundImage,
-  BackgroundOverlay,
-  ContentWrapper,
   LoginCard,
   LoginForm,
   FormHeader,
@@ -64,20 +59,9 @@ export default function LoginPage() {
   }, []);
 
   return (
-    <Container className="relative min-h-screen flex items-center justify-center">
-      {/* Background Image with Grayscale */}
-      <BackgroundImage 
-        className="absolute inset-0 w-full h-full"
-        $backgroundImage={IMAGES.AUTH_BACKGROUND}
-      />
-      
-      {/* Primary Color Overlay */}
-      <BackgroundOverlay className="absolute inset-0 bg-primary-500 opacity-90 mix-blend-multiply" />
-      
-      {/* Content */}
-      <ContentWrapper className="relative z-10 max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 p-4 sm:p-6 lg:p-8  items-center">
-        {/* Login Form */}
-        <LoginCard className="bg-white rounded-2xl shadow-xl p-8 lg:p-10 order-2 lg:order-1">
+    <>
+      {/* Login Form */}
+      <LoginCard className="bg-white rounded-2xl shadow-xl p-8 lg:p-10 order-2 lg:order-1">
           <FormHeader className="mb-10 text-center">
             <FormTitle className="text-4xl font-bold text-gray-900 mb-3">
               Bem-vindo de volta!
@@ -223,8 +207,7 @@ export default function LoginPage() {
               Criar conta gratuita
             </Button>
           </RegisterCTA> */}
-        </RegisterSection>
-      </ContentWrapper>
-    </Container>
+      </RegisterSection>
+    </>
   );
 }

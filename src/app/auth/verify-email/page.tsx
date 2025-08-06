@@ -6,12 +6,7 @@ import { useApiRequest } from '@/hooks/useApiRequest';
 import { useMetadata } from '@/hooks/useMetadata';
 import { Button } from '@/components/atoms/Button';
 import { Alert } from '@/components/atoms/Alert';
-import { IMAGES } from '@/utils/constants';
 import { 
-  Container, 
-  BackgroundImage, 
-  BackgroundOverlay, 
-  ContentWrapper,
   VerifyCard,
   CardContent,
   IconWrapper, 
@@ -85,20 +80,9 @@ export default function VerifyEmailPage() {
 
 
   return (
-    <Container className="relative min-h-screen flex items-center justify-center">
-      {/* Background Image with Grayscale */}
-      <BackgroundImage 
-        className="absolute inset-0 w-full h-full"
-        $backgroundImage={IMAGES.AUTH_BACKGROUND}
-      />
-      
-      {/* Primary Color Overlay */}
-      <BackgroundOverlay className="absolute inset-0 bg-primary-500 opacity-90 mix-blend-multiply" />
-      
-      {/* Content */}
-      <ContentWrapper className="relative z-10 max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 p-4 sm:p-6 lg:p-8  items-center">
-        {/* Verify Card */}
-        <VerifyCard className="bg-white rounded-2xl shadow-xl p-8 lg:p-10">
+    <>
+      {/* Verify Card */}
+      <VerifyCard className="bg-white rounded-2xl shadow-xl p-8 lg:p-10">
           <CardContent>
             {status === 'loading' && (
               <>
@@ -219,7 +203,6 @@ export default function VerifyEmailPage() {
             </StepItem>
           </StepsList>
         </InfoSection>
-      </ContentWrapper>
-    </Container>
+    </>
   );
 }
