@@ -62,9 +62,9 @@ export default function ResetPasswordPage() {
 
   useEffect(() => {
     if (!token) {
-      setError('Token de recuperação não encontrado');
+      router.push('/recuperar-senha');
     }
-  }, [token]);
+  }, [token, router]);
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -144,9 +144,38 @@ export default function ResetPasswordPage() {
               )}
 
               {!token ? (
-                <Alert severity="error">
-                  Link de recuperação inválido. Por favor, solicite um novo email de recuperação.
-                </Alert>
+                <>
+                  <Alert severity="error" className="mb-6">
+                    Link de recuperação inválido. Por favor, solicite um novo email de recuperação.
+                  </Alert>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    onClick={() => router.push('/recuperar-senha')}
+                    className="py-3 text-lg font-semibold bg-primary-500 hover:bg-primary-600 shadow-[0_4px_0_0_#00a8a0] hover:shadow-[0_2px_0_0_#00a8a0] active:shadow-none active:translate-y-[2px] transition-all"
+                  >
+                    Solicitar novo link
+                  </Button>
+                </>
+              ) : error ? (
+                <>
+                  <Alert severity="error" className="mb-6">
+                    {error === 'Token inválido ou expirado' 
+                      ? 'Este link de recuperação expirou ou já foi utilizado. Por favor, solicite um novo email de recuperação.'
+                      : error
+                    }
+                  </Alert>
+                  {error === 'Token inválido ou expirado' && (
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      onClick={() => router.push('/recuperar-senha')}
+                      className="py-3 text-lg font-semibold bg-primary-500 hover:bg-primary-600 shadow-[0_4px_0_0_#00a8a0] hover:shadow-[0_2px_0_0_#00a8a0] active:shadow-none active:translate-y-[2px] transition-all"
+                    >
+                      Solicitar novo link
+                    </Button>
+                  )}
+                </>
               ) : (
                 <Form onSubmit={handleSubmit}>
                   <TextField

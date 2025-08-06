@@ -49,8 +49,7 @@ export default function VerifyEmailPage() {
 
   useEffect(() => {
     if (!token) {
-      setStatus('error');
-      setMessage('Token de verificação não encontrado');
+      router.push('/login');
       return;
     }
 
@@ -143,10 +142,18 @@ export default function VerifyEmailPage() {
                   <ErrorIcon className="fa fa-times-circle text-7xl text-red-500" />
                 </IconWrapper>
                 <Title className="text-3xl font-bold text-gray-900 mb-4">
-                  Erro na Verificação
+                  {message === 'Email já verificado' 
+                    ? 'Email Já Verificado' 
+                    : 'Erro na Verificação'
+                  }
                 </Title>
                 <Alert severity="error" className="mb-8">
-                  {message}
+                  {message === 'Token inválido ou expirado'
+                    ? 'Este link de verificação expirou ou é inválido. Por favor, faça login e solicite um novo email de verificação.'
+                    : message === 'Email já verificado'
+                    ? 'Este email já foi verificado anteriormente. Você pode fazer login normalmente.'
+                    : message
+                  }
                 </Alert>
                 <ButtonGroup className="space-y-3">
                   <Button

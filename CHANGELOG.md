@@ -7,6 +7,20 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Melhorado
+- **Proteção de Rotas de Token**: Páginas reset-password e verify-email agora redirecionam se não houver token
+  - reset-password redireciona para /recuperar-senha
+  - verify-email redireciona para /login
+  - Mensagens de erro específicas para tokens expirados/inválidos
+  - Botões de ação contextuais para solicitar novos tokens
+  
+### Segurança
+- **Validação de Tokens**: Sistema completo de validação no backend
+  - Verifica se token existe no banco de dados
+  - Verifica se token já foi utilizado
+  - Verifica se token expirou (1 hora para reset de senha)
+  - Mensagens de erro padronizadas e seguras
+
 ## [0.12.1] - 2025-01-06
 
 ### Melhorado
