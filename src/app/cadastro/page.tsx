@@ -22,7 +22,6 @@ import {
   FormContent,
   FormRow,
   FormActions,
-  SocialRegister,
   LoginPrompt,
   LoginPromptText,
   BenefitsSection,
@@ -66,7 +65,7 @@ export default function CadastroPage() {
       {/* Content */}
       <ContentWrapper className="relative z-10 max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 p-4 sm:p-6 lg:p-8">
         {/* Benefits Section */}
-        <BenefitsSection className="flex flex-col justify-center p-8 order-2 lg:order-1">
+        <BenefitsSection className="hidden xl:flex flex-col justify-center p-8 order-2 lg:order-1">
           <BenefitsWrapper className="mb-8">
             <BenefitsTitle className="text-4xl font-bold text-white mb-4">
               Bem-vindo à Nutreon!
@@ -208,26 +207,26 @@ export default function CadastroPage() {
                 fullWidth
                 variant="contained"
                 loading={loading}
-                className="py-3 text-lg font-semibold bg-primary-500 hover:bg-primary-600"
+                className="py-3 text-lg font-semibold bg-primary-500 hover:bg-primary-600 shadow-[0_4px_0_0_#00a8a0] hover:shadow-[0_2px_0_0_#00a8a0] active:shadow-none active:translate-y-[2px] transition-all"
               >
                 Criar conta
               </Button>
             </FormActions>
           </RegisterForm>
 
-          <Divider text="ou cadastre-se com" className="my-8" />
-
+          <Divider text="ou" className="my-8" />
+{/* 
           <SocialRegister className="space-y-4">
             <Button
               fullWidth
               variant="outlined"
               onClick={() => window.location.href = '/api/auth/google'}
-              className="py-3 border-gray-300 text-gray-700 hover:bg-gray-50"
+              className="py-3 border-gray-300 text-gray-700 hover:bg-gray-50 shadow-[0_4px_0_0_#e5e5e5] hover:shadow-[0_2px_0_0_#e5e5e5] active:shadow-none active:translate-y-[2px] transition-all"
             >
               <BenefitIcon className="fa-brands fa-google mr-2 text-red-500" />
               Google
             </Button>
-          </SocialRegister>
+          </SocialRegister> */}
 
           <LoginPrompt className="mt-8 text-center">
             <LoginPromptText className="text-gray-600">Já tem uma conta? </LoginPromptText>

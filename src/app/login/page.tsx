@@ -2,7 +2,6 @@
 
 import { useState, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useRouter } from 'next/navigation';
 import { useAuthForm } from '@/hooks/useAuthForm';
 import { useMetadata } from '@/hooks/useMetadata';
 import { TextField } from '@/components/atoms/TextField';
@@ -25,7 +24,6 @@ import {
   FormContent,
   RememberForgotWrapper,
   FormActions,
-  SocialLogin,
   RegisterPrompt,
   RegisterPromptText,
   RegisterSection,
@@ -39,13 +37,10 @@ import {
   FeatureIcon,
   FeatureContent,
   FeatureTitle,
-  FeatureText,
-  RegisterCTA,
-  RegisterCTAText
+  FeatureText
 } from './styles';
 
 export default function LoginPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams?.get('redirect') || '/conta';
   const [rememberMe, setRememberMe] = useState(false);
@@ -141,26 +136,26 @@ export default function LoginPage() {
                 fullWidth
                 variant="contained"
                 loading={loading}
-                className="py-3 text-lg font-semibold bg-primary-500 hover:bg-primary-600"
+                className="py-3 text-lg font-semibold bg-primary-500 hover:bg-primary-600 shadow-[0_4px_0_0_#00a8a0] hover:shadow-[0_2px_0_0_#00a8a0] active:shadow-none active:translate-y-[2px] transition-all"
               >
                 Entrar
               </Button>
             </FormActions>
           </LoginForm>
 
-          <Divider text="ou continue com" className="my-8" />
+          <Divider text="ou" className="my-8" />
 
-          <SocialLogin className="space-y-4">
+          {/* <SocialLogin className="space-y-4">
             <Button
               fullWidth
               variant="outlined"
               onClick={() => window.location.href = '/api/auth/google'}
-              className="py-3 border-gray-300 text-gray-700 hover:bg-gray-50"
+              className="py-3 border-gray-300 text-gray-700 hover:bg-gray-50 shadow-[0_4px_0_0_#e5e5e5] hover:shadow-[0_2px_0_0_#e5e5e5] active:shadow-none active:translate-y-[2px] transition-all"
             >
               <FeatureIcon className="fa-brands fa-google mr-2 text-red-500" />
               Google
             </Button>
-          </SocialLogin>
+          </SocialLogin> */}
 
           <RegisterPrompt className="mt-8 text-center">
             <RegisterPromptText className="text-gray-600">Não tem uma conta? </RegisterPromptText>
@@ -171,7 +166,7 @@ export default function LoginPage() {
         </LoginCard>
 
         {/* Brand Section */}
-        <RegisterSection className="flex flex-col justify-center p-8 order-1 lg:order-2">
+        <RegisterSection className="hidden xl:flex flex-col justify-center p-8 order-1 lg:order-2">
           <BrandWrapper className="mb-8">
             <RegisterTitle className="text-5xl font-bold text-white mb-4">
               Nutreon
@@ -216,18 +211,18 @@ export default function LoginPage() {
             </FeatureItem>
           </FeatureList>
 
-          <RegisterCTA className="mt-12">
+          {/* <RegisterCTA className="mt-12">
             <RegisterCTAText className="text-white font-semibold mb-4 text-lg drop-shadow-md">Primeira vez aqui?</RegisterCTAText>
             <Button
               fullWidth
               variant="contained"
               color="primary"
               onClick={() => router.push('/cadastro')}
-              className="py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold shadow-lg"
+              className="py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold shadow-[0_4px_0_0_#00a8a0] hover:shadow-[0_2px_0_0_#00a8a0] active:shadow-none active:translate-y-[2px] transition-all"
             >
               Criar conta gratuita
             </Button>
-          </RegisterCTA>
+          </RegisterCTA> */}
         </RegisterSection>
       </ContentWrapper>
     </Container>

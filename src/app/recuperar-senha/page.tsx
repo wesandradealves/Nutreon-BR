@@ -132,7 +132,7 @@ export default function RecuperarSenhaPage() {
                   fullWidth
                   variant="contained"
                   loading={loading}
-                  className="py-3 text-lg font-semibold bg-primary-500 hover:bg-primary-600"
+                  className="py-3 text-lg font-semibold bg-primary-500 hover:bg-primary-600 shadow-[0_4px_0_0_#00a8a0] hover:shadow-[0_2px_0_0_#00a8a0] active:shadow-none active:translate-y-[2px] transition-all"
                 >
                   Enviar e-mail de recuperação
                 </Button>
@@ -162,7 +162,7 @@ export default function RecuperarSenhaPage() {
                 fullWidth
                 variant="contained"
                 onClick={handleBack}
-                className="py-3 bg-primary-500 hover:bg-primary-600"
+                className="py-3 bg-primary-500 hover:bg-primary-600 shadow-[0_4px_0_0_#00a8a0] hover:shadow-[0_2px_0_0_#00a8a0] active:shadow-none active:translate-y-[2px] transition-all"
               >
                 Voltar ao login
               </Button>
@@ -171,7 +171,7 @@ export default function RecuperarSenhaPage() {
         </RecoveryCard>
 
         {/* Info Section */}
-        <InfoSection className="flex flex-col justify-center p-8">
+        <InfoSection className="hidden xl:flex flex-col justify-center p-8">
           <InfoWrapper className="mb-8">
             <InfoTitle className="text-3xl font-bold text-white mb-4">
               Como funciona?
