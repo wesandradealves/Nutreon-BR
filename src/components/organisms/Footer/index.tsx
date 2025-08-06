@@ -78,7 +78,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <FooterContainer className="bg-dark-900 text-gray-300 mt-20">
+    <FooterContainer className="bg-dark-900 text-gray-300">
       <FooterContent className="container mx-auto px-4 py-12">
         <FooterRow className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
           {/* Logo */}

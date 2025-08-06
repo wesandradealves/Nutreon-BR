@@ -7,6 +7,55 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+## [0.11.1] - 2025-01-06
+
+### Melhorado
+- **Botões de Ação**: Padronização visual dos botões
+  - Todos os botões principais agora usam `bg-primary-500` com hover `bg-primary-600`
+  - Removidos ícones dos botões de submit para visual mais limpo
+  - Botões afetados: Entrar, Criar conta, Enviar e-mail de recuperação, Voltar ao login
+- **Ícone do Header**: Alterado ícone de login de seta (`fa-share`) para perfil (`fa-user`)
+
+### Técnico
+- Consistência visual aprimorada em todas as páginas de autenticação
+- Melhor contraste dos botões sobre o fundo com overlay
+
+## [0.11.0] - 2025-01-06
+
+### Adicionado
+- **Páginas de Autenticação Individuais**: Novas páginas separadas para login, cadastro e recuperação de senha
+  - `/login` - Página de login com layout moderno em 2 colunas
+  - `/cadastro` - Página de cadastro com benefícios e formulário
+  - `/recuperar-senha` - Página de recuperação com guia passo-a-passo
+  - Componentes atoms criados: Checkbox, Link e Divider
+  - Integração completa com hooks de autenticação existentes
+  - Design responsivo e acessível
+
+- **Background com Overlay nas Páginas de Autenticação**:
+  - Imagem de fundo com filtro grayscale
+  - Overlay na cor primária (ciano) com opacidade 90%
+  - Efeito mix-blend-multiply para melhor integração visual
+  - Constante global `AUTH_BACKGROUND` em constants.ts
+  - Textos e elementos visuais adaptados para contraste
+
+### Melhorado
+- **Links do Header**: Atualizados para apontar para as novas páginas
+  - Login: `/auth` → `/login`
+  - Cadastre-se: `/auth?tab=1` → `/cadastro`
+  - Recuperar senha: `/auth?tab=2` → `/recuperar-senha`
+- **Middleware**: Atualizado para incluir novas rotas de visitantes
+- **Visibilidade de Elementos**: Melhorias visuais na página de login
+  - Ícones aumentados e com maior destaque (shadow-lg)
+  - Títulos com font-bold e drop-shadow
+  - Botão "Criar conta" com fundo branco para contraste
+  - Textos com melhor legibilidade sobre o fundo
+
+### Técnico
+- Styled Components aplicados em todos os elementos (sem tags HTML diretas)
+- Tailwind CSS para estilização visual
+- useCallback para todos os handlers
+- Performance otimizada com memoização
+
 ## [0.10.3] - 2025-01-05
 
 ### Adicionado

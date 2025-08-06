@@ -53,6 +53,7 @@ export const PAGINATION = {
 // Imagens padrão
 export const IMAGES = {
   PRODUCT_PLACEHOLDER: 'https://cdn.oceanserver.com.br/lojas/gymchef/uploads_produto/56-kibe-recheado-pure-de-cenoura-230g-683cbdf74d6a8.webp',
+  AUTH_BACKGROUND: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2053&q=80',
 } as const;
 
 // Cookies

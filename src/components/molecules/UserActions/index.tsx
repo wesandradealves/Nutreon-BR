@@ -96,14 +96,14 @@ const UserActions = ({
         ) : (
           <>
             <ActionItem>
-              <Link href="/auth?tab=1" className="flex items-center gap-1 text-gray-300 no-underline text-sm transition-colors hover:text-primary-500" aria-label="Cadastre-se">
+              <Link href="/cadastro" className="flex items-center gap-1 text-gray-300 no-underline text-sm transition-colors hover:text-primary-500" aria-label="Cadastre-se">
                 <ActionIcon className="fa fa-user-o text-lg" />
                 Cadastre-se
               </Link>
             </ActionItem>
             <ActionItem>
-              <Link href="/auth" className="flex items-center gap-1 text-gray-300 no-underline text-sm transition-colors hover:text-primary-500" aria-label="Login">
-                <ActionIcon className="fa fa-share text-lg" />
+              <Link href="/login" className="flex items-center gap-1 text-gray-300 no-underline text-sm transition-colors hover:text-primary-500" aria-label="Login">
+                <ActionIcon className="fa fa-user text-lg" />
                 Login
               </Link>
             </ActionItem>

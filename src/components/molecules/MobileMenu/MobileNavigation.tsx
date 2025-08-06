@@ -148,7 +148,7 @@ const MobileNavigation = ({ isOpen, onClose, items }: MobileNavigationProps) => 
         ) : (
           <UserSection className="p-4 border-b border-dark-800">
             <LoginButton 
-              href="/auth" 
+              href="/login" 
               className="block w-full bg-primary-500 text-white text-center py-3 rounded-lg font-medium hover:bg-primary-600 transition-colors"
               onClick={handleClose}
             >
