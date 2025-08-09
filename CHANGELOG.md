@@ -7,6 +7,43 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+## [0.13.0] - 2025-01-09
+
+### Adicionado
+- **Sistema de Busca Completo**: Implementação de busca de produtos integrada com Nuvemshop
+  - SearchBar com busca em tempo real (debounce de 500ms)
+  - Página de resultados de busca (/busca)
+  - API route /api/search otimizada
+  - ProductCardCompact para resultados de busca
+  - Integração com parâmetro `q` da API Nuvemshop
+
+### Melhorado
+- **Arquitetura e Padrões**: Refatoração completa para consistência
+  - API de busca usando `nuvemshopClient` padrão
+  - Remoção de interfaces duplicadas (Product)
+  - Uso consistente de `NuvemshopProduct`
+  - Criação de helpers centralizados em `/utils/product-helpers.ts`
+  - Aplicação de useCallback e useMemo para performance
+
+### Adicionado
+- **Componentes Reutilizáveis**:
+  - `ProductCardCompact`: Versão compacta do ProductCard para busca
+  - Helpers de produto: getProductName, getProductPrice, getProductImage, etc.
+  - Integração com constante IMAGES.PRODUCT_PLACEHOLDER
+
+### Corrigido
+- **Imagens de Produtos**: Correção do placeholder de imagem
+  - Uso correto da constante IMAGES.PRODUCT_PLACEHOLDER
+  - Fallback funcional para produtos sem imagem
+
+### Documentação
+- **Claude.md**: Atualização de regras e padrões
+  - Documentação de lógicas centralizadas
+  - Regra de responder sempre em português
+  - Regra de implementar uma coisa por vez
+  - Regra de não adicionar comentários no código
+  - Regra de usar useCallback/useMemo apropriadamente
+
 ## [0.12.3] - 2025-01-06
 
 ### Adicionado

@@ -1,7 +1,7 @@
 'use client';
 
 import IconButton from '../IconButton';
-import { SearchButtonContainer, SearchIcon } from './styles';
+import { SearchButtonContainer, SearchIcon, SearchText } from './styles';
 
 interface SearchButtonProps {
   onClick: () => void;
@@ -18,11 +18,11 @@ const SearchButton = ({
     <SearchButtonContainer className={`busca mod-full ${className}`}>
       <IconButton
         onClick={onClick}
-        icon={<SearchIcon className="fa fa-search w-4 h-4" />}
+        icon={<SearchIcon className="fas fa-search text-gray-400" />}
         ariaLabel="Buscar"
-        className="flex items-center gap-2 px-4 py-1.5 border border-dark-700 rounded text-gray-300 text-sm transition-all duration-300 hover:border-primary-500 hover:text-primary-500"
+        className="flex items-center gap-2 px-4 py-2 bg-dark-800 border border-dark-600 rounded-lg text-sm transition-all duration-300 hover:bg-dark-700 hover:border-primary-500 hover:text-white focus:outline-none focus:border-primary-500"
       >
-        {text}
+        <SearchText className="text-gray-400">{text}</SearchText>
       </IconButton>
     </SearchButtonContainer>
   );

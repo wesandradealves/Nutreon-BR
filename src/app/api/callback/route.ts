@@ -66,6 +66,16 @@ export async function GET(request: NextRequest) {
     console.log('🔄 Depois de atualizar o .env.local, reinicie o servidor!');
     console.log('=========================================\n');
     
+    // Verificar se é o fluxo temporário
+    const isTemp = searchParams.get('state') === 'oauth_temp';
+    
+    if (isTemp) {
+      // Redirecionar para página temporária com o token
+      return NextResponse.redirect(
+        new URL(`/oauth-temp?access_token=${tokenData.access_token}&user_id=${tokenData.user_id}`, request.url)
+      );
+    }
+    
     // Criar resposta com redirect para home
     const response = NextResponse.redirect(new URL('/?auth=success', request.url));
     

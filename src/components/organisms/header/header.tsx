@@ -9,6 +9,7 @@ import Navigation from '@/components/molecules/Navigation';
 import TopBar from '@/components/organisms/TopBar';
 import MobileMenu from '@/components/molecules/MobileMenu';
 import MobileNavigation from '@/components/molecules/MobileMenu/MobileNavigation';
+import SearchBar from '@/components/molecules/SearchBar';
 import {
   Container,
   IndiqueAmigoHeader,
@@ -28,6 +29,7 @@ const Header = ({}: HeaderProps) => {
   const { isAuthenticated, customer } = useAuth();
   const [isClient, setIsClient] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [showSearchBar, setShowSearchBar] = useState(false);
   const [isDelivering] = useState(false);
   const [deliveryAddress] = useState('');
 
@@ -62,7 +64,7 @@ const Header = ({}: HeaderProps) => {
 
 
   const openSearch = useCallback(() => {
-    // TODO: Implementar abertura da busca
+    setShowSearchBar(true);
   }, []);
 
   return (
@@ -125,6 +127,12 @@ const Header = ({}: HeaderProps) => {
         isOpen={showMobileMenu}
         onClose={() => setShowMobileMenu(false)}
         items={navigationItems}
+      />
+      
+      {/* Search Bar Overlay */}
+      <SearchBar
+        isOpen={showSearchBar}
+        onClose={() => setShowSearchBar(false)}
       />
     </>
   );
