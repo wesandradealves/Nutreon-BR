@@ -40,7 +40,7 @@ const SearchBar = ({ isOpen, onClose }: SearchBarProps) => {
   const [hasSearched, setHasSearched] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
-  const searchTimeout = useRef<NodeJS.Timeout>();
+  const searchTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (isOpen && inputRef.current) {

@@ -8,6 +8,7 @@ import { useFavoritesContext } from '@/context/favorites';
 import { QuantitySelector } from '@/components/atoms/QuantitySelector';
 import { BuyButton } from '@/components/atoms/BuyButton';
 import { formatCurrency } from '@/utils/formatters';
+import { IMAGES } from '@/utils/constants';
 import {
   ProductCardContainer,
   ProductImageWrapper,
@@ -32,7 +33,6 @@ interface ProductCardProps {
   categoryName?: string;
 }
 
-const DEFAULT_IMAGE = 'https://cdn.oceanserver.com.br/lojas/gymchef/uploads_produto/56-kibe-recheado-pure-de-cenoura-230g-683cbdf74d6a8.webp';
 
 export function ProductCard({ product, categoryName }: ProductCardProps) {
   const router = useRouter();
@@ -47,7 +47,7 @@ export function ProductCard({ product, categoryName }: ProductCardProps) {
     [product.name]
   );
   
-  const imageUrl = product.images?.[0]?.src || DEFAULT_IMAGE;
+  const imageUrl = product.images?.[0]?.src || IMAGES.PRODUCT_PLACEHOLDER;
   const variant = product.variants?.[0];
   
   const { price, currentPrice, hasDiscount, discountPercentage, inStock } = useMemo(() => {
@@ -132,7 +132,7 @@ export function ProductCard({ product, categoryName }: ProductCardProps) {
           alt={productName}
           onClick={handleViewDetails}
           onError={(e) => {
-            e.currentTarget.src = DEFAULT_IMAGE;
+            e.currentTarget.src = IMAGES.PRODUCT_PLACEHOLDER;
           }}
         />
       </ProductImageWrapper>

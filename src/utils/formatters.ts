@@ -77,9 +77,3 @@ export function formatDateTime(date: string | Date, locale = 'pt-BR'): string {
   }).format(dateObj);
 }
 
-/**
- * Formata preço em Real brasileiro
- */
-export function formatPrice(value: number): string {
-  return formatCurrency(value);
-}

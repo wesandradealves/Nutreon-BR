@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 import { ShoppingCart, Plus, Minus, Trash2, X } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import { useMetadata } from '@/hooks/useMetadata';
-import { formatPrice } from '@/utils/formatters';
+import { formatCurrency } from '@/utils/formatters';
 import { toast } from 'react-hot-toast';
 import { IMAGES } from '@/utils/constants';
 import {
@@ -195,14 +195,14 @@ export default function CartPage() {
                               {item.name}
                             </ProductName>
                             <ProductPrice className="text-sm text-gray-500 mt-1">
-                              {formatPrice(item.price)} cada
+                              {formatCurrency(item.price)} cada
                             </ProductPrice>
                           </ProductDetails>
                           
                           {/* Preço total do item */}
                           <TotalPrice className="text-right">
                             <TotalPriceText className="text-lg font-medium text-gray-900">
-                              {formatPrice(item.price * item.quantity)}
+                              {formatCurrency(item.price * item.quantity)}
                             </TotalPriceText>
                           </TotalPrice>
                         </ProductHeader>
@@ -258,7 +258,7 @@ export default function CartPage() {
               <SummaryContent className="space-y-3">
                 <SummaryRow className="flex justify-between text-gray-600">
                   <SummaryLabel>Subtotal</SummaryLabel>
-                  <SummaryValue>{formatPrice(subtotal)}</SummaryValue>
+                  <SummaryValue>{formatCurrency(subtotal)}</SummaryValue>
                 </SummaryRow>
                 
                 <SummaryRow className="flex justify-between text-gray-600">
@@ -267,7 +267,7 @@ export default function CartPage() {
                     {shipping === 0 ? (
                       <FreeShippingLabel className="text-green-600 font-medium">Grátis</FreeShippingLabel>
                     ) : (
-                      formatPrice(shipping)
+                      formatCurrency(shipping)
                     )}
                   </SummaryValue>
                 </SummaryRow>
@@ -281,7 +281,7 @@ export default function CartPage() {
                 <SummaryDivider className="pt-3 border-t">
                   <SummaryTotal className="flex justify-between text-lg font-bold text-gray-900">
                     <TotalLabel>Total</TotalLabel>
-                    <TotalValue>{formatPrice(total)}</TotalValue>
+                    <TotalValue>{formatCurrency(total)}</TotalValue>
                   </SummaryTotal>
                 </SummaryDivider>
               </SummaryContent>
@@ -306,10 +306,10 @@ export default function CartPage() {
               {subtotal < 200 && (
                 <ShippingInfo className="mt-6 p-4 bg-blue-50 rounded-lg">
                   <ShippingTitle className="text-sm text-blue-800">
-                    <ShippingHighlight>Frete Grátis</ShippingHighlight> para compras acima de {formatPrice(200)}
+                    <ShippingHighlight>Frete Grátis</ShippingHighlight> para compras acima de {formatCurrency(200)}
                   </ShippingTitle>
                   <ShippingText className="text-xs text-blue-700 mt-1">
-                    Faltam {formatPrice(200 - subtotal)} para você ganhar frete grátis!
+                    Faltam {formatCurrency(200 - subtotal)} para você ganhar frete grátis!
                   </ShippingText>
                 </ShippingInfo>
               )}

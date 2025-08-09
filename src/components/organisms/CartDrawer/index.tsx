@@ -5,7 +5,7 @@ import { Transition } from '@headlessui/react';
 import { X, ShoppingCart, Plus, Minus, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useCart } from '@/hooks/useCart';
-import { formatPrice } from '@/utils/formatters';
+import { formatCurrency } from '@/utils/formatters';
 import { 
   DrawerOverlay, 
   DrawerContainer, 
@@ -171,10 +171,10 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                 <ItemDetailsWrapper>
                                   <ItemHeader className="flex justify-between text-base font-medium text-gray-900">
                                     <ItemName>{item.name}</ItemName>
-                                    <ItemPrice>{formatPrice(item.price * item.quantity)}</ItemPrice>
+                                    <ItemPrice>{formatCurrency(item.price * item.quantity)}</ItemPrice>
                                   </ItemHeader>
                                   <ItemSubPrice className="mt-1 text-sm text-gray-500">
-                                    {formatPrice(item.price)} cada
+                                    {formatCurrency(item.price)} cada
                                   </ItemSubPrice>
                                 </ItemDetailsWrapper>
                                 <ItemFooter className="flex flex-1 items-end justify-between text-sm">
@@ -227,15 +227,15 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                         <>
                           <SubtotalRow className="flex justify-between text-base font-medium text-gray-900">
                             <SubtotalLabel>Subtotal</SubtotalLabel>
-                            <SubtotalValue>{formatPrice(subtotal)}</SubtotalValue>
+                            <SubtotalValue>{formatCurrency(subtotal)}</SubtotalValue>
                           </SubtotalRow>
                           <ShippingRow className="flex justify-between text-sm text-gray-500 mt-2">
                             <ShippingLabel>Frete</ShippingLabel>
-                            <ShippingValue>{shipping === 0 ? 'Grátis' : formatPrice(shipping)}</ShippingValue>
+                            <ShippingValue>{shipping === 0 ? 'Grátis' : formatCurrency(shipping)}</ShippingValue>
                           </ShippingRow>
                           <TotalRow className="flex justify-between text-lg font-bold text-gray-900 mt-4 pt-4 border-t">
                             <TotalLabel>Total</TotalLabel>
-                            <TotalValue>{formatPrice(total)}</TotalValue>
+                            <TotalValue>{formatCurrency(total)}</TotalValue>
                           </TotalRow>
                           <ActionsWrapper className="mt-6 space-y-3">
                             <CheckoutButton

@@ -59,5 +59,4 @@ export const IMAGES = {
 // Cookies
 export const COOKIES = {
   CART_SESSION: 'nutreon_cart_session',
-  AUTH_TOKEN: 'auth-token',
 } as const;

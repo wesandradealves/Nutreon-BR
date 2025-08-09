@@ -4,6 +4,7 @@ import { successResponse, errorResponse, handleApiError } from '@/lib/api-utils'
 import { cookies } from 'next/headers';
 import { nuvemshopClient } from '@/lib/nuvemshop-client';
 import type { NuvemshopProduct } from '@/types/nuvemshop.types';
+import { COOKIE_NAMES } from '@/config/constants';
 import { COOKIES, IMAGES } from '@/utils/constants';
 
 // GET /api/cart - Obter carrinho
@@ -11,7 +12,7 @@ export async function GET() {
   try {
     // Tenta obter customerId do token JWT
     const cookieStore = await cookies();
-    const token = cookieStore.get(COOKIES.AUTH_TOKEN)?.value;
+    const token = cookieStore.get(COOKIE_NAMES.AUTH_TOKEN)?.value;
     console.log('[GET /api/cart] Cookie auth-token:', token ? 'PRESENTE' : 'AUSENTE');
     
     let customerId: string | null = null;
@@ -90,7 +91,7 @@ export async function GET() {
               ...item,
               name: product.name?.pt || product.name?.es || 'Produto sem nome',
               image: product.images?.[0]?.src || IMAGES.PRODUCT_PLACEHOLDER,
-              price: parseFloat(variant?.price || '0'),
+              price: Number(item.price),
               stock: variant?.stock || 0,
             };
           }
@@ -106,7 +107,12 @@ export async function GET() {
         });
         
         // Calcular subtotal
-        const subtotal = enrichedItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+        interface EnrichedItem {
+          price: number;
+          quantity: number;
+        }
+        
+        const subtotal = enrichedItems.reduce((acc: number, item: EnrichedItem) => acc + (item.price * item.quantity), 0);
         
         // Retornar carrinho enriquecido
         return successResponse({
@@ -146,7 +152,7 @@ export async function POST(request: NextRequest) {
 
     // Obtém o carrinho atual
     const cookieStore = await cookies();
-    const token = cookieStore.get(COOKIES.AUTH_TOKEN)?.value;
+    const token = cookieStore.get(COOKIE_NAMES.AUTH_TOKEN)?.value;
     let customerId: string | null = null;
 
     if (token) {
@@ -220,7 +226,7 @@ export async function POST(request: NextRequest) {
 export async function DELETE() {
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get(COOKIES.AUTH_TOKEN)?.value;
+    const token = cookieStore.get(COOKIE_NAMES.AUTH_TOKEN)?.value;
     let customerId: string | null = null;
 
     if (token) {

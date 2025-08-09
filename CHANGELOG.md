@@ -7,6 +7,51 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+## [0.14.0] - 2025-01-10
+
+### Adicionado
+- **Página de Detalhes do Produto**: Implementação completa da página de produto
+  - Integração com API `/api/products/[handle]` usando handle dinâmico
+  - Galeria de imagens com miniaturas
+  - Cálculo de frete integrado
+  - Breadcrumb dinâmico com categorias
+  - Tabs de descrição e detalhes
+  - Produtos relacionados
+  - Sistema de favoritos integrado
+  - Adicionar ao carrinho com seletor de quantidade
+  - SEO dinâmico com metadata do produto
+
+### Melhorado
+- **Qualidade de Código e DRY**: Refatoração para eliminar duplicação
+  - Unificação de constantes AUTH_TOKEN (removida duplicação)
+  - Remoção de função formatPrice redundante (usar apenas formatCurrency)
+  - ProductCard usando constante IMAGES.PRODUCT_PLACEHOLDER
+  - QuantitySelector refatorado para usar apenas classes Tailwind
+
+### Corrigido
+- **Tipagem TypeScript**: Eliminação de uso de `any`
+  - Tipos adequados e específicos em todas as funções
+  - Uso de tipagem centralizada em `src/types/`
+  - Correção de tipos do Prisma vs tipos do frontend
+  - Build limpo sem erros de TypeScript
+
+- **Componentes React**: Correções de compatibilidade
+  - Remoção de `legacyBehavior` deprecado do Link
+  - Correção de erro de hidratação (nested `<a>` tags)
+  - BreadcrumbLink mudado de `styled.a` para `styled.span`
+
+- **Sistema de Email**: Atualização de credenciais e templates
+  - Novas credenciais Ethereal configuradas
+  - Correção do caminho do logo nos templates (logo.PNG)
+  - Templates de welcome, password-reset e login-notification atualizados
+
+### Documentação
+- **Claude.md**: Adição de regras de tipagem
+  - Nunca usar `any` no TypeScript
+  - Sempre criar tipos adequados
+  - Usar tipagem centralizada
+  - Verificar se tipo existe antes de criar
+
 ## [0.13.0] - 2025-01-09
 
 ### Adicionado

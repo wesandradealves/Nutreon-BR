@@ -80,11 +80,8 @@ const Header = ({}: HeaderProps) => {
 
       <HeaderContainer className="bg-dark-900">
         <TopBar
-          isDelivering={isDelivering}
-          deliveryAddress={deliveryAddress}
           isAuthenticated={isClient && isAuthenticated}
           customerName={customer?.name?.split(' ')[0]}
-          onDeliveryCheck={verificaEntregaCep}
           onSearchClick={openSearch}
         />
         

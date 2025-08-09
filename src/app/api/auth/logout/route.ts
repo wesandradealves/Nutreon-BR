@@ -1,12 +1,12 @@
 import { container } from '@/core/infrastructure/container';
 import { successResponse, handleApiError } from '@/lib/api-utils';
 import { cookies } from 'next/headers';
-import { COOKIES } from '@/utils/constants';
+import { COOKIE_NAMES } from '@/config/constants';
 
 export async function POST() {
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get(COOKIES.AUTH_TOKEN)?.value;
+    const token = cookieStore.get(COOKIE_NAMES.AUTH_TOKEN)?.value;
     
     // Se tem token, invalida a sessão no banco
     if (token) {
@@ -32,7 +32,7 @@ export async function POST() {
     const response = successResponse({ message: 'Logout realizado com sucesso' });
     
     // Remove todos os cookies de autenticação
-    response.cookies.delete(COOKIES.AUTH_TOKEN);
+    response.cookies.delete(COOKIE_NAMES.AUTH_TOKEN);
     response.cookies.delete('nuvemshop_token');
     response.cookies.delete('nuvemshop_user_id');
     
