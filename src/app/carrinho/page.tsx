@@ -9,7 +9,7 @@ import { formatCurrency } from '@/utils/formatters';
 import { toast } from 'react-hot-toast';
 import { IMAGES } from '@/utils/constants';
 import { FavoriteToggle } from '@/components/atoms/FavoriteToggle';
-import { QuantityControls } from '@/components/molecules/QuantityControls';
+import { QuantitySelector } from '@/components/atoms/QuantitySelector';
 import {
   PageContainer,
   Container,
@@ -213,9 +213,9 @@ export default function CartPage() {
                         {/* Controles */}
                         <ProductControls className="flex items-center justify-between mt-4">
                           {/* Quantidade */}
-                          <QuantityControls
-                            quantity={item.quantity}
-                            onQuantityChange={(newQuantity) => handleQuantityChange(item.id, newQuantity)}
+                          <QuantitySelector
+                            value={item.quantity}
+                            onChange={(newQuantity) => handleQuantityChange(item.id, newQuantity)}
                           />
                           
                           {/* Ações */}

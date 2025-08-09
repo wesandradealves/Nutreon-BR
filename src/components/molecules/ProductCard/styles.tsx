@@ -35,4 +35,8 @@ export const CurrentPrice = styled.div``;
 
 export const QuantityRow = styled.div``;
 
+export const QuantityWrapper = styled.div``;
+
+export const CartIndicator = styled.span``;
+
 export const OutOfStockOverlay = styled.div``;

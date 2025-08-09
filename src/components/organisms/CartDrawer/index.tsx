@@ -8,7 +8,7 @@ import { useCart } from '@/hooks/useCart';
 import { useFavoriteActions } from '@/hooks/useFavoriteActions';
 import { formatCurrency } from '@/utils/formatters';
 import { FavoriteToggle } from '@/components/atoms/FavoriteToggle';
-import { QuantityControls } from '@/components/molecules/QuantityControls';
+import { QuantitySelector } from '@/components/atoms/QuantitySelector';
 import { 
   DrawerOverlay, 
   DrawerContainer, 
@@ -179,9 +179,9 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                   </ItemSubPrice>
                                 </ItemDetailsWrapper>
                                 <ItemFooter className="flex flex-1 items-end justify-between text-sm">
-                                  <QuantityControls
-                                    quantity={item.quantity}
-                                    onQuantityChange={(newQuantity) => handleQuantityChange(item.id, newQuantity)}
+                                  <QuantitySelector
+                                    value={item.quantity}
+                                    onChange={(newQuantity) => handleQuantityChange(item.id, newQuantity)}
                                   />
 
                                   <ActionsWrapper className="flex items-center gap-2">

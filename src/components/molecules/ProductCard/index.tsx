@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { Heart } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/hooks/useCart';
@@ -24,6 +24,8 @@ import {
   OldPrice,
   CurrentPrice,
   QuantityRow,
+  QuantityWrapper,
+  CartIndicator,
   OutOfStockOverlay
 } from './styles';
 import type { NuvemshopProduct } from '@/types';
@@ -36,20 +38,16 @@ interface ProductCardProps {
 
 export function ProductCard({ product, categoryName }: ProductCardProps) {
   const router = useRouter();
-  const { addToCart, getProductQuantity } = useCart();
+  const { addToCart, getProductQuantity, updateQuantity, cart } = useCart();
   const { isFavorite, toggleFavorite } = useFavoritesContext();
   const [isLoading, setIsLoading] = useState(false);
   const [isFavoriteLoading, setIsFavoriteLoading] = useState(false);
   
-  // Obter quantidade do carrinho ou inicializar com 1
+  // Quantidade para adicionar
+  const [quantity, setQuantity] = useState(1);
+  
+  // Quantidade atual no carrinho
   const cartQuantity = getProductQuantity(product.id.toString());
-  const [quantity, setQuantity] = useState(cartQuantity || 1);
-
-  // Sincronizar quantidade quando o carrinho muda
-  useEffect(() => {
-    const newQuantity = getProductQuantity(product.id.toString());
-    setQuantity(newQuantity || 1);
-  }, [cartQuantity, getProductQuantity, product.id]);
 
   const productName = useMemo(() => 
     product.name.pt || Object.values(product.name).find(Boolean) || 'Produto sem nome',
@@ -76,16 +74,24 @@ export function ProductCard({ product, categoryName }: ProductCardProps) {
     
     setIsLoading(true);
     try {
-      // Converte ID para string e usa o primeiro variant disponível
       const productIdStr = product.id.toString();
       const variantId = product.variants?.[0]?.id?.toString();
       
-      await addToCart(productIdStr, variantId, quantity);
-      setQuantity(1); // Reset após adicionar
+      // Se já está no carrinho, adiciona a quantidade atual ao carrinho existente
+      if (cartQuantity > 0) {
+        // Já está no carrinho, a quantidade já foi atualizada pelo handleQuantityChange
+        // Apenas mostra feedback de sucesso
+        const { toast } = await import('react-hot-toast');
+        toast.success('Quantidade atualizada no carrinho!');
+      } else {
+        // Não está no carrinho, adiciona com a quantidade selecionada
+        await addToCart(productIdStr, variantId, quantity);
+        setQuantity(1); // Reset para 1 após adicionar
+      }
     } finally {
       setIsLoading(false);
     }
-  }, [inStock, addToCart, product.id, product.variants, quantity]);
+  }, [inStock, addToCart, product.id, product.variants, quantity, cartQuantity]);
 
   const handleViewDetails = useCallback(() => {
     let slug = `produto-${product.id}`;
@@ -105,6 +111,24 @@ export function ProductCard({ product, categoryName }: ProductCardProps) {
       setIsFavoriteLoading(false);
     }
   }, [toggleFavorite, product.id]);
+
+  // Quando alterar quantidade, se produto já está no carrinho, atualiza diretamente
+  const handleQuantityChange = useCallback(async (newQuantity: number) => {
+    setQuantity(newQuantity);
+    
+    // Se o produto já está no carrinho, atualiza a quantidade no carrinho
+    if (cartQuantity > 0 && cart?.items) {
+      const cartItem = cart.items.find(item => item.productId === product.id.toString());
+      if (cartItem) {
+        setIsLoading(true);
+        try {
+          await updateQuantity(cartItem.id, newQuantity);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    }
+  }, [cartQuantity, cart?.items, product.id, updateQuantity]);
 
   return (
     <ProductCardContainer className="bg-white relative transition-all duration-300 border border-gray-200 hover:shadow-lg">
@@ -161,11 +185,18 @@ export function ProductCard({ product, categoryName }: ProductCardProps) {
         </ProductName>
 
         <QuantityRow className="flex items-center justify-between mb-4">
-          <QuantitySelector 
-            value={quantity}
-            onChange={setQuantity}
-            max={typeof variant?.stock === 'number' ? variant.stock : 99}
-          />
+          <QuantityWrapper>
+            <QuantitySelector 
+              value={cartQuantity > 0 ? cartQuantity : quantity}
+              onChange={handleQuantityChange}
+              max={typeof variant?.stock === 'number' ? variant.stock : 99}
+            />
+            {cartQuantity > 0 && (
+              <CartIndicator className="text-xs text-green-600 mt-1 block">
+                {cartQuantity} no carrinho
+              </CartIndicator>
+            )}
+          </QuantityWrapper>
 
           <PriceContainer className="text-right">
             {hasDiscount && (
