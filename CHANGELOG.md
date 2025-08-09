@@ -7,6 +7,16 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+## [0.15.1] - 2025-01-10
+
+### Corrigido
+- **Sincronização de Quantidade no Carrinho**: Quantidade agora sincronizada entre todos os componentes
+  - ProductCard mostra quantidade real do carrinho
+  - Página de produto mostra quantidade real do carrinho
+  - Drawer, carrinho e produtos agora sempre sincronizados
+  - Adicionada função `getProductQuantity` ao contexto do carrinho
+  - useEffect para atualização automática quando carrinho muda
+
 ## [0.15.0] - 2025-01-10
 
 ### Adicionado

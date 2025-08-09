@@ -23,5 +23,6 @@ export function useCart() {
     getCart: cartContext.loadCart,
     clearCart: cartContext.clearCart,
     calculateShipping: cartContext.calculateShipping,
+    getProductQuantity: cartContext.getProductQuantity,
   };
 }

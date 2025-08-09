@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { Heart } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/hooks/useCart';
@@ -36,11 +36,20 @@ interface ProductCardProps {
 
 export function ProductCard({ product, categoryName }: ProductCardProps) {
   const router = useRouter();
-  const { addToCart } = useCart();
+  const { addToCart, getProductQuantity } = useCart();
   const { isFavorite, toggleFavorite } = useFavoritesContext();
   const [isLoading, setIsLoading] = useState(false);
   const [isFavoriteLoading, setIsFavoriteLoading] = useState(false);
-  const [quantity, setQuantity] = useState(1);
+  
+  // Obter quantidade do carrinho ou inicializar com 1
+  const cartQuantity = getProductQuantity(product.id.toString());
+  const [quantity, setQuantity] = useState(cartQuantity || 1);
+
+  // Sincronizar quantidade quando o carrinho muda
+  useEffect(() => {
+    const newQuantity = getProductQuantity(product.id.toString());
+    setQuantity(newQuantity || 1);
+  }, [cartQuantity, getProductQuantity, product.id]);
 
   const productName = useMemo(() => 
     product.name.pt || Object.values(product.name).find(Boolean) || 'Produto sem nome',

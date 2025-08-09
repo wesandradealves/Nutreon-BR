@@ -89,7 +89,7 @@ export default function ProductPage() {
   const { request: requestProduct } = useApiRequest<{ data: NuvemshopProduct }>();
   const { request: requestRelated } = useApiRequest<{ data: NuvemshopProduct[] }>();
   const { request: requestCategories } = useApiRequest<{ data: NuvemshopCategory[] }>();
-  const { addToCart } = useCart();
+  const { addToCart, getProductQuantity } = useCart();
   const { isFavorite, toggleFavorite } = useFavoritesContext();
   
   const [product, setProduct] = useState<NuvemshopProduct | null>(null);
@@ -100,7 +100,17 @@ export default function ProductPage() {
   const [isFavoriteLoading, setIsFavoriteLoading] = useState(false);
   
   const [selectedImage, setSelectedImage] = useState(0);
-  const [quantity, setQuantity] = useState(1);
+  // Sincronizar quantidade com o carrinho
+  const cartQuantity = product ? getProductQuantity(product.id.toString()) : 0;
+  const [quantity, setQuantity] = useState(cartQuantity || 1);
+  
+  // Atualizar quantidade quando o carrinho ou produto mudar
+  useEffect(() => {
+    if (product) {
+      const newQuantity = getProductQuantity(product.id.toString());
+      setQuantity(newQuantity || 1);
+    }
+  }, [product, getProductQuantity, cartQuantity]);
   const [cep, setCep] = useState('');
   const [shippingRates, setShippingRates] = useState<ShippingRate[]>([]);
   const [loadingShipping, setLoadingShipping] = useState(false);

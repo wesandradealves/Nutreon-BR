@@ -20,6 +20,7 @@ interface CartContextData {
   clearCart: () => Promise<void>;
   loadCart: () => Promise<void>;
   calculateShipping: (zipCode: string) => Promise<void>;
+  getProductQuantity: (productId: string) => number;
 }
 
 const CartContext = createContext<CartContextData>({} as CartContextData);
@@ -44,6 +45,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
     subtotal + shipping - (cart?.discount || 0), 
     [subtotal, shipping, cart?.discount]
   );
+
+  // Obtém quantidade de um produto no carrinho
+  const getProductQuantity = useCallback((productId: string) => {
+    if (!cart?.items) return 0;
+    const item = cart.items.find(item => item.productId === productId);
+    return item?.quantity || 0;
+  }, [cart?.items]);
 
   // Carrega carrinho
   const loadCart = useCallback(async () => {
@@ -243,6 +251,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         clearCart,
         loadCart,
         calculateShipping,
+        getProductQuantity,
       }}
     >
       {children}
