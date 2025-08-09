@@ -37,7 +37,7 @@ export function QuantitySelector({
   return (
     <QuantityContainer className="flex items-center">
       <QuantityButton 
-        className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 transition-colors disabled:bg-gray-300"
+        className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 transition-colors disabled:bg-gray-300 rounded-l"
         onClick={handleDecrease}
         disabled={value <= min}
         aria-label="Diminuir quantidade"
@@ -46,7 +46,7 @@ export function QuantitySelector({
       </QuantityButton>
       
       <QuantityInput
-        className="w-12 h-8 text-center border-y border-gray-200 focus:outline-none"
+        className="w-12 h-8 text-center border-y border-gray-200 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         type="number"
         value={value}
         onChange={handleInputChange}
@@ -56,7 +56,7 @@ export function QuantitySelector({
       />
       
       <QuantityButton 
-        className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 transition-colors disabled:bg-gray-300"
+        className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 transition-colors disabled:bg-gray-300 rounded-r"
         onClick={handleIncrease}
         disabled={value >= max}
         aria-label="Aumentar quantidade"

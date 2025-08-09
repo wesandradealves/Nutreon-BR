@@ -140,7 +140,7 @@ export function passwordResetEmailTemplate(customerName: string, resetLink: stri
   <div class="container">
     <div class="header">
       <div class="logo">
-        <img src="${process.env.NEXT_PUBLIC_APP_URL}/img/logo.png" alt="Nutreon" />
+        <img src="${process.env.NEXT_PUBLIC_APP_URL}/img/logo.PNG" alt="Nutreon" />
       </div>
       <h1>Recuperação de Senha</h1>
       <p>Nutrindo Saúde, Transformando Vidas</p>

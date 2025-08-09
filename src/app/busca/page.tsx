@@ -3,10 +3,7 @@
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import styled from 'styled-components';
-import Header from '@/components/organisms/header/header';
-import Footer from '@/components/organisms/footer/footer';
-import ProductCard from '@/components/molecules/ProductCard';
-import { getProductName, getProductPrice, getProductImage, getProductStock, getProductHandle, getProductPromotionalPrice } from '@/utils/product-helpers';
+import { ProductCard } from '@/components/molecules/ProductCard';
 import type { NuvemshopProduct } from '@/types';
 
 const Container = styled.div``;
@@ -70,18 +67,9 @@ function SearchContent() {
     }
   }, [searchTerm, router]);
 
-  const handleProductClick = useCallback((product: NuvemshopProduct) => {
-    const handle = getProductHandle(product.handle);
-    if (handle) {
-      router.push(`/produto/${handle}`);
-    }
-  }, [router]);
 
   return (
-    <>
-      <Header />
-      
-      <Container className="min-h-screen bg-dark-950">
+    <Container className="min-h-screen bg-dark-950">
         <SearchSection className="py-8">
           <div className="container mx-auto px-4">
             <SearchHeader className="mb-8">
@@ -126,13 +114,7 @@ function SearchContent() {
                 {products.map((product) => (
                   <ProductCard
                     key={product.id}
-                    id={product.id.toString()}
-                    name={getProductName(product.name)}
-                    price={getProductPrice(product)}
-                    promotionalPrice={getProductPromotionalPrice(product)}
-                    image={getProductImage(product)}
-                    stock={getProductStock(product)}
-                    onClick={() => handleProductClick(product)}
+                    product={product}
                   />
                 ))}
               </ProductsGrid>
@@ -148,10 +130,7 @@ function SearchContent() {
             ) : null}
           </div>
         </SearchSection>
-      </Container>
-      
-      <Footer />
-    </>
+    </Container>
   );
 }
 

@@ -147,7 +147,7 @@ export const welcomeEmailTemplate = (customerName: string, verificationLink?: st
       <div class="container">
         <div class="header">
           <div class="logo">
-            <img src="${process.env.NEXT_PUBLIC_APP_URL}/img/logo.png" alt="Nutreon" />
+            <img src="${process.env.NEXT_PUBLIC_APP_URL}/img/logo.PNG" alt="Nutreon" />
           </div>
           <h1>Bem-vindo à Nutreon!</h1>
           <p>Nutrindo Saúde, Transformando Vidas</p>

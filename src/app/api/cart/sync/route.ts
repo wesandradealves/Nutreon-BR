@@ -1,6 +1,7 @@
 import { container } from '@/core/infrastructure/container';
 import { successResponse, errorResponse, handleApiError } from '@/lib/api-utils';
 import { cookies } from 'next/headers';
+import { COOKIE_NAMES } from '@/config/constants';
 import { COOKIES } from '@/utils/constants';
 
 // POST /api/cart/sync - Sincronizar carrinho ao fazer login
@@ -8,7 +9,7 @@ export async function POST() {
   try {
     // Verifica se está autenticado
     const cookieStore = await cookies();
-    const token = cookieStore.get(COOKIES.AUTH_TOKEN)?.value;
+    const token = cookieStore.get(COOKIE_NAMES.AUTH_TOKEN)?.value;
     
     if (!token) {
       return errorResponse('Não autorizado', 401);

@@ -180,7 +180,7 @@ export const loginNotificationTemplate = (
         <div class="container">
           <div class="header">
             <div class="logo">
-              <img src="${process.env.NEXT_PUBLIC_APP_URL}/img/logo.png" alt="Nutreon" />
+              <img src="${process.env.NEXT_PUBLIC_APP_URL}/img/logo.PNG" alt="Nutreon" />
             </div>
             <h1>Notificação de Acesso</h1>
             <p>Alerta de Segurança</p>

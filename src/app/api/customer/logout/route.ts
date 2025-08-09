@@ -3,12 +3,12 @@ import { container } from '@/core/infrastructure/container';
 import { LogoutCustomerUseCase } from '@/core/application/use-cases/customer/LogoutCustomerUseCase';
 import { cookies } from 'next/headers';
 import { handleApiError } from '@/lib/api-utils';
-import { COOKIES } from '@/utils/constants';
+import { COOKIE_NAMES } from '@/config/constants';
 
 export async function POST(request: NextRequest) {
   try {
     const cookieStore = await cookies();
-    const tokenFromCookie = cookieStore.get(COOKIES.AUTH_TOKEN)?.value;
+    const tokenFromCookie = cookieStore.get(COOKIE_NAMES.AUTH_TOKEN)?.value;
     
     const authHeader = request.headers.get('Authorization');
     const tokenFromHeader = authHeader?.startsWith('Bearer ') 
@@ -45,8 +45,8 @@ export async function POST(request: NextRequest) {
     });
     
     // Deletar o cookie corretamente
-    console.log('[Logout] Deletando cookie:', COOKIES.AUTH_TOKEN);
-    response.cookies.set(COOKIES.AUTH_TOKEN, '', {
+    console.log('[Logout] Deletando cookie:', COOKIE_NAMES.AUTH_TOKEN);
+    response.cookies.set(COOKIE_NAMES.AUTH_TOKEN, '', {
       expires: new Date(0),
       path: '/'
     });
