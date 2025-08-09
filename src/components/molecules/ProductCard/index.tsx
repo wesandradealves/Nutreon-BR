@@ -25,7 +25,6 @@ import {
   CurrentPrice,
   QuantityRow,
   QuantityWrapper,
-  CartIndicator,
   OutOfStockOverlay
 } from './styles';
 import type { NuvemshopProduct } from '@/types';
@@ -69,30 +68,6 @@ export function ProductCard({ product, categoryName }: ProductCardProps) {
   }, [variant]);
 
 
-  const handleAddToCart = useCallback(async () => {
-    if (!inStock) return;
-    
-    setIsLoading(true);
-    try {
-      const productIdStr = product.id.toString();
-      const variantId = product.variants?.[0]?.id?.toString();
-      
-      // Se já está no carrinho, adiciona a quantidade atual ao carrinho existente
-      if (cartQuantity > 0) {
-        // Já está no carrinho, a quantidade já foi atualizada pelo handleQuantityChange
-        // Apenas mostra feedback de sucesso
-        const { toast } = await import('react-hot-toast');
-        toast.success('Quantidade atualizada no carrinho!');
-      } else {
-        // Não está no carrinho, adiciona com a quantidade selecionada
-        await addToCart(productIdStr, variantId, quantity);
-        setQuantity(1); // Reset para 1 após adicionar
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  }, [inStock, addToCart, product.id, product.variants, quantity, cartQuantity]);
-
   const handleViewDetails = useCallback(() => {
     let slug = `produto-${product.id}`;
     if (product.handle) {
@@ -102,6 +77,28 @@ export function ProductCard({ product, categoryName }: ProductCardProps) {
     }
     router.push(`/produto/${slug}`);
   }, [product.id, product.handle, router]);
+
+  const handleAddToCart = useCallback(async () => {
+    if (!inStock) return;
+    
+    // Se já está no carrinho, vai para a página de detalhes
+    if (cartQuantity > 0) {
+      handleViewDetails();
+      return;
+    }
+    
+    // Se não está no carrinho, adiciona normalmente
+    setIsLoading(true);
+    try {
+      const productIdStr = product.id.toString();
+      const variantId = product.variants?.[0]?.id?.toString();
+      
+      await addToCart(productIdStr, variantId, quantity);
+      setQuantity(1); // Reset para 1 após adicionar
+    } finally {
+      setIsLoading(false);
+    }
+  }, [inStock, addToCart, product.id, product.variants, quantity, cartQuantity, handleViewDetails]);
 
   const handleToggleFavorite = useCallback(async () => {
     setIsFavoriteLoading(true);
@@ -191,11 +188,6 @@ export function ProductCard({ product, categoryName }: ProductCardProps) {
               onChange={handleQuantityChange}
               max={typeof variant?.stock === 'number' ? variant.stock : 99}
             />
-            {cartQuantity > 0 && (
-              <CartIndicator className="text-xs text-green-600 mt-1 block">
-                {cartQuantity} no carrinho
-              </CartIndicator>
-            )}
           </QuantityWrapper>
 
           <PriceContainer className="text-right">
@@ -220,7 +212,7 @@ export function ProductCard({ product, categoryName }: ProductCardProps) {
           disabled={!inStock}
           loading={isLoading}
         >
-          Eu Quero
+          {cartQuantity > 0 ? 'Ver Detalhes' : 'Eu Quero'}
         </BuyButton>
       </ProductInfo>
     </ProductCardContainer>
