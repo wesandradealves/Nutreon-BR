@@ -1,12 +1,15 @@
 'use client';
 
 import { useCallback } from 'react';
-import { ShoppingCart, Plus, Minus, Trash2, X } from 'lucide-react';
+import { ShoppingCart, Trash2, X } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
+import { useFavoriteActions } from '@/hooks/useFavoriteActions';
 import { useMetadata } from '@/hooks/useMetadata';
 import { formatCurrency } from '@/utils/formatters';
 import { toast } from 'react-hot-toast';
 import { IMAGES } from '@/utils/constants';
+import { FavoriteToggle } from '@/components/atoms/FavoriteToggle';
+import { QuantityControls } from '@/components/molecules/QuantityControls';
 import {
   PageContainer,
   Container,
@@ -31,10 +34,8 @@ import {
   TotalPrice,
   TotalPriceText,
   ProductControls,
-  QuantityControls,
-  QuantityButton,
-  QuantityValue,
   RemoveButton,
+  ActionsWrapper,
   SummarySection,
   SummaryCard,
   SummaryTitle,
@@ -78,10 +79,12 @@ export default function CartPage() {
     removeItem,
     clearCart
   } = useCart();
+  const { isFavorite, handleToggleFavorite, loadingFavorites } = useFavoriteActions();
 
   useMetadata({
-    title: `Nutreon BR - Carrinho (${itemCount})`,
-    ogTitle: `Nutreon BR - Carrinho`
+    title: `Carrinho (${itemCount}) - Nutreon BR`,
+    description: 'Seu carrinho de compras na Nutreon - Refeições congeladas saudáveis e nutritivas',
+    ogTitle: `Carrinho - Nutreon BR`
   });
 
   const handleQuantityChange = useCallback(async (itemId: string, newQuantity: number) => {
@@ -210,35 +213,29 @@ export default function CartPage() {
                         {/* Controles */}
                         <ProductControls className="flex items-center justify-between mt-4">
                           {/* Quantidade */}
-                          <QuantityControls className="flex items-center gap-3">
-                            <QuantityButton
-                              onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                              disabled={item.quantity <= 1}
-                              className="w-8 h-8 rounded-md border border-gray-300 flex items-center justify-center hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                            >
-                              <Minus size={16} />
-                            </QuantityButton>
-                            
-                            <QuantityValue className="w-12 text-center font-medium">
-                              {item.quantity}
-                            </QuantityValue>
-                            
-                            <QuantityButton
-                              onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                              className="w-8 h-8 rounded-md border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
-                            >
-                              <Plus size={16} />
-                            </QuantityButton>
-                          </QuantityControls>
+                          <QuantityControls
+                            quantity={item.quantity}
+                            onQuantityChange={(newQuantity) => handleQuantityChange(item.id, newQuantity)}
+                          />
                           
-                          {/* Remover */}
-                          <RemoveButton
-                            onClick={() => handleRemove(item.id)}
-                            className="text-red-600 hover:text-red-700 flex items-center gap-1 transition-colors"
-                          >
-                            <X size={20} />
-                            Remover
-                          </RemoveButton>
+                          {/* Ações */}
+                          <ActionsWrapper className="flex items-center gap-2">
+                            <FavoriteToggle
+                              productId={item.productId}
+                              isFavorite={isFavorite(item.productId)}
+                              onToggle={handleToggleFavorite}
+                              disabled={loadingFavorites.includes(item.productId)}
+                            />
+                            
+                            {/* Remover */}
+                            <RemoveButton
+                              onClick={() => handleRemove(item.id)}
+                              className="text-red-600 hover:text-red-700 flex items-center gap-1 transition-colors"
+                            >
+                              <X size={20} />
+                              Remover
+                            </RemoveButton>
+                          </ActionsWrapper>
                         </ProductControls>
                       </ProductInfo>
                     </ProductWrapper>

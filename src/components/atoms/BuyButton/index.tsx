@@ -16,7 +16,7 @@ export function BuyButton({ onClick, disabled, loading, children }: BuyButtonPro
       onClick={onClick}
       disabled={disabled}
       loading={loading}
-      className="font-bold py-3 uppercase tracking-wider hover:shadow-lg"
+      className="py-3 text-lg font-semibold bg-primary-500 hover:bg-primary-600 shadow-[0_4px_0_0_#00a8a0] hover:shadow-[0_2px_0_0_#00a8a0] active:shadow-none active:translate-y-[2px] transition-all uppercase"
     >
       {loading ? 'Adicionando...' : children}
     </Button>

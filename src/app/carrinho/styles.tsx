@@ -33,6 +33,7 @@ export const QuantityControls = styled.div``;
 export const QuantityButton = styled.button``;
 export const QuantityValue = styled.span``;
 export const RemoveButton = styled.button``;
+export const ActionsWrapper = styled.div``;
 
 export const SummarySection = styled.div``;
 export const SummaryCard = styled.div``;

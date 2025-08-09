@@ -70,8 +70,9 @@ export default function AccountPage() {
   const [isInitialized, setIsInitialized] = useState(false);
 
   useMetadata({
-    title: `Nutreon BR - Conta`,
-    ogTitle: `Nutreon BR - Conta`
+    title: 'Minha Conta - Nutreon BR',
+    description: 'Gerencie sua conta, endereços e pedidos na Nutreon',
+    ogTitle: 'Minha Conta - Nutreon BR'
   });
 
   // Form para dados pessoais

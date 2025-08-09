@@ -16,9 +16,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           [&::-webkit-scrollbar-track]:bg-black
           [&::-webkit-scrollbar-track]:ms-7
           [&::-webkit-scrollbar-track]:me-7
-          [&::-webkit-scrollbar-track]:rounded-full
+          [&::-webkit-scrollbar-track]:rounded-0
           [&::-webkit-scrollbar-thumb]:bg-white
-          [&::-webkit-scrollbar-thumb]:rounded-full
+          [&::-webkit-scrollbar-thumb]:rounded-0
           [&::-webkit-scrollbar-thumb]:cursor-move
         `)}
       >

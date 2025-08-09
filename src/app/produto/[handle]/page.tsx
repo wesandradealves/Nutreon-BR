@@ -206,6 +206,22 @@ export default function ProductPage() {
     }
   }, [product, toggleFavorite]);
 
+  const handleBackToHome = useCallback(() => {
+    router.push('/');
+  }, [router]);
+
+  const handleGoBack = useCallback(() => {
+    router.back();
+  }, [router]);
+
+  const handleSelectImage = useCallback((index: number) => {
+    setSelectedImage(index);
+  }, []);
+
+  const handleCepChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setCep(e.target.value.replace(/\D/g, ''));
+  }, []);
+
   const calculateShipping = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!cep || cep.length < 8 || !product) return;
@@ -283,7 +299,7 @@ export default function ProductPage() {
       <PageContainer className="min-h-screen bg-gray-50">
         <NotFoundContainer className="container mx-auto px-4 py-8 text-center">
           <NotFoundTitle className="text-2xl font-bold mb-4">Produto não encontrado</NotFoundTitle>
-          <BuyButton onClick={() => router.push('/')} loading={false}>
+          <BuyButton onClick={handleBackToHome} loading={false}>
             Voltar ao início
           </BuyButton>
         </NotFoundContainer>
@@ -297,7 +313,7 @@ export default function ProductPage() {
       
       <ProductContainer className="container mx-auto px-4 py-8">
         <BackButton 
-          onClick={() => router.back()}
+          onClick={handleGoBack}
           className="inline-flex items-center text-gray-600 hover:text-primary-500 mb-6 transition-colors"
         >
           <ArrowLeft size={20} className="mr-2" />
@@ -322,7 +338,7 @@ export default function ProductPage() {
                   {product.images.map((image, index) => (
                     <ThumbnailItem
                       key={image.id}
-                      onClick={() => setSelectedImage(index)}
+                      onClick={() => handleSelectImage(index)}
                       className={`cursor-pointer rounded border-2 transition-all ${
                         selectedImage === index 
                           ? 'border-primary-500' 
@@ -413,7 +429,7 @@ export default function ProductPage() {
                     type="text"
                     placeholder="Digite seu CEP"
                     value={cep}
-                    onChange={(e) => setCep(e.target.value.replace(/\D/g, ''))}
+                    onChange={handleCepChange}
                     maxLength={8}
                     className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500"
                   />

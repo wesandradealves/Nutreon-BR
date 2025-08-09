@@ -2,10 +2,13 @@
 
 import { Fragment, useCallback, useMemo, useEffect } from 'react';
 import { Transition } from '@headlessui/react';
-import { X, ShoppingCart, Plus, Minus, Trash2 } from 'lucide-react';
+import { X, ShoppingCart, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useCart } from '@/hooks/useCart';
+import { useFavoriteActions } from '@/hooks/useFavoriteActions';
 import { formatCurrency } from '@/utils/formatters';
+import { FavoriteToggle } from '@/components/atoms/FavoriteToggle';
+import { QuantityControls } from '@/components/molecules/QuantityControls';
 import { 
   DrawerOverlay, 
   DrawerContainer, 
@@ -22,9 +25,6 @@ import {
   ItemInfo,
   ItemName,
   ItemPrice,
-  QuantityControls,
-  QuantityButton,
-  QuantityValue,
   RemoveButton,
   CartFooter,
   SubtotalRow,
@@ -60,6 +60,7 @@ interface CartDrawerProps {
 
 export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const { cart, loading, updateQuantity, removeItem, subtotal, shipping, total } = useCart();
+  const { isFavorite, handleToggleFavorite, loadingFavorites } = useFavoriteActions();
 
   const handleQuantityChange = useCallback(async (itemId: string, newQuantity: number) => {
     if (newQuantity < 1) return;
@@ -178,33 +179,27 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                   </ItemSubPrice>
                                 </ItemDetailsWrapper>
                                 <ItemFooter className="flex flex-1 items-end justify-between text-sm">
-                                  <QuantityControls className="flex items-center gap-2">
-                                    <QuantityButton
-                                      onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                                      disabled={item.quantity <= 1}
-                                      className="p-1 rounded-md border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    >
-                                      <Minus size={16} />
-                                    </QuantityButton>
-                                    <QuantityValue className="w-12 text-center font-medium">
-                                      {item.quantity}
-                                    </QuantityValue>
-                                    <QuantityButton
-                                      onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                                      className="p-1 rounded-md border border-gray-300 hover:bg-gray-50"
-                                    >
-                                      <Plus size={16} />
-                                    </QuantityButton>
-                                  </QuantityControls>
+                                  <QuantityControls
+                                    quantity={item.quantity}
+                                    onQuantityChange={(newQuantity) => handleQuantityChange(item.id, newQuantity)}
+                                  />
 
-                                  <RemoveButton
-                                    type="button"
-                                    onClick={() => handleRemove(item.id)}
-                                    className="font-medium text-red-600 hover:text-red-500 flex items-center gap-1"
-                                  >
-                                    <Trash2 size={16} />
-                                    Remover
-                                  </RemoveButton>
+                                  <ActionsWrapper className="flex items-center gap-2">
+                                    <FavoriteToggle
+                                      productId={item.productId}
+                                      isFavorite={isFavorite(item.productId)}
+                                      onToggle={handleToggleFavorite}
+                                      disabled={loadingFavorites.includes(item.productId)}
+                                    />
+                                    <RemoveButton
+                                      type="button"
+                                      onClick={() => handleRemove(item.id)}
+                                      className="font-medium text-red-600 hover:text-red-500 flex items-center gap-1"
+                                    >
+                                      <Trash2 size={16} />
+                                      Remover
+                                    </RemoveButton>
+                                  </ActionsWrapper>
                                 </ItemFooter>
                               </ItemInfo>
                             </CartItem>

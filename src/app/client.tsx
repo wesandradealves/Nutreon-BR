@@ -38,8 +38,10 @@ export default function ClientProviders({ children }: { children: React.ReactNod
   }, [scrollY]);
 
   useMetadata({
-    title: `Nutreon BR`,
-    ogTitle: `Nutreon BR`
+    title: 'Nutreon BR - Nutrindo Saúde',
+    description: 'Refeições congeladas saudáveis e nutritivas. Mais de 60 opções de pratos prontos para sua rotina.',
+    keywords: 'refeições congeladas, comida saudável, nutrição, marmitas fit, Nutreon',
+    ogTitle: 'Nutreon BR - Nutrindo Saúde'
   });
 
   return (

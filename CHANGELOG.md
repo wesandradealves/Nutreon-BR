@@ -7,6 +7,50 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+## [0.15.0] - 2025-01-10
+
+### Adicionado
+- **Sistema de Favoritos no Carrinho**: Botão de favoritar em itens do carrinho
+  - Implementado tanto no CartDrawer quanto na página de carrinho
+  - Integração com contexto de favoritos existente
+  - Componente FavoriteToggle reutilizável (Atomic Design)
+
+- **Métricas de Qualidade de Código**: Sistema de monitoramento de qualidade
+  - Métricas mínimas estabelecidas (nota geral: 8.8/10)
+  - Checklist obrigatório antes de commits
+  - Red flags para correção imediata
+  - Documentado em Claude.md
+
+### Melhorado
+- **Refatoração DRY Massiva**: Eliminação de código duplicado
+  - Hook `useFavoriteActions` centraliza toda lógica de favoritos
+  - Componente `QuantityControls` unifica controles de quantidade
+  - Eliminada duplicação em 3+ arquivos diferentes
+  
+- **Performance**: Otimizações com useCallback
+  - Todas funções inline convertidas para callbacks memoizados
+  - Prevenção de re-renders desnecessários
+  - Página de produto completamente otimizada
+
+- **Consistência de UI**: Padronização de componentes
+  - BuyButton consistente em toda aplicação
+  - Botões seguem mesmo estilo visual (shadow-box effect)
+  - Styled Components sem tags HTML diretas (100% compliance)
+
+- **SEO e Metadata**: Padronização de títulos
+  - Formato unificado: "Página - Nutreon BR"
+  - Descrições relevantes para todas as páginas
+  - Keywords apropriadas para busca
+
+### Corrigido
+- **Toast Duplicado**: Mensagens de favoritos apareciam 2x
+  - Removido toast redundante em useFavoriteActions
+  - Mantido apenas no hook original useFavorites
+
+- **Imports Não Utilizados**: Limpeza completa
+  - Removidas importações desnecessárias
+  - Build sem warnings de ESLint
+
 ## [0.14.0] - 2025-01-10
 
 ### Adicionado

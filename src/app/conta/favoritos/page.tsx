@@ -36,8 +36,9 @@ export default function FavoritosPage() {
   const [isMounted, setIsMounted] = useState(false);
 
   useMetadata({
-    title: `Nutreon BR - Favoritos`,
-    ogTitle: `Nutreon BR - Favoritos`
+    title: 'Meus Favoritos - Nutreon BR',
+    description: 'Seus produtos favoritos salvos na Nutreon',
+    ogTitle: 'Favoritos - Nutreon BR'
   });
 
   const loadFavoriteProducts = useCallback(async () => {
