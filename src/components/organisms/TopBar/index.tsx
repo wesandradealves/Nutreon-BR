@@ -2,26 +2,19 @@
 
 import { TopBarContainer, TopBarContent, SocialSection, ActionsSection } from './styles';
 import SocialLinks from '@/components/molecules/SocialLinks';
-import DeliveryCheck from '@/components/atoms/DeliveryCheck';
 import SearchButton from '@/components/atoms/SearchButton';
 import UserActions from '@/components/molecules/UserActions';
 import { ContactText } from '@/components/atoms/Typography';
 
 interface TopBarProps {
-  isDelivering: boolean;
-  deliveryAddress: string;
   isAuthenticated: boolean;
   customerName?: string;
-  onDeliveryCheck: () => void;
   onSearchClick: () => void;
 }
 
 const TopBar = ({
-  isDelivering,
-  deliveryAddress,
   isAuthenticated,
   customerName,
-  onDeliveryCheck,
   onSearchClick
 }: TopBarProps) => {
   return (
@@ -41,11 +34,6 @@ const TopBar = ({
           
           <ActionsSection className="flex items-center gap-4">
             <SearchButton onClick={onSearchClick} />
-            <DeliveryCheck
-              isDelivering={isDelivering}
-              address={deliveryAddress}
-              onClick={onDeliveryCheck}
-            />
             <UserActions
               isAuthenticated={isAuthenticated}
               userName={customerName}
