@@ -89,7 +89,7 @@ export default function ProductPage() {
   const { request: requestProduct } = useApiRequest<{ data: NuvemshopProduct }>();
   const { request: requestRelated } = useApiRequest<{ data: NuvemshopProduct[] }>();
   const { request: requestCategories } = useApiRequest<{ data: NuvemshopCategory[] }>();
-  const { addToCart, getProductQuantity } = useCart();
+  const { addToCart, getProductQuantity, updateQuantity, cart } = useCart();
   const { isFavorite, toggleFavorite } = useFavoritesContext();
   
   const [product, setProduct] = useState<NuvemshopProduct | null>(null);
@@ -190,6 +190,23 @@ export default function ProductPage() {
     ogTitle: productName || 'Nutreon',
     ogImage: productImage || '/img/logo.PNG'
   });
+
+  const handleQuantityChange = useCallback(async (newQuantity: number) => {
+    setQuantity(newQuantity);
+    
+    // Se o produto já está no carrinho, atualiza a quantidade no carrinho
+    if (product && cartQuantity > 0 && cart?.items) {
+      const cartItem = cart.items.find(item => item.productId === product.id.toString());
+      if (cartItem) {
+        setIsAddingToCart(true);
+        try {
+          await updateQuantity(cartItem.id, newQuantity);
+        } finally {
+          setIsAddingToCart(false);
+        }
+      }
+    }
+  }, [product, cartQuantity, cart?.items, updateQuantity]);
 
   const handleAddToCart = useCallback(async () => {
     if (!product || stock === 0) return;
@@ -401,8 +418,8 @@ export default function ProductPage() {
 
               <QuantitySection className="flex items-center gap-4 mb-6">
                 <QuantitySelector
-                  value={quantity}
-                  onChange={setQuantity}
+                  value={cartQuantity > 0 ? cartQuantity : quantity}
+                  onChange={handleQuantityChange}
                   max={stock}
                 />
 
