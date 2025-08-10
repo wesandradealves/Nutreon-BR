@@ -7,6 +7,29 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+## [0.16.0] - 2025-01-10
+
+### Adicionado
+- **Sincronização em Tempo Real do Carrinho**: Quantidade do carrinho agora atualiza em tempo real
+  - ProductCard atualiza carrinho diretamente ao alterar quantidade
+  - Página de produto atualiza carrinho diretamente ao alterar quantidade
+  - Sincronização bidirecional entre todos os componentes
+  - Componente QuantitySelector unificado para todos os locais
+
+### Melhorado
+- **Botão "Eu Quero" Inteligente**: Comportamento adaptativo baseado no estado do carrinho
+  - Quando produto não está no carrinho: Adiciona ao carrinho
+  - Quando produto já está no carrinho: Redireciona para página de detalhes
+  - Texto do botão muda dinamicamente ("Eu Quero" → "Ver Detalhes")
+
+### Removido
+- **Componente Duplicado**: Removido QuantityControls em favor de QuantitySelector
+- **Indicador Redundante**: Removido texto "X no carrinho" abaixo do seletor de quantidade
+
+### Corrigido
+- **Ordem de Declaração**: Corrigido erro de inicialização com handleViewDetails
+- **Sincronização de Estado**: Garantida consistência total entre ProductCard, página de produto, drawer e carrinho
+
 ## [0.15.1] - 2025-01-10
 
 ### Corrigido
